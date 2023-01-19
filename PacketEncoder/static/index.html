@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head> 
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="icon" href="icon.png" type="image/x-icon">
+		<link rel="stylesheet" href="style.css" type="text/css">
+		<base href="http://localhost:8080/">
+		<title>LoRaWAN Packet Encoder/Decoder</title>
+	</head>
+	<body>
+
+		<div>
+			<h1>Welcome to LoRaWAN Packet Encoder/Decoder API</h1>
+		</div>
+
+		<div>
+			<table class="table">
+
+				<tr>
+				  <th class="table-header">API Name</th>
+				  <th class="table-header">Description</th>
+				  <th class="table-header">Documentation</th>
+				</tr>
+
+				<tr>
+				  <td class="table-data"><h4>/MessageType</h4></td>
+				  <td class="table-data">Type of packet</td>
+				  <td class="table-data">
+					<div class="info">
+						<h4>POST Request URL</h4>
+						<h5><a href="MessageType" target="_blank">http://localhost:8080/MessageType</a></h5>
+					</div>
+					<div class="info">
+						<h4>POST Request JSON Parameter</h4>
+						<p><b>PHYPayload  : </b>LoRa PHYPayload (base64 string)</p>
+					</div>
+					<div class="info">
+						<h4>POST Response JSON Data</h4>
+						<p><b>MessageType : </b>Message Type (UTF-8 string)</p>
+					</div>
+				  </td>
+				</tr>
+
+				<tr>
+					<td class="table-data"><h4>/JoinRequest</h4></td>
+					<td class="table-data">Encode Join Request packet with the given parameters</td>
+					<td class="table-data">
+						<div class="info">
+							<h4>POST Request URL</h4>
+							<h5><a href="JoinRequest" target="_blank">http://localhost:8080/JoinRequest</a></h5>
+						</div>
+						<div class="info">
+							<h4>POST Request JSON Parameter</h4>
+							<p><b>DevEUI     : </b>Device EUI (hex string)</p>
+							<p><b>AppEUI     : </b>Application EUI (hex string)</p>
+							<p><b>AppKey     : </b>Application Key (hex string)</p>
+							<p><b>DevNonce   : </b>Device Nonce (hex string)</p>
+						</div>
+						<div class="info">
+							<h4>POST Response JSON Data</h4>
+							<p><b>PHYPayload : </b>LoRa PHYPayload (base64 string)</p>
+						</div>
+					</td>
+				</tr>
+
+				<tr>
+					<td class="table-data"><h4>/JoinAccept</h4></td>
+					<td class="table-data">Decode Join Accept packet with the given parameters</td>
+					<td class="table-data">
+						<div class="info">
+							<h4>POST Request URL</h4>
+							<h5><a href="JoinAccept" target="_blank">http://localhost:8080/JoinAccept</a></h5>
+						</div>
+						<div class="info">
+							<h4>POST Request JSON Parameter</h4>
+							<p><b>PHYPayload : </b>LoRa PHYPayload (base64 string)</p>
+							<p><b>AppKey     : </b>Application Key (hex string)</p>
+							<p><b>DevNonce   : </b>Device Nonce <b>"same as JoinRequest"</b> (hex string)</p>
+						</div>
+						<div class="info">
+							<h4>POST Response JSON Data</h4>
+							<p><b>DevAddr    : </b>Device Address (hex string)</p>
+							<p><b>NwkSKey    : </b>Network Session Key (hex string)</p>
+							<p><b>AppSKey    : </b>Application Session Key (hex string)</p>
+						</div>
+					</td>
+				</tr>
+
+				<tr>
+					<td class="table-data"><h4>/UnconfirmedDataUp</h4></td>
+					<td class="table-data">Encode Unconfirmed Data Up packet with the given parameters</td>
+					<td class="table-data">
+						<div class="info">
+							<h4>POST Request URL</h4>
+							<h5><a href="UnconfirmedDataUp" target="_blank">http://localhost:8080/UnconfirmedDataUp</a></h5>
+						</div>
+						<div class="info">
+							<h4>POST Request JSON Parameter</h4>
+							<p><b>DevAddr    : </b>Device Address (hex string)</p>
+							<p><b>FCnt       : </b>Frame Counter (number from 1 to 65535)</p>
+							<p><b>FPort      : </b>Frame Port (number from 1 to 255)</p>
+							<p><b>payload    : </b>User data payload (hex string)</p>
+							<p><b>NwkSKey    : </b>Network Session Key (hex string)</p>
+							<p><b>AppSKey    : </b>Application Session Key (hex string)</p>
+						</div>
+						<div class="info">
+							<h4>POST Response JSON Data</h4>
+							<p><b>PHYPayload : </b>LoRa PHYPayload (base64 string)</p>
+						</div>
+					</td>
+				</tr>
+
+				<tr>
+					<td class="table-data"><h4>/ConfirmedDataUp</h4></td>
+					<td class="table-data">Encode Confirmed Data Up packet with the given parameters</td>
+					<td class="table-data">
+						<div class="info">
+							<h4>POST Request URL</h4>
+							<h5><a href="ConfirmedDataUp" target="_blank">http://localhost:8080/ConfirmedDataUp</a></h5>
+						</div>
+						<div class="info">
+							<h4>POST Request JSON Parameter</h4>
+							<p><b>DevAddr    : </b>Device Address (hex string)</p>
+							<p><b>FCnt       : </b>Frame Counter (number from 1 to 65535)</p>
+							<p><b>FPort      : </b>Frame Port (number from 1 to 255)</p>
+							<p><b>payload    : </b>User data payload (hex string)</p>
+							<p><b>NwkSKey    : </b>Network Session Key (hex string)</p>
+							<p><b>AppSKey    : </b>Application Session Key (hex string)</p>
+						</div>
+						<div class="info">
+							<h4>POST Response JSON Data</h4>
+							<p><b>PHYPayload : </b>LoRa PHYPayload (base64 string)</p>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>		  
+
+	</body>
+</html>

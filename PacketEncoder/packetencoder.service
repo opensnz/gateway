@@ -1,0 +1,16 @@
+[Unit]
+Description=Packet Encoder Service Daemon
+StartLimitIntervalSec=86400
+StartLimitBurst=8640
+
+[Service]
+User=pi
+Group=sudo
+Type=simple
+WorkingDirectory=/home/pi/PacketEncoder
+ExecStart=/usr/local/bin/npm start
+Restart=on-failure
+RestartSec=1s
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,16 @@
+[Unit]
+Description=Packet Forwarder Service Daemon
+StartLimitIntervalSec=86400
+StartLimitBurst=8640
+
+[Service]
+User=pi
+Group=sudo
+Type=simple
+WorkingDirectory=/home/pi/PacketForwarder
+ExecStart=/usr/bin/python3 -u /home/pi/PacketForwarder/forwarder.py
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
