@@ -65,7 +65,7 @@ class Gateway():
         # Save current date and time
         date_time = {
             "time": datetime.utcnow().isoformat()+'Z',
-            "tmst": int(datetime.now().timestamp()),
+            "tmst": round(datetime.now().timestamp()),
         }
         topic = message.topic
         topic_payload = eval(message.payload)
