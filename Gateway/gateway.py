@@ -1,15 +1,15 @@
 import paho.mqtt.client as mqtt
-import requests, json
+import json
 import time, threading
-from queue import Queue
 from datetime import datetime
 from database import Database
 from encoder import Encoder
 from constants import *
 
-class TYPE(enumerate):
-    TX = 0
-    TX_RX = 1
+
+# class TYPE(enumerate):
+#     TX = 0
+#     TX_RX = 1
 
 
 class STATUS(enumerate):
@@ -21,7 +21,6 @@ class Gateway():
 
     def __init__(self):
         self.__mapping__ = dict()
-        self.__queue = Queue()
         self.__mqtt_client = mqtt.Client(transport="tcp",client_id="gateway")
 
 
@@ -133,6 +132,18 @@ class Gateway():
             ]
         }
         return packet
+    
+    def __update_packet__(self, packet:dict, topic_payload:dict, date_time:dict) -> dict:
+        """Update packet with transceiver metadata, date and time"""
+        packet["rxpk"][0]["time"] = date_time["time"]
+        packet["rxpk"][0]["tmms"] = date_time["tmst"]
+        packet["rxpk"][0]["tmst"] = date_time["tmst"]
+        # Filling packet with transceiver metadata
+        # packet["rxpk"][0]["freq"] = topic_payload["freq"]
+        # packet["rxpk"][0]["datr"] = topic_payload["datr"]
+        # packet["rxpk"][0]["rssi"] = topic_payload["rssi"]
+        # packet["rxpk"][0]["lsnr"] = topic_payload["lsnr"]
+        return packet
 
 
     def __mqtt_on_message__(self,  client:mqtt.Client, userdata, message:mqtt.MQTTMessage):
@@ -169,32 +180,24 @@ class Gateway():
                 # Save device's packet(with its raw payload) for later Unconfirmed or Conformed Data Up (Unconfirmed by default)
                 packet = self.__generic_packet__()
                 packet["rxpk"][0]["data"] = payload
-                # Update packet with date and time
-                packet["rxpk"][0]["time"] = date_time["time"]
-                packet["rxpk"][0]["tmms"] = date_time["tmst"]
-                packet["rxpk"][0]["tmst"] = date_time["tmst"]
-                # Filling packet with transceiver metadata
-                # packet["rxpk"][0]["freq"] = topic_payload["freq"]
-                # packet["rxpk"][0]["datr"] = topic_payload["datr"]
-                # packet["rxpk"][0]["rssi"] = topic_payload["rssi"]
-                # packet["rxpk"][0]["lsnr"] = topic_payload["lsnr"]
+                # Update packet with transceiver metadata, date and time 
+                self.__update_packet__(packet, topic_payload, date_time)
                 _db.open()
                 _db.update_data(DevEUI=DevEUI, Packet=json.dumps(packet))
                 _db.close()
                 # LoRaWAN Join Request is needed
                 # Encode packet by using RESP API service
                 packet = self.__join_request_packet__(device)
+                # Update packet with transceiver metadata, date and time 
+                self.__update_packet__(packet, topic_payload, date_time)
                 return packet
 
             else:
                 # LoRaWAN Unconfirmed or Conformed Data Up is needed (Unconfirmed by default)
                 # Encode packet by using RESP API service
                 packet = self.__unconfirmed_data_up_packet__(device, payload)
-                # Filling packet
-                # packet["rxpk"][0]["freq"] = topic_payload["freq"]
-                # packet["rxpk"][0]["datr"] = topic_payload["datr"]
-                # packet["rxpk"][0]["rssi"] = topic_payload["rssi"]
-                # packet["rxpk"][0]["lsnr"] = topic_payload["lsnr"]
+                # Update packet with transceiver metadata, date and time 
+                self.__update_packet__(packet, topic_payload, date_time)
                 return packet
             
         return None
@@ -203,8 +206,8 @@ class Gateway():
         DevEUI = topic_payload["DevEUI"]
         _db = Database()
         if self.__mapping__[DevEUI] == STATUS.JOIN_REQUEST:
+            # Remove DevEUI from mapping dict
             self.__mapping__.pop(DevEUI)
-            print(self.__mapping__)
             PHYPayload = json.loads(topic_payload["packet"])["txpk"]["data"]
             # Get device informations from database
             _db.open()
@@ -216,7 +219,8 @@ class Gateway():
             packet = json.loads(packet)
             # LoRaWAN Join Accept is needed
             # Decode packet by using RESP API service
-            device = Encoder.join_accept(device, PHYPayload)
+            # device is modified in the function(device is mutable object, so no need to get return dict)
+            Encoder.join_accept(device, PHYPayload) 
             # Use saved packet's raw payload to encode uplink data
             # LoRaWAN Unconfirmed or Conformed Data Up is needed (Unconfirmed by default)
             # Encode packet by using RESP API service

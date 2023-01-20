@@ -5,9 +5,9 @@ from handler import Handler
 from constants import *
 
 
-class TYPE(enumerate):
-    TX = 0
-    TX_RX = 1
+# class TYPE(enumerate):
+#     TX = 0
+#     TX_RX = 1
 
 
 class Forwarder():
@@ -68,12 +68,7 @@ class Forwarder():
                 print("TX_ACK Sent")
             DevEUI = self.__handler.get_DevEUI()
             packet = data[4:].decode("utf-8")
-            payload= {
-                "DevEUI" : DevEUI,
-                "packet" : packet
-            }
-            print(payload)
-            self.__mqtt_client.publish(MQTT_TOPIC_FORWARDER_OUT, payload=json.dumps(payload))
+            self.__publish__(DevEUI, packet)
         elif pkt_type == PKT_PULL_ACK:
             self.__handler.pull_ack(data)
         elif pkt_type == PKT_PUSH_ACK:
@@ -129,6 +124,15 @@ class Forwarder():
     def __mqtt_on_disconnect__(self, client : mqtt.Client, userdata, rc):
         print("MQTT_Client disconnected")
 
+
+    def __publish__(self, DevEUI:str, packet:str):
+        """Publish packet with DevEUI to Gateway System"""
+        payload = {
+            "DevEUI":DevEUI,
+            "packet":packet
+        }
+        print("Publishing Packet", payload["packet"])
+        self.__mqtt_client.publish(MQTT_TOPIC_FORWARDER_OUT, payload=json.dumps(payload))
 
 
 

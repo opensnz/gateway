@@ -2,6 +2,7 @@ import requests
 from database import Database
 from constants import PACKET_ENCODER_URL
 
+
 class Encoder():
 
 
@@ -26,7 +27,7 @@ class Encoder():
 
     @staticmethod
     def join_accept(device:dict, PHYPayload:str) -> dict:
-        """return updated device after decoding Join Accept PHYPayload"""
+        """Update device after decoding Join Accept PHYPayload"""
         post_json = {}
         post_json["AppKey"] = device["AppKey"]
         post_json["DevNonce"] = hex(device["DevNonce"]-1)[2:].zfill(4)

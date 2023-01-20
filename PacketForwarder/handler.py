@@ -1,12 +1,11 @@
 import os, json
-from queue import Queue
 from constants import *
 
 class Handler():
 
     def __init__(self, gateway_id : str):
         self.__mapping__    = dict()
-        self.__queue__ = Queue(QUEUE_MAX_SIZE)
+        self.__DevEUI__     = ""
         self._token_x       = bytes([0x00, 0x00])
         self._token_y       = bytes([0x00, 0x00])
         self._token_z       = bytes([0x00, 0x00])
@@ -41,7 +40,7 @@ class Handler():
     def push_ack(self, data : bytes) -> bytes:
         token_x = data[1:3]
         DevEUI = self.__mapping__.pop(token_x)
-        self.__queue__.put(DevEUI)
+        self.__DevEUI__ = DevEUI
         print("PUSH_ACK Received")
         return self.validate_token_x(data)
 
@@ -68,9 +67,8 @@ class Handler():
         print("TX_ACK Ready")
         return b''.join([bytes([PROTOCOL_VERSION]), token_z, bytes([PKT_TX_ACK]), self._gateway_id, data])
 
-
     def get_DevEUI(self) -> str:
-        return self.__queue__.get()
+        return self.__DevEUI__
 
 
     
