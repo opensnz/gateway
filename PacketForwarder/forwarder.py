@@ -13,8 +13,8 @@ from constants import *
 class Forwarder():
 
 
-    def __init__(self, server : str, port : int):
-        self.server = server
+    def __init__(self, host : str, port : int):
+        self.host   = host
         self.port   = port
         self.__lock = threading.Lock()
         self.__socket  = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
@@ -64,7 +64,7 @@ class Forwarder():
             token_z = self.__handler.pull_resp(data)
             tx_data = self.__handler.tx_ack(token_z)
             with self.__lock:
-                self.__socket.sendto(tx_data, (self.server, self.port))
+                self.__socket.sendto(tx_data, (self.host, self.port))
                 print("TX_ACK Sent")
             DevEUI = self.__handler.get_DevEUI()
             packet = data[4:].decode("utf-8")
@@ -79,7 +79,7 @@ class Forwarder():
         try:
             data = self.__handler.pull_data()
             with self.__lock:
-                self.__socket.sendto(data, (self.server, self.port))
+                self.__socket.sendto(data, (self.host, self.port))
                 print("PULL_DATA Sent")
         except:
             pass
@@ -97,12 +97,19 @@ class Forwarder():
                 data : str = payload["packet"]
                 data = self.__handler.push_data(data, DevEUI)
                 with self.__lock:
-                    self.__socket.sendto(data, (self.server, self.port))
+                    self.__socket.sendto(data, (self.host, self.port))
                     print("PUSH_DATA Sent")
             elif topic == MQTT_TOPIC_GATEWAY_ID:
                 gateway_id = payload["gatewayID"]
                 self.__handler.set_gateway_id(gateway_id)
                 print("GATEWAY ID Set")
+            elif topic == MQTT_TOPIC_GATEWAY_SERVER:
+                host = payload["host"]
+                port = payload["port"]
+                with self.__lock:
+                    self.host = host
+                    self.port = port
+                print("LoRa Server Set")
         except Exception as e:
             print(e)
             pass

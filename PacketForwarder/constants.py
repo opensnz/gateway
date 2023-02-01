@@ -23,6 +23,7 @@ MQTT_PASSWORD  = "forwarder#2022"
 MQTT_TOPIC_FORWARDER_IN    = "/forwarder/data/in"
 MQTT_TOPIC_FORWARDER_OUT   = "/forwarder/data/out"
 MQTT_TOPIC_GATEWAY_ID      = "/forwarder/gateway/id"
+MQTT_TOPIC_GATEWAY_SERVER  = "/forwarder/gateway/server"
 
 
 # Constants for Packet Forwarder

@@ -1,0 +1,185 @@
+html,body {
+    height: 100%;
+    margin: 0;
+ }
+
+.content {
+    padding-top: 10px;
+    padding-bottom: 2px;
+    text-align: center;
+}
+
+#tabs {
+    display: inline-block;
+    width: 600px;
+    height: 100px;
+}
+.ui-tabs .ui-tabs-nav {
+    text-align: center;
+}
+
+.ui-tabs .ui-tabs-nav li {
+    float: none !important;
+    display: inline-block;
+}
+#tabs>div{
+    text-align: center;
+    padding: 2px;
+}
+
+.visual{
+    display: grid;
+    width: 605px;
+    margin: auto;
+    padding: 0px;
+    font-family: Arial,Helvetica,sans-serif;
+    grid-template-columns: repeat(8, 1fr);
+    grid-gap: 0px;
+    grid-auto-rows: auto;
+    grid-template-areas:
+    "a a b b b b c c"
+    "d d d d d d d d"
+    "d d d d d d d d"
+    "d d d d d d d d"
+    "d d d d d d d d";
+    align-items: center;
+    justify-items: center;
+}
+.item1 {
+    grid-area: a;
+}
+.item2 {
+    grid-area: b;
+}
+.item3 {
+    grid-area: c;
+}
+.item4 {
+    grid-area: d;
+}
+
+.visual-frame {
+    border: 2px solid #c5c5c5;
+    border-radius: 10px;
+}
+
+/* The div switch */
+.div-switch{
+    display: inline-block;
+    margin: 10px;
+    font-size: 18px;
+}
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(20px);
+    -ms-transform: translateX(20px);
+    transform: translateX(20px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 20px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+b {
+    padding: 6px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-right: 1.8px;
+    border: 2px solid #c5c5c5;
+    border-radius: 4px;
+}
+
+/* tooltip */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px black;
+}
+  
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 150px;
+    background-color: rgba(0, 0, 0, 0.650);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;
+    left: 50%;
+    margin-left: -60px;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: small;
+    font-weight: normal;
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.650) transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
