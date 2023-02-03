@@ -30,6 +30,7 @@ class Gateway():
         _db.create_tables()
         ############## Just for test
         _db.insert_device(DevEUI="b53fcaaa8725fe1b", AppKey="45abd993fa42864305fd20b63b21b80d")
+        _db.insert_device(DevEUI="A840415411822622", AppKey="283CE694DCDA688F1A9E7BC9995A46E1", AppEUI="A84041DF61822622")
         ##############
         _db.close()
         self.__mqtt_client.on_connect    = self.__mqtt_on_connect__
@@ -65,7 +66,7 @@ class Gateway():
         # Save current date and time
         date_time = {
             "time": datetime.utcnow().isoformat()+'Z',
-            "tmst": round(datetime.now().timestamp()),
+            "tmst": round(datetime.utcnow().timestamp()),
         }
         topic = message.topic
         topic_payload = eval(message.payload)
@@ -136,7 +137,7 @@ class Gateway():
     def __update_packet__(self, packet:dict, topic_payload:dict, date_time:dict) -> dict:
         """Update packet with transceiver metadata, date and time"""
         packet["rxpk"][0]["time"] = date_time["time"]
-        packet["rxpk"][0]["tmms"] = date_time["tmst"]
+        packet["rxpk"][0]["tmms"] = int(date_time["tmst"] - GPS_START_TIMESTAMP) * 1000
         packet["rxpk"][0]["tmst"] = date_time["tmst"]
         # Filling packet with transceiver metadata
         # packet["rxpk"][0]["freq"] = topic_payload["freq"]
@@ -243,6 +244,11 @@ class Gateway():
         }
         print("Publishing Packet", payload["packet"])
         self.__mqtt_client.publish(MQTT_TOPIC_FORWARDER_IN, payload=json.dumps(payload))
+
+
+    def __publish_config__(self, topic:str, config:dict):
+        """Publish config data"""
+        self.__mqtt_client.publish(topic, payload=json.dumps(config))
     
 
 if __name__ == "__main__":

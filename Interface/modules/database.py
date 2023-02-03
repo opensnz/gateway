@@ -1,6 +1,5 @@
 import sqlite3
-
-SQLITE_DATABASE_PATH = "./devices.db"
+from constants import SQLITE_DATABASE_PATH
 
 TABLE_DEVICE_QUERY = """
 CREATE TABLE IF NOT EXISTS DEVICE (
@@ -8,7 +7,7 @@ CREATE TABLE IF NOT EXISTS DEVICE (
     DevEUI VARCHAR(16) NOT NULL UNIQUE,
     AppEUI VARCHAR(16) NOT NULL,
     AppKey VARCHAR(32) NOT NULL,
-    DevNonce INTEGER DEFAULT 1,
+    DevNonce INTEGER DEFAULT 21,
     DevAddr VARCHAR(8),
     NwkSKey VARCHAR(32),
     AppSKey VARCHAR(32),
@@ -21,7 +20,7 @@ TABLE_DATA_QUERY = """
 CREATE TABLE IF NOT EXISTS DATA (
     ID INTEGER PRIMARY KEY AUTOINCREMENT,
     DevEUI VARCHAR(16) NOT NULL UNIQUE,
-    Data TEXT,
+    Packet TEXT,
     Created_at TIMESTAMP DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now', 'utc'))
 );
 """
@@ -34,8 +33,8 @@ DELETE_DEVICE_QUERY  = "DELETE FROM DEVICE WHERE DevEUI = ? "
 
 SELECT_ALL_DATA_QUERY= "SELECT * FROM DATA "
 SELECT_DATA_QUERY    = "SELECT * FROM DATA WHERE DevEUI = ? "
-INSERT_DATA_QUERY    = "INSERT INTO DATA(DevEUI, Data) VALUES(?, ?) "
-UPDATE_DATA_QUERY    = "UPDATE DATA SET Data = ? WHERE DevEUI = ? "
+INSERT_DATA_QUERY    = "INSERT INTO DATA(DevEUI) VALUES(?) "
+UPDATE_DATA_QUERY    = "UPDATE DATA SET Packet = ? WHERE DevEUI = ? "
 DELETE_DATA_QUERY    = "DELETE FROM DATA WHERE DevEUI = ? "
 
 DEFAULT_APPEUI = "0000000000000000"
@@ -124,7 +123,7 @@ class Database():
             return False
         self.__cursor.execute(INSERT_DEVICE_QUERY, (DevEUI, AppEUI, AppKey,))
         self.__cursor.connection.commit()
-        return self.__insert_data__(DevEUI=DevEUI, Data="")
+        return self.__insert_data__(DevEUI=DevEUI)
     
     def update_dev_nonce(self, DevEUI:str=None, DevNonce:int=0) -> bool:
         if self.__connected__() is not True:
@@ -135,7 +134,7 @@ class Database():
         if DevNonce <= 0 or DevNonce >= 65536:
             print(COLOR.FAIL+"DevNonce must be between 1 and 65535"+COLOR.END)
             return False
-        query = UPDATE_DEVICE_QUERY + "DevNonce = ?, " \
+        query = UPDATE_DEVICE_QUERY + "DevNonce = ? " \
                                     + "WHERE DevEUI = ?"
         self.__cursor.execute(query, (DevNonce, DevEUI,))
         self.__connection.commit()
@@ -150,7 +149,7 @@ class Database():
         if FCnt <= 0 or FCnt >= 65536:
             print(COLOR.FAIL+"FCnt must be between 1 and 65535"+COLOR.END)
             return False
-        query = UPDATE_DEVICE_QUERY + "FCnt = ?, " \
+        query = UPDATE_DEVICE_QUERY + "FCnt = ? " \
                                     + "WHERE DevEUI = ?"
         self.__cursor.execute(query, (FCnt, DevEUI,))
         self.__connection.commit()
@@ -184,11 +183,11 @@ class Database():
     ######################## Table DATA CRUD methods #############################
 
     def __get_data__(self, item:tuple=None) -> dict:
-        if item is None or len(item) != 3:
+        if item is None or len(item) != 4:
             return None
         data = {}
         data["DevEUI"] = item[1]
-        data["Data"]   = item[2]
+        data["Packet"]   = item[2]
         return data
     
     def get_data(self, DevEUI:str=None) -> dict:
@@ -213,23 +212,24 @@ class Database():
                 all_data.append(data)
         return all_data
 
-    def __insert_data__(self, DevEUI:str=None, Data:str=None) -> bool:
+    def __insert_data__(self, DevEUI:str=None) -> bool:
         if self.__connected__() is not True:
             return False
         if DevEUI == None:
             print(COLOR.FAIL+"DevEUI or Data can't be none"+COLOR.END)
             return False
-        self.__cursor.execute(INSERT_DATA_QUERY, (DevEUI, Data,))
-        self.__cursor.connection.commit()
+        self.__cursor.execute(INSERT_DATA_QUERY, (DevEUI,))
+        self.__connection.commit()
+        print("Success")
         return True
     
-    def update_data(self, DevEUI:str=None, Data:str=None) -> bool:
+    def update_data(self, DevEUI:str=None, Packet:str=None) -> bool:
         if self.__connected__() is not True:
             return False
-        if DevEUI == None or Data == None:
-            print(COLOR.FAIL+"DevEUI or Data can't be none"+COLOR.END)
+        if DevEUI == None or Packet == None:
+            print(COLOR.FAIL+"DevEUI or Packet can't be none"+COLOR.END)
             return False
-        self.__cursor.execute(UPDATE_DATA_QUERY, (Data, DevEUI,))
+        self.__cursor.execute(UPDATE_DATA_QUERY, (Packet, DevEUI,))
         self.__connection.commit()
         return True
 

@@ -13,7 +13,7 @@ PULL_DATA_FREQUENCY = 30 # every 30 seconds
 TX_ACK_NO_ERROR = "NONE"
 """Packet has been programmed for downlink"""
 
-DEFAULT_GATEWAY_ID = "5b4931f97b1c0a8e"
+DEFAULT_GATEWAY_EUI = "5b4931f97b1c0a8e"
 
 # Constants for MQTT connection
 MQTT_BROKER    = "192.168.1.241"
@@ -22,8 +22,8 @@ MQTT_USERNAME  = "forwarder"
 MQTT_PASSWORD  = "forwarder#2022"
 MQTT_TOPIC_FORWARDER_IN    = "/forwarder/data/in"
 MQTT_TOPIC_FORWARDER_OUT   = "/forwarder/data/out"
-MQTT_TOPIC_GATEWAY_ID      = "/forwarder/gateway/id"
-MQTT_TOPIC_GATEWAY_SERVER  = "/forwarder/gateway/server"
+MQTT_TOPIC_FORWARDER_EUI   = "/forwarder/gateway/eui"
+MQTT_TOPIC_FORWARDER_NWK   = "/forwarder/gateway/nwk"
 
 
 # Constants for Packet Forwarder

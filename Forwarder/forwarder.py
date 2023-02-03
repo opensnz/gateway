@@ -18,7 +18,7 @@ class Forwarder():
         self.port   = port
         self.__lock = threading.Lock()
         self.__socket  = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-        self.__handler = Handler(DEFAULT_GATEWAY_ID)
+        self.__handler = Handler(DEFAULT_GATEWAY_EUI)
         self.__mqtt_client = mqtt.Client(transport="tcp",client_id="forwarder")
 
 
@@ -99,11 +99,11 @@ class Forwarder():
                 with self.__lock:
                     self.__socket.sendto(data, (self.host, self.port))
                     print("PUSH_DATA Sent")
-            elif topic == MQTT_TOPIC_GATEWAY_ID:
+            elif topic == MQTT_TOPIC_FORWARDER_EUI:
                 gateway_id = payload["gatewayID"]
-                self.__handler.set_gateway_id(gateway_id)
+                self.__handler.set_gateway_eui(gateway_id)
                 print("GATEWAY ID Set")
-            elif topic == MQTT_TOPIC_GATEWAY_SERVER:
+            elif topic == MQTT_TOPIC_FORWARDER_NWK:
                 host = payload["host"]
                 port = payload["port"]
                 with self.__lock:
@@ -125,7 +125,8 @@ class Forwarder():
     def __mqtt_on_connect__(self, client : mqtt.Client, userdata, flags, rc):
         print("MQTT_Client connected")
         client.subscribe(MQTT_TOPIC_FORWARDER_IN)
-        client.subscribe(MQTT_TOPIC_GATEWAY_ID)
+        client.subscribe(MQTT_TOPIC_FORWARDER_EUI)
+        client.subscribe(MQTT_TOPIC_FORWARDER_NWK)
 
 
     def __mqtt_on_disconnect__(self, client : mqtt.Client, userdata, rc):

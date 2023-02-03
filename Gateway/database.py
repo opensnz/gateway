@@ -1,13 +1,22 @@
 import sqlite3
 from constants import SQLITE_DATABASE_PATH
 
+TABLE_CONFIG_QUERY = """
+CREATE TABLE IF NOT EXISTS CONFIG (
+    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+    GatewayEUI VARCHAR(16) NOT NULL,
+    Forwarder_Host VARCHAR(255) NOT NULL,
+    Forwarder_Port INTEGER DEFAULT 1700,
+    Created_at TIMESTAMP DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now', 'utc'))
+);
+"""
 TABLE_DEVICE_QUERY = """
 CREATE TABLE IF NOT EXISTS DEVICE (
     ID INTEGER PRIMARY KEY AUTOINCREMENT,
     DevEUI VARCHAR(16) NOT NULL UNIQUE,
     AppEUI VARCHAR(16) NOT NULL,
     AppKey VARCHAR(32) NOT NULL,
-    DevNonce INTEGER DEFAULT 21,
+    DevNonce INTEGER DEFAULT 302,
     DevAddr VARCHAR(8),
     NwkSKey VARCHAR(32),
     AppSKey VARCHAR(32),
@@ -19,11 +28,15 @@ CREATE TABLE IF NOT EXISTS DEVICE (
 TABLE_DATA_QUERY = """
 CREATE TABLE IF NOT EXISTS DATA (
     ID INTEGER PRIMARY KEY AUTOINCREMENT,
-    DevEUI VARCHAR(16) NOT NULL UNIQUE,
+    DevEUI VARCHAR(16) NOT NULL,
     Packet TEXT,
     Created_at TIMESTAMP DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now', 'utc'))
 );
 """
+
+SELECT_CONFIG_QUERY  = "SELECT * FROM CONFIG"
+INSERT_CONFIG_QUERY  = "INSERT INTO CONFIG(GatewayEUI, Forwarder_Host, Forwarder_Port) VALUES(?, ?, ?) "
+UPDATE_CONFIG_QUERY  = "UPDATE CONFIG SET "
 
 SELECT_DEVICES_QUERY = "SELECT * FROM DEVICE "
 SELECT_DEVICE_QUERY  = "SELECT * FROM DEVICE WHERE DevEUI = ? "
@@ -37,7 +50,8 @@ INSERT_DATA_QUERY    = "INSERT INTO DATA(DevEUI) VALUES(?) "
 UPDATE_DATA_QUERY    = "UPDATE DATA SET Packet = ? WHERE DevEUI = ? "
 DELETE_DATA_QUERY    = "DELETE FROM DATA WHERE DevEUI = ? "
 
-DEFAULT_APPEUI = "0000000000000000"
+DEFAULT_GATEWAYEUI   = "0000000000000000"
+DEFAULT_APPEUI       = "0000000000000000"
 
 class COLOR:
     WARNING = '\033[93m'
@@ -70,8 +84,57 @@ class Database():
     def create_tables(self) -> bool:
         if self.__connected__() is not True:
             return False
+        self.__cursor.execute(TABLE_CONFIG_QUERY)
         self.__cursor.execute(TABLE_DEVICE_QUERY)
         self.__cursor.execute(TABLE_DATA_QUERY)
+        self.__connection.commit()
+        self.__insert_config__()
+        return True
+
+    ######################## Table CONFIG CRUD methods #############################
+
+    def __get_config__(self, item:tuple=None) -> dict:
+        if item is None or len(item) != 5:
+            return None
+        config = {}
+        config["GatewayEUI"]   = item[1]
+        config["Forwarder_Host"]   = item[2]
+        config["Forwarder_Port"]   = item[3]
+        return config
+
+    def get_config(self) -> dict:
+        if self.__connected__() is not True:
+            return None
+        self.__cursor.execute(SELECT_CONFIG_QUERY)
+        item = self.__cursor.fetchone()
+        return self.__get_config__(item)
+
+    def __insert_config__(self, gateway_eui=DEFAULT_GATEWAYEUI, host='localhost', port=1700) -> bool:
+        if self.__connected__() is not True:
+            return False
+        self.__cursor.execute(INSERT_CONFIG_QUERY, (gateway_eui, host, port,))
+        self.__cursor.connection.commit()
+        return True
+    
+    def update_gateway_eui(self, gateway_eui) -> bool:
+        if self.__connected__() is not True:
+            return False
+        if gateway_eui == None:
+            print(COLOR.FAIL+"GatewayEUI can't be none"+COLOR.END)
+            return False
+        query = UPDATE_CONFIG_QUERY + "GatewayEUI = ? " \
+                                    + "WHERE ID = ?"
+        self.__cursor.execute(query, (gateway_eui, 1,))
+        self.__connection.commit()
+        return True
+    
+    def update_forwarder_config(self, host, port) -> bool:
+        if self.__connected__() is not True:
+            return False
+        query = UPDATE_CONFIG_QUERY + "Forwarder_Host = ? " \
+                                    + "Forwarder_Port = ? " \
+                                    + "WHERE ID = ?"
+        self.__cursor.execute(query, (host, port, 1,))
         self.__connection.commit()
         return True
 
