@@ -1,6 +1,6 @@
 
 # Constants for MQTT connection
-MQTT_BROKER    = "192.168.1.241"
+MQTT_BROKER    = "localhost"#"192.168.1.241"
 MQTT_PORT      = 1883
 MQTT_USERNAME  = "transceiver"
 MQTT_PASSWORD  = "transceiver#2022"

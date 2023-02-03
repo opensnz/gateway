@@ -115,18 +115,18 @@ class Gateway():
         packet = {
             "rxpk": [
                 {
-                    "time": '',
-                    "tmms": 0,
-                    "tmst": 0,
-                    "freq": 868.1,
-                    "chan": 0,
-                    "rfch": 0,
-                    "stat": 1,
-                    "modu": 'LORA',
-                    "datr": 'SF7BW125',
-                    "codr": '4/5',
-                    "rssi": -97,
-                    "lsnr": 12,
+                    "time":'',
+                    "tmms":0,
+                    "tmst":0,
+                    "chan":1,
+                    "rfch":0,
+                    "freq":868.3,
+                    "stat":1,
+                    "modu":"LORA",
+                    "datr":"SF7BW125",
+                    "codr":"4/5",
+                    "rssi":-35,
+                    "lsnr":5.0,
                     "size": 23,
                     "data": ''
                 }

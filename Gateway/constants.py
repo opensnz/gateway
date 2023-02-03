@@ -13,7 +13,7 @@ GPS_START_TIMESTAMP  = 315964800 # January 6, 1980, 00:00:00 (seconds)
 PACKET_ENCODER_URL = "http://localhost:8080/"
 
 # Constants for MQTT
-MQTT_BROKER    = "192.168.1.241"
+MQTT_BROKER    = "localhost"#"192.168.1.241"
 MQTT_PORT      = 1883
 MQTT_USERNAME  = "gateway"
 MQTT_PASSWORD  = "gateway#2022"

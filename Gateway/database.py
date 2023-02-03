@@ -16,12 +16,12 @@ CREATE TABLE IF NOT EXISTS DEVICE (
     DevEUI VARCHAR(16) NOT NULL UNIQUE,
     AppEUI VARCHAR(16) NOT NULL,
     AppKey VARCHAR(32) NOT NULL,
-    DevNonce INTEGER DEFAULT 302,
+    DevNonce INTEGER DEFAULT 1,
     DevAddr VARCHAR(8),
     NwkSKey VARCHAR(32),
     AppSKey VARCHAR(32),
     FCnt INTEGER DEFAULT 1,
-    FPort INTEGER DEFAULT 1,
+    FPort INTEGER DEFAULT 2,
     Created_at TIMESTAMP DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now', 'utc'))
 );
 """

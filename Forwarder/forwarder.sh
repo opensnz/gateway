@@ -6,30 +6,14 @@ sudo apt update
 sudo apt install -y pip
 
 # 3. Install all dependencies of the project
-# WorkingDirectory=/home/pi/Forwarder
+# WorkingDirectory=/home/pi/gateway/Forwarder
 sudo pip install paho-mqtt
 ########## Packet Forwarder Service Daemon Installation ############
 
 # 1. Create file forwarder.service and paste the following lines
-[Unit]
-Description=Packet Forwarder Service Daemon
-StartLimitIntervalSec=86400
-StartLimitBurst=8640
-
-[Service]
-User=pi
-Group=sudo
-Type=simple
-WorkingDirectory=/home/pi/Forwarder
-ExecStart=/usr/bin/python3 -u /home/pi/Forwarder/forwarder.py
-Restart=on-failure
-RestartSec=1s
-
-[Install]
-WantedBy=multi-user.target
 
 # 2. Copy forwarder.service to /lib/systemd/system/ folder
-sudo cp /home/pi/Forwarder/forwarder.service /lib/systemd/system/forwarder.service
+sudo cp /home/pi/gateway/Forwarder/forwarder.service /lib/systemd/system/forwarder.service
 
 # 3. Give rights on forwarder.service file to pi user
 sudo chmod 644 /lib/systemd/system/forwarder.service

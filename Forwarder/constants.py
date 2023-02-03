@@ -16,7 +16,7 @@ TX_ACK_NO_ERROR = "NONE"
 DEFAULT_GATEWAY_EUI = "5b4931f97b1c0a8e"
 
 # Constants for MQTT connection
-MQTT_BROKER    = "192.168.1.241"
+MQTT_BROKER    = "localhost"#"192.168.1.241"
 MQTT_PORT      = 1883
 MQTT_USERNAME  = "forwarder"
 MQTT_PASSWORD  = "forwarder#2022"

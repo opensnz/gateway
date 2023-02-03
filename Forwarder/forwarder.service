@@ -7,8 +7,8 @@ StartLimitBurst=8640
 User=pi
 Group=sudo
 Type=simple
-WorkingDirectory=/home/pi/Forwarder
-ExecStart=/usr/bin/python3 -u /home/pi/Forwarder/forwarder.py
+WorkingDirectory=/home/pi/gateway/Forwarder
+ExecStart=/usr/bin/python3 -u /home/pi/gateway/Forwarder/forwarder.py
 Restart=on-failure
 RestartSec=10s
 

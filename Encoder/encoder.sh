@@ -17,31 +17,15 @@ sudo apt remove npm
 sudo apt autoremove
 
 # 3. Install all dependencies of the project
-# Go to Project Directory : /home/pi/Encoder
+# Go to Project Directory : /home/pi/gateway/Encoder
 sudo npm install
 
 ########## Packet Encoder Service Daemon Installation ############
 
 # 1. Create file encoder.service and paste the following lines
-[Unit]
-Description=Packet Encoder Service Daemon
-StartLimitIntervalSec=86400
-StartLimitBurst=8640
-
-[Service]
-User=pi
-Group=sudo
-Type=simple
-WorkingDirectory=/home/pi/Encoder
-ExecStart=npm start
-Restart=on-failure
-RestartSec=1s
-
-[Install]
-WantedBy=multi-user.target
 
 # 2. Copy encoder.service to /lib/systemd/system/ folder
-sudo cp /home/pi/Encoder/encoder.service /lib/systemd/system/encoder.service
+sudo cp /home/pi/gateway/Encoder/encoder.service /lib/systemd/system/encoder.service
 
 # 3. Give rights on encoder.service file to pi user
 sudo chmod 644 /lib/systemd/system/encoder.service
