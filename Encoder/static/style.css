@@ -1,0 +1,34 @@
+body{
+	margin: 0 auto; 		
+	width: 100%;		 	
+	text-align: center;		
+}
+
+table {
+	margin: 0 auto; 		
+	width: 90%;		 		
+	border-spacing: 5px; 	
+}
+
+.table th, .table td {
+	text-align: center; 	
+	padding: 10px; 			
+	border: 1px solid gray;
+} 
+
+.info {
+	margin: 5px;
+	padding: 10px;
+	border: 1px solid lightgray;
+}
+
+p {
+	text-align: left; 
+	padding: 10px;
+	font-size: medium;
+	font-style: italic;
+}
+
+b{
+	font-style: normal;
+}
