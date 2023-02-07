@@ -16,7 +16,7 @@ sudo echo "listener 1883" >> /etc/mosquitto/mosquitto.conf
 
 # 3. Create password file
 #sudo touch /etc/mosquitto/passwd
-sudo cp /home/pi/gateway/Mosquitto/passwd /etc/mosquitto/passwd
+sudo cp ./passwd /etc/mosquitto/passwd
 
 # 4. Generate password for clients (username, password must be modified)
 #sudo mosquitto_passwd -b /etc/mosquitto/passwd username password
