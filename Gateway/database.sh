@@ -7,13 +7,3 @@ sudo apt install sqlite3 -y
 # 2. Check SQLite version
 echo "sqlite3 version:"
 sudo sqlite3 --version
-
-# 3. Database directory
-DIR=./SQLite
-if [ -d "$DIR" ];
-then
-    echo "$DIR directory exists."
-else
-	sudo mkdir $DIR
-    echo "$DIR directory created."
-fi

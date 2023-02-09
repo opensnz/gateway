@@ -4,7 +4,7 @@ DEV_EUI_SIZE = 8
 DEVICE_IDENTIFIER_SIZE = DEV_EUI_SIZE
 
 # Constants for SQLITE
-SQLITE_DATABASE_PATH = "./SQLite/gateway.db"
+SQLITE_DATABASE_PATH = "gateway.db"
 
 # Constants for GPS
 GPS_START_TIMESTAMP  = 315964800 # January 6, 1980, 00:00:00 (seconds)
