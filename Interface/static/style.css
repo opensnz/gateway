@@ -4,10 +4,83 @@ html,body {
     overflow: hidden;
  }
 
-header{
-    margin: 25px;
-}
-
 main{
     height:  90%;
 }
+
+header {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto; 
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    background-color: #333;
+    color: white;
+    padding: 20px; 
+  }
+  
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+  }
+  
+  nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+  }
+  
+  nav li {
+    margin: 0 10px;
+    position: relative;
+  }
+  
+  nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+  }
+  
+  nav li:hover > ul {
+    display: inherit;
+  }
+  
+  nav ul ul {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #333;
+    display: none;
+  }
+  
+  nav ul ul li {
+    display: block;
+    white-space: nowrap;
+  }
+  
+  nav ul ul a {
+    display: block;
+    padding: 10px;
+  }
+  
+  nav a:hover {
+    background-color: #555;
+  }
+  
+  nav ul li:hover > a {
+    background-color: #555;
+  }
+  
+  nav ul li:hover ul li:hover > a {
+    background-color: #666;
+  }
+  
+  nav a:focus {
+    background-color: #555;
+    color: white;
+  }
+  
