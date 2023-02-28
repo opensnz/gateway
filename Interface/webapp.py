@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, Response, jsonify, abort
 from modules.constants import *
 import paho.mqtt.client as mqtt
 import json
+from modules.telemetry import Telemetry
 
 #########################################################################
 
@@ -16,6 +17,12 @@ app = Flask(__name__)
 @app.route("/")
 def index():
    return render_template('index.html')
+
+
+@app.route("/system")
+def system():
+   system = Telemetry().to_json()
+   return jsonify(json.loads(system))
 
 
 
