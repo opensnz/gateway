@@ -1,5 +1,5 @@
 import sqlite3
-from constants import SQLITE_DATABASE_PATH
+from modules.constants import SQLITE_DATABASE_PATH
 
 TABLE_DEVICE_QUERY = """
 CREATE TABLE IF NOT EXISTS DEVICE (

@@ -3,6 +3,8 @@
 sudo apt update
 # 1. Install 
 
+pip install requests
+
 # 2. Configure 
 
 

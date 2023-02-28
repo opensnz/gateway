@@ -3,6 +3,9 @@ from modules.constants import *
 import paho.mqtt.client as mqtt
 import json
 from modules.telemetry import Telemetry
+from modules.database import Database
+
+
 
 #########################################################################
 
@@ -19,10 +22,21 @@ def index():
    return render_template('index.html')
 
 
-@app.route("/system")
+@app.route("/system",  methods=['GET', 'POST'])
 def system():
    system = Telemetry().to_json()
    return jsonify(json.loads(system))
+
+
+@app.route("/devices",  methods=['GET', 'POST'])
+def devices():
+   db = Database()
+   db.open()
+   devices = db.get_devices()
+   print(devices)
+   db.close()
+   return jsonify(json.loads(devices))
+
 
 
 
