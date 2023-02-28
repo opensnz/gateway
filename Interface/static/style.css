@@ -1,8 +1,13 @@
 html,body {
     height: 100%;
     margin: 0;
+    overflow: hidden;
  }
 
 header{
     margin: 25px;
+}
+
+main{
+    height:  90%;
 }

@@ -5,8 +5,8 @@ import json
 
 #########################################################################
 
-mqtt_client = mqtt.Client(transport="tcp",client_id="transceiver")
-mqtt_client.username_pw_set("transceiver","transceiver#2022")
+mqtt_client = mqtt.Client(transport="tcp",client_id="interface")
+mqtt_client.username_pw_set("interface","interface#2022")
 mqtt_client.connect(MQTT_BROKER, MQTT_PORT)
 
 #########################################################################
@@ -23,4 +23,4 @@ def index():
 
 
 if __name__ == "__main__":
-   app.run(host='0.0.0.0', port=80, debug=False)
+   app.run(host='0.0.0.0', port=88, debug=False)
