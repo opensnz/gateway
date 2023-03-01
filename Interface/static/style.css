@@ -102,18 +102,28 @@ header img {
     font-family: montserrat;
   }
   
+  header {
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    width: 100%;
+    margin: 0 auto; 
+    background-color: #0082e6;
+    color: white;
+  }
+  
   nav{
     display: flex;
     justify-content: center;
-    background: #0082e6;
-    height: 80px;
-    width: 100%;
     justify-content: space-between;
+    background: #0082e6;
+    height: 60px;
+    width: 100%;
   }
+
   label.logo{
     color :white;
     font-size : 35px ;
-    line-height: 80px;
     padding :0 100px ;
     font-weight: bold;
   }
@@ -129,7 +139,7 @@ header img {
   }
 
   nav li {
-    margin: 0 10px;
+    margin: 0 5px;
     position: relative;
   }
 
@@ -148,15 +158,9 @@ header img {
     color: white;
     font-size: 17px;
     padding: 7px 13px;
-    text-transform: uppercase;
     padding: 7px 13px;
     border-radius: 3px;
 
-  }
-
-  a.active , a:hover {
-    background: #1b9bff;
-    transition:.5s;;
   }
 
   nav li:hover > ul {
@@ -178,9 +182,9 @@ header img {
   
   nav ul ul a {
     display: block;
-    padding: 10px;
+    padding: 5px;
   }
   
   nav a:hover {
-    background-color: #0082e6;
+    background-color: #0091ff;
   }
