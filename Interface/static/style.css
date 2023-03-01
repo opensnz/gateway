@@ -103,6 +103,8 @@ header img {
   }
   
   nav{
+    display: flex;
+    justify-content: center;
     background: #0082e6;
     height: 80px;
     width: 100%;
