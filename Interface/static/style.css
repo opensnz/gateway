@@ -90,28 +90,7 @@ header img {
     color: white;
   }
   */
-  .container {
-    display: flex;
-  }
-  .row {
-    width: 700px;
-    margin-top: 100px;
-  }
-  .img {
-    flex: 1;
-  }
-  .logo{
-    display: inline-block;
-    vertical-align: top;
-    width: 60px;
-    margin-right: 20px;
-    margin-top: 15px;
-  }
-  .navbar-header{
-    margin-bottom: 5px;
-    
-      
-    }
+
 
   /**{
     padding: 0;
