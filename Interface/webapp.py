@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, Response, jsonify, abort
+from flask import Flask, redirect, render_template, request, Response, jsonify, abort, url_for
 from modules.constants import *
 import paho.mqtt.client as mqtt
 import json
@@ -20,6 +20,11 @@ app = Flask(__name__)
 @app.route("/")
 def index():
     return render_template('index.html')
+
+@app.route('/devices' , methods=['GET', 'POST'])
+def device():
+    return render_template('devices.html')
+
 
 
 @app.route("/system",  methods=['GET', 'POST'])

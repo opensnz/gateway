@@ -34,7 +34,7 @@
                         </ul>
                       </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="#">Devices</a>
+                      <a class="nav-link" href="{{ url_for('devices') }}">Devices</a>
                     </li>
                     <li class="nav-item">
                       <a class="nav-link" href="#">Network</a>
@@ -46,7 +46,7 @@
 
         <!-- Main Content -->
         <main>
-            <p>Welcome to my web page!</p>
+           
             <button id="add" onclick="addDevice()">Add device</button>
             <button id="all" onclick="getDevices()">Get devices</button>
             <button id="system" onclick="getSystem()">Get System Info</button>

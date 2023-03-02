@@ -4,9 +4,33 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
 </head>
 <body>
-    
+    <p>Devices</p>
+    <div class="container">
+        <div class="col-md-11 center-block">
+            <tr>
+                <td>
+                    <?php echo $id ; ?>
+                </td>
+                <td>
+                    <?php echo $row ['id_client'];     ?>
+                </td>
+                <td>
+                    <?php echo $row ['full_name'];     ?>
+                </td>
+
+                <td>
+                    <?php echo $row ['date_open'];     ?>
+                </td>
+                <td>
+                    <?php echo $row ['solde'];     ?>
+                </td>  
 </body>
 </html>
