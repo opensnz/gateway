@@ -52,45 +52,19 @@
                     <th>FCnt</th>
                     <th>FPort</th>          
                 </tr>
+
                 <tr>
-                    <td>lojygjhbghbvghbh2jb1hj12b21hb</td>
-                    <td>lojygjhbghbvghbh2jb1hj12b21hb</td>
-                    <td>lojygjhbghbvghbh2jb1hj12b21hb</td>
-                    <td>1</td>
-                    <td>lojygjhbghbvghbh2jb1hj12b21hb</td>  
-                    <td>lojygjhbghbvghbh2jb1hj12b21hb</td>
-                    <td>1</td>
-                    <td>1</td>
-                </tr><tr>
-                    <td>lojygjhbghbvghbh2jb1hj12b21hb</td>
-                    <td>lojygjhbghbvghbh2jb1hj12b21hb</td>
-                    <td>lojygjhbghbvghbh2jb1hj12b21hb</td>
-                    <td>1</td>
-                    <td>lojygjhbghbvghbh2jb1hj12b21hb</td>  
-                    <td>lojygjhbghbvghbh2jb1hj12b21hb</td>
-                    <td>1</td>
-                    <td>1</td>
-                </tr>
-                <tr>
-                    <td>lojygjhbghbvghbh2jb1hj12b21hb</td>
-                    <td>lojygjhbghbvghbh2jb1hj12b21hb</td>
-                    <td>lojygjhbghbvghbh2jb1hj12b21hb</td>
-                    <td>1</td>
-                    <td>lojygjhbghbvghbh2jb1hj12b21hb</td>  
-                    <td>lojygjhbghbvghbh2jb1hj12b21hb</td>
-                    <td>1</td>
-                    <td>1</td>
-                </tr>
-                <tr>
-                    <td>lojygjhbghbvghbh2jb1hj12b21hb</td>
-                    <td>lojygjhbghbvghbh2jb1hj12b21hb</td>
-                    <td>lojygjhbghbvghbh2jb1hj12b21hb</td>
-                    <td>1</td>
-                    <td>lojygjhbghbvghbh2jb1hj12b21hb</td>  
-                    <td>lojygjhbghbvghbh2jb1hj12b21hb</td>
-                    <td>1</td>
-                    <td>1</td>
-                </tr>
+                     {% for device in device %}
+                    <td>{{device.Created_at}}</td>
+                    <td>{{device.DevAddr}}</td>
+                    <td>{{device.DevEUI}}</td>
+                    <td>{{device.DevNonce}}</td>
+                    <td>{{device.AppEUI}}</td>
+                    <td>{{device.AppKey}}</td>  
+                    <td>{{device.FCnt}}</td>
+                    <td>{{device.FPort}}</td>
+                    {{%endfor}}
+               
                 
             </table>
         </div>
