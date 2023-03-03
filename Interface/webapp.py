@@ -21,9 +21,9 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-@app.route('/devices' , methods=['GET', 'POST'])
-def device():
-    return render_template('devices.html')
+@app.route('/peripherique' , methods=['GET', 'POST'])
+def peripherique():
+    return render_template('peripherique.html')
 
 
 
