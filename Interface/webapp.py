@@ -23,7 +23,12 @@ def index():
 
 @app.route('/peripherique' , methods=['GET', 'POST'])
 def peripherique():
-    return render_template('peripherique.html')
+    db = Database()
+    db.open()
+    devices = db.get_devices()
+    print(devices)
+    db.close()
+    return render_template('peripherique.html',  devices=devices)
 
 
 
@@ -40,7 +45,8 @@ def devices():
     devices = db.get_devices()
     print(devices)
     db.close()
-    return jsonify(devices)
+    #return jsonify(devices)
+    return render_template("peripherique.html", devices=devices)
 
 
 
