@@ -50,7 +50,6 @@
     <div class="container-fluid mt-2">
       <div class="table table-bordered table-responsive">
             <table class="table table-hover">
-              <thead class="table-active">
                 <tr>
                     <th>Created_at</th>
                     <th>DevAddr</th>
@@ -61,55 +60,21 @@
                     <th>FCnt</th>
                     <th>FPort</th>          
                 </tr>
-              </thead>
-              <tbody>
-                    <tr>
-                    <td>lojygjhbghbvghj12b21hb</td>
-                    <td>lojyb1hj12b21hb</td>
-                    <td>lojygjhbh2jb1hj12b21hb</td>
-                    <td>1</td>
-                    <td>lojygjhbghbvjb1hj12b21hb</td>  
-                    <td>lojygjhbghbvgb1hj12b21hb</td>
-                    <td>1</td>
-                    <td>1</td>
-                </tr><tr>
-                    <td>lojygjhbghbb1hj12b21hb</td>
-                    <td>lojygjhbgb1hj12b21hb</td>
-                    <td>lojygjh2jb1hj12b21hb</td>
-                    <td>1</td>
-                    <td>lojygjhbghbb1hj12b21hb</td>  
-                    <td>lojygjb1hj12b21hb</td>
-                    <td>1</td>
-                    <td>1</td>
-                </tr>
+
                 <tr>
-                    <td>lojygjhbgh1hj12b21hb</td>
-                    <td>lojygjhb2jb1hj12b21hb</td>
-                    <td>lojygjhbghbvghj12b21hb</td>
-                    <td>1</td>
-                    <td>lojygjhbhj12b21hb</td>  
-                    <td>lojygjhbh2jb1hj12b21hb</td>
-                    <td>1</td>
-                    <td>1</td>
-                </tr>
-                <tr>
-                    <td>lojygjhbjb1hj12b21hb</td>
-                    <td>lojygjhbg2b21hb</td>
-                    <td>lojygjhbg21hb</td>
-                    <td>1</td>
-                    <td>lojygjhbghbvghbhb21hb</td>  
-                    <td>lojygjhbghhj12b21hb</td>
-                    <td>1</td>
-                    <td>1</td>
-                </tr>
-              </tbody>
+                     {% for device in device %}
+                    <td>{{device.Created_at}}</td>
+                    <td>{{device.DevAddr}}</td>
+                    <td>{{device.DevEUI}}</td>
+                    <td>{{device.DevNonce}}</td>
+                    <td>{{device.AppEUI}}</td>
+                    <td>{{device.AppKey}}</td>  
+                    <td>{{device.FCnt}}</td>
+                    <td>{{device.FPort}}</td>
+                    {{%endfor}}
+               
+                
             </table>
         </div>
-    </div>
-    </main>
-    <footer>
-
-
-    </footer>
 </body>
 </html>
