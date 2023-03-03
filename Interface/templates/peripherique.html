@@ -38,13 +38,13 @@
             </div>
           </nav>
     </header>
-    <p>Devices</p>
-    <div>
-      <button id="add" onclick="addDevice()">Add device</button>
-      <button id="all" onclick="getDevices()">Get devices</button>
-      <button id="system" onclick="getSystem()">Get System Info</button>
+    <main>
+    <div class="d-flex justify-content-end mt-5">
+      <button id="add" onclick="addDevice()" class="btn btn-primary me-3">Add device</button>
+      <button id="all" onclick="getDevices()" class="btn btn-primary me-3">Get devices</button>
+      <button id="system" onclick="getSystem()" class="btn btn-primary me-3">Get System Info</button>
     </div>
-    <div class="container-fluid">
+    <div class="container-fluid mt-2">
       <div class="table table-bordered table-responsive">
             <table class="table table-hover">
               <thead class="table-active">
@@ -103,5 +103,10 @@
             </table>
         </div>
     </div>
+    </main>
+    <footer>
+
+
+    </footer>
 </body>
 </html>
