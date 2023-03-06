@@ -4,6 +4,7 @@ import paho.mqtt.client as mqtt
 import json
 from modules.telemetry import Telemetry
 from modules.database import Database
+from modules.telemetry import NETWORK
 
 
 
@@ -31,13 +32,21 @@ def peripherique():
     return render_template('peripherique.html',  devices=devices)
 
 
-
-
 @app.route("/system",  methods=['GET', 'POST'])
 def system():
-    system = Telemetry().to_json()
-    #return jsonify(json.loads(system))
-    return render_template('network.html',  )
+    db = Database()
+    db.open()
+    devices = db.get_devices()
+    print(devices)
+    db.close()
+    network = NETWORK()
+    return render_template('network.html', interfaces=network.interfaces)
+
+#@app.route("/system",  methods=['GET', 'POST'])
+#def system():
+#    system = Telemetry().to_json()
+#    #return jsonify(json.loads(system))
+#    return render_template('network.html',  )
 
 
 @app.route("/device/all",  methods=['GET', 'POST'])

@@ -41,5 +41,17 @@
             </div>
           </nav>
     </header>
+    <main>
+        <h1>Interfaces</h1>
+            {% for interface in interfaces %}
+            <p>Name: {{ interface.name }}</p>
+            <p>MAC: {{ interface.mac }}</p>
+            <p>IPv4: {{ interface.ipv4 }}</p>
+            <p>Mask: {{ interface.mask }}</p>
+            <p>IPv6: {{ interface.ipv6 }}</p>
+            {% endfor %}
+        
+            </table>
+    </main>
 </body>
 </html>
