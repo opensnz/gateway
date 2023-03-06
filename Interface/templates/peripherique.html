@@ -46,7 +46,7 @@
     <div class="d-flex justify-content-end mt-5">
       <div class="flex-grow-1 d-flex align-items-center" style="padding: 0px 12px;"><h3> All Devices </h3></div>
       <div>
-        <button id="add" onclick="addDevice()" class="btn btn-primary me-3">Add device</button>
+        <a href="{{ url_for('addDevice') }}"><button id="add" onclick="addDevice()" class="btn btn-primary me-3"  >Add device</button></a>
         <button id="all" onclick="getDevices()" class="btn btn-primary me-3">Get devices</button>
         <button id="system" onclick="getSystem()" class="btn btn-primary me-3">Get System Info</button>
       </div>
@@ -56,6 +56,7 @@
             <table class="table table-hover">
               <thead>
                 <tr>
+                  <th></th>
                   <th>DevEUI</th>
                   <th>AppEUI</th>
                   <th>AppKey</th>
@@ -71,6 +72,7 @@
               <tbody>
                 {% for device in devices %}
                 <tr>
+                  <td><div class="form-check"><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
                   <td>{{ device["DevEUI"] }}</td>
                   <td>{{ device["AppEUI"] }}</td>
                   <td>{{ device["AppKey"] }}</td>
