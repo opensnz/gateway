@@ -27,7 +27,7 @@ def index():
     disk = DISK()
     ram=RAM()
     platform=PLATFORM()
-    return render_template('index.html', interfaces=network.interfaces, cpu=cpu, disk=disk, ram=ram, platform=platform)
+    return render_template('index.html', interfaces=network.interfaces, cpu=cpu, disk=disk, ram=ram, platform=platform )
 
 #@app.route('/peripherique' , methods=['GET', 'POST'])
 #def peripherique():
