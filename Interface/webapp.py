@@ -36,8 +36,6 @@ def peripherique():
 def system():
     db = Database()
     db.open()
-    devices = db.get_devices()
-    print(devices)
     db.close()
     network = NETWORK()
     return render_template('network.html', interfaces=network.interfaces)
