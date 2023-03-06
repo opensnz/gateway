@@ -32,10 +32,12 @@ def peripherique():
 
 
 
+
 @app.route("/system",  methods=['GET', 'POST'])
 def system():
     system = Telemetry().to_json()
-    return jsonify(json.loads(system))
+    #return jsonify(json.loads(system))
+    return render_template('network.html',  )
 
 
 @app.route("/device/all",  methods=['GET', 'POST'])
