@@ -25,15 +25,11 @@
                 <li class="nav-item" style="padding: 3px 0 0 0; ">
                     <a class="navbar-brand" href="{{ url_for('index') }}">Gateway</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Status</a>
-                    <ul class="dropdown-menu bg-light">
-                      <li><a class="dropdown-item" href="#">Overview</a></li>
-                      <li><a class="dropdown-item" href="#">Graphs</a></li>
-                    </ul>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('index') }}">Status</a>
                   </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('peripherique') }}">Devices</a>
+                  <a class="nav-link" href="{{ url_for('devices') }}">Devices</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="{{ url_for('system') }}">Network</a>
@@ -46,9 +42,8 @@
     <div class="d-flex justify-content-end mt-5">
       <div class="flex-grow-1 d-flex align-items-center" style="padding: 0px 12px;"><h3> All Devices </h3></div>
       <div>
-        <button id="add" onclick="addDevice()" class="btn btn-primary me-3">Add device</button>
-        <button id="all" onclick="getDevices()" class="btn btn-primary me-3">Get devices</button>
-        <button id="system" onclick="getSystem()" class="btn btn-primary me-3">Get System Info</button>
+        <button id="add" onclick="addDevice()" class="btn btn-primary me-3"> Add device </button>
+        <button id="all" onclick="getDevices()" class="btn btn-danger me-3"> Delete device </button>
       </div>
     </div>
     <div class="container-fluid mt-2">

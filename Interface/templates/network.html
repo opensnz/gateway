@@ -15,7 +15,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm bg-primary navbar-dark ">
+        <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
             <div class="container-fluid justify-content-center">
                 <a class="navbar-brand" style="padding: 0px 0px; " href="{{ url_for('index') }}">
                     <img src="../static/logo2.png" alt="Avatar Logo" style="width:110px; background-color: white;" class="rounded-pill"> 
@@ -24,15 +24,11 @@
                 <li class="nav-item" style="padding: 3px 0 0 0; ">
                     <a class="navbar-brand" href="{{ url_for('index') }}">Gateway</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Status</a>
-                    <ul class="dropdown-menu bg-light">
-                      <li><a class="dropdown-item" href="#">Overview</a></li>
-                      <li><a class="dropdown-item" href="#">Graphs</a></li>
-                    </ul>
+                <li class="nav-item ">
+                    <a class="nav-link" href="{{ url_for('index') }}">Status</a>
                   </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('peripherique') }}">Devices</a>
+                  <a class="nav-link" href="{{ url_for('devices') }}">Devices</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="#">Network</a>
@@ -41,17 +37,6 @@
             </div>
           </nav>
     </header>
-    <main>
-        <h1>Interfaces</h1>
-            {% for interface in interfaces %}
-            <p>Name: {{ interface.name }}</p>
-            <p>MAC: {{ interface.mac }}</p>
-            <p>IPv4: {{ interface.ipv4 }}</p>
-            <p>Mask: {{ interface.mask }}</p>
-            <p>IPv6: {{ interface.ipv6 }}</p>
-            {% endfor %}
-        
-            </table>
-    </main>
+    
 </body>
 </html>
