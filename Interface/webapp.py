@@ -33,7 +33,7 @@ def status():
     disk = DISK()
     ram=RAM()
     platform=PLATFORM()
-    return render_template('status.html', interfaces=network.interfaces, cpu=cpu, disk=disk, ram=ram, platform=platform )
+    return render_template( 'status.html', interfaces=network.interfaces, cpu=cpu, disk=disk, ram=ram, platform=platform )
 
 @app.route("/addDevice")
 def addDevice():

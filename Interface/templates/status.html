@@ -43,252 +43,27 @@
     </nav>
   </header>
 
-  <!-- Main Content -->
-  <main>
-    <div class="d-flex justify-content-end mt-5">
-      <div class="flex-grow-1 d-flex align-items-center" style="padding: 0px 12px;">
-        <h3> Status </h3>
-      </div>
-    </div>
+  <head>
 
+  </head>
 
-    <div class="container-fluid mt-2">
-      <div class="row">
-        <div class="col-lg-4">
-          <div class="card mb-3">
-            <div class="card-header">
-              Network
-            </div>
-            <div class="card-body">
-              <div class="container-sm">
-                <div class="d-flex flex-column justify-content-center align-items-center">
-                  {% for interface in interfaces %}
-                  <div class="mt-5">
-                    <div class="input-group mb-3">
-                      <span class="input-group-text">Name : </span>
-                      <input type="text" class="form-control" value="{{ interface.name }}" readonly>
-                    </div>
-                    <div class="input-group mb-3">
-                      <span class="input-group-text">MAC : </span>
-                      <input type="text" class="form-control" value="{{ interface.mac }}" readonly>
-                    </div>
-
-                    <div class="input-group mb-3">
-                      <span class="input-group-text">IPv4 : </span>
-                      <input type="text" class="form-control" value="{{ interface.ipv4 }}" readonly>
-                    </div>
-
-                    <div class="input-group mb-3">
-                      <span class="input-group-text">Mask : </span>
-                      <input type="text" class="form-control" value="{{ interface.mask }}" readonly>
-                    </div>
-
-                    <div class="input-group mb-3">
-                      <span class="input-group-text">IPv6 : </span>
-                      <input type="text" class="form-control" value="{{ interface.ipv6 }}" readonly>
-                    </div>
-                  </div>
-                  {% endfor %}
-                </div>
-              </div>
-            </div>
+  <body>
+    <div class="container mt-3">
+      <div class="card">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="../static/OPENSNZ-TECHNOLOGY-logo-2048x1048.jpg" alt="company-s-logo" class="img-fluid">
           </div>
-        </div>
-        <div class="col-lg-4">
-          <div class="card mb-3">
-            <div class="card-header">
-              CPU
-            </div>
+          <div class="col-md-8">
             <div class="card-body">
-              <div class="container-sm">
-                <div class="d-flex flex-column justify-content-center align-items-center">
-                  <div class="mt-5">
-                    <div class="input-group mb-3">
-                      <span class="input-group-text">Current Frequency : </span>
-                      <input type="text" class="form-control" value="{{ cpu.frequency_current }}" readonly>
-                    </div>
-                    <div class="input-group mb-3">
-                      <span class="input-group-text">Minimum Frequency : </span>
-                      <input type="text" class="form-control" value="{{ cpu.frequency_min }}" readonly>
-                    </div>
-
-                    <div class="input-group mb-3">
-                      <span class="input-group-text">Maximum Frequency : </span>
-                      <input type="text" class="form-control" value="{{ cpu.frequency_max }}" readonly>
-                    </div>
-
-                    <div class="input-group mb-3">
-                      <span class="input-group-text">CPU Cores : </span>
-                      <input type="text" class="form-control" value="{{ cpu.cores }}" readonly>
-                    </div>
-
-                    <div class="input-group mb-3">
-                      <span class="input-group-text">CPU Utilization : </span>
-                      <input type="text" class="form-control" value="{{ cpu.percent }}" readonly>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-4"></div>
-            <div class="card mb-3">
-              <div class="card-header">
-                Platform
-              </div>
-              <div class="card-body">
-                <div class="container-sm">
-                  <div class="d-flex flex-column justify-content-center align-items-center">
-                    <div class="mt-5">
-                      <div class="input-group mb-3">
-                        <span class="input-group-text">System : </span>
-                        <input type="text" class="form-control" value="{{ platform.system }}" readonly>
-                      </div>
-                      <div class="input-group mb-3">
-                        <span class="input-group-text">System Release : </span>
-                        <input type="text" class="form-control" value="{{ platform.system_release }}" readonly>
-                      </div>
-          
-                      <div class="input-group mb-3">
-                        <span class="input-group-text">System Version : </span>
-                        <input type="text" class="form-control" value="{{ platform.system_version }}" readonly>
-                      </div>
-          
-                      <div class="input-group mb-3">
-                        <span class="input-group-text">Architecture : </span>
-                        <input type="text" class="form-control" value="{{ platform.architecture }}" readonly>
-                      </div>
-          
-                      <div class="input-group mb-3">
-                        <span class="input-group-text">Processor : </span>
-                        <input type="text" class="form-control" value="{{ platform.processor }}" readonly>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-        
-
-
-        </div>
-
-        
-
-        <div class="col-lg-4">
-          <div class="card mb-3">
-            <div class="card-header">
-              Disk
-            </div>
-            <div class="card-body">
-              <div class="container-sm">
-                <div class="d-flex flex-column justify-content-center align-items-center">
-                  <div class="mt-5">
-                    <div class="input-group mb-3">
-                      <span class="input-group-text">Total disk space : </span>
-                      <input type="text" class="form-control" value="{{ disk.total }}" readonly>
-                    </div>
-                    <div class="input-group mb-3">
-                      <span class="input-group-text">Free disk space : </span>
-                      <input type="text" class="form-control" value="{{ disk.free }}" readonly>
-                    </div>
-
-                    <div class="input-group mb-3">
-                      <span class="input-group-text">Used disk space : </span>
-                      <input type="text" class="form-control" value="{{ disk.used }}" readonly>
-                    </div>
-
-                    <div class="input-group mb-3">
-                      <span class="input-group-text">Percentage of disk usage : </span>
-                      <input type="text" class="form-control" value="{{ disk.percent }}" readonly>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-4"></div>
-          <div class="card mb-3">
-            <div class="card-header">
-              RAM
-            </div>
-            <div class="card-body">
-              <div class="container-sm">
-                <div class="d-flex flex-column justify-content-center align-items-center">
-                  <div class="mt-5">
-                    <div class="input-group mb-3">
-                      <span class="input-group-text">Total RAM : </span>
-                      <input type="text" class="form-control" value="{{ ram.total }}" readonly>
-                    </div>
-                    <div class="input-group mb-3">
-                      <span class="input-group-text">Available RAM : </span>
-                      <input type="text" class="form-control" value="{{ ram.available }}" readonly>
-                    </div>
-
-                    <div class="input-group mb-3">
-                      <span class="input-group-text">RAM Used : </span>
-                      <input type="text" class="form-control" value="{{ ram.used }}" readonly>
-                    </div>
-
-                    <div class="input-group mb-3">
-                      <span class="input-group-text">RAM Percent Used : </span>
-                      <input type="text" class="form-control" value="{{ ram.percent }}" readonly>
-                    </div>
-
-                    {% if active_ram %}
-                    <div class="input-group mb-3">
-                      <span class="input-group-text">Active RAM : </span>
-                      <input type="text" class="form-control" value="{{ ram.active }}" readonly>
-                    </div>
-                    {% endif %}
-
-                    {% if shared_ram %}
-                    <div class="input-group mb-3">
-                      <span class="input-group-text">Shared RAM : </span>
-                      <input type="text" class="form-control" value="{{ ram.shared }}" readonly>
-                    </div>
-                    {% endif %}
-
-                    {% if cached_ram %}
-                    <div class="input-group mb-3">
-                      <span class="input-group-text">Cached RAM : </span>
-                      <input type="text" class="form-control" value="{{ ram.cached }}" readonly>
-                    </div>
-                    {% endif %}
-
-                    {% if slab_ram %}
-                    <div class="input-group mb-3">
-                      <span class="input-group-text">Slab RAM : </span>
-                      <input type="text" class="form-control" value="{{ ram.slab }}" readonly>
-                    </div>
-                    {% endif %}
-
-                  </div>
-                </div>
-              </div>
+              <h5 class="card-title">Welcome to OpenSNZ Technology Company's LoRaWAN Gateway Configuration page!</h5>
+              <p class="card-text">In this guide, we will walk you through the steps to easily add LoRa devices and configure your LoRaWAN server using our company's gateways.</p>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-
-
-
-
-
-
-  </main>
-
-
-  <!-- Footer -->
-  <footer>
-    <p>
-      <a href="https://www.opensnz-technology.com">Visit Opensnz Technology Website</a>
-    </p>
-  </footer>
-</body>
+  </body>
+  
 
 </html>
