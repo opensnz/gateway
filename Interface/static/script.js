@@ -60,7 +60,7 @@ function getSystem()
 }
 
 function generateRandomString(inputId, length) {
-    var chars = '0123456789abcdefghijklmnopqrstuv';
+    var chars = '0123456789abcdef';
     var result = '';    
     var input = document.getElementById(inputId);  
     for (var i = 0; i < length; i++) {
