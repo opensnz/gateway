@@ -20,15 +20,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    db = Database()
-    db.open()
-    db.close()
-    network = NETWORK()
-    cpu = CPU()
-    disk = DISK()
-    ram=RAM()
-    platform=PLATFORM()
-    return render_template('index.html', interfaces=network.interfaces, cpu=cpu, disk=disk, ram=ram, platform=platform )
+    return render_template('index.html')
 
 @app.route("/addDevice")
 def addDevice():
@@ -52,8 +44,15 @@ def peripherique():
 
 @app.route("/system",  methods=['GET', 'POST'])
 def system():
-    system = Telemetry()
-    return render_template('network.html', system=system)
+    db = Database()
+    db.open()
+    db.close()
+    network = NETWORK()
+    cpu = CPU()
+    disk = DISK()
+    ram=RAM()
+    platform=PLATFORM()
+    return render_template('index.html', interfaces=network.interfaces, cpu=cpu, disk=disk, ram=ram, platform=platform )
 
 #@app.route('/peripherique' , methods=['GET', 'POST'])
 #def peripherique():
@@ -72,6 +71,12 @@ def system():
 #    db.close()
 #    network = NETWORK()
 #    return render_template('network.html')
+
+@app.route("/system",  methods=['GET', 'POST'])
+def system():
+    system = Telemetry().to_json()
+    #return jsonify(json.loads(system))
+    return render_template('network.html' )
 
 
 @app.route("/device/all",  methods=['GET', 'POST'])

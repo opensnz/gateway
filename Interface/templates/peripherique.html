@@ -42,9 +42,9 @@
     <div class="d-flex justify-content-end mt-5">
       <div class="flex-grow-1 d-flex align-items-center" style="padding: 0px 12px;"><h3> All Devices </h3></div>
       <div>
-        <button id="add" onclick="addDevice()" class="btn btn-primary me-3">Add device</button>
-        <button id="all" onclick="getDevices()" class="btn btn-primary me-3">Get devices</button>
-        <button id="system" onclick="getSystem()" class="btn btn-primary me-3">Get System Info</button>
+        <button id="add" href="{{ url_for('addDevice') }}" class="btn btn-primary me-3">Add device</button>
+        <button id="all" onclick="getDevices()" class="btn btn-danger me-3">Delete devices</button>
+       
       </div>
     </div>
     <div class="container-fluid mt-2">
