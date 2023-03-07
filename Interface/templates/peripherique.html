@@ -26,7 +26,7 @@
                     <a class="navbar-brand" href="{{ url_for('index') }}">Gateway</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('index') }}">Status</a>
+                    <a class="nav-link" href="{{ url_for('status') }}">Status</a>
                   </li>
                 <li class="nav-item">
                   <a class="nav-link" href="{{ url_for('devices') }}">Devices</a>
@@ -44,7 +44,6 @@
         <div>
           <a href="{{ url_for('addDevice') }}"><button  class="btn btn-primary me-3">Add device</button></a>
           <button class="btn btn-danger me-3" onclick="deleteDevices()">Delete devices</button>
-         
         </div>
       </div>
       <div class="container-fluid mt-2">

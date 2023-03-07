@@ -1,48 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <title>Network</title>
-    <meta name="viewport" content="width=device-width, height=device-height,initial-scale=1.0"/>
-    <link type="image/png" href="../static/logo.png" rel="icon">
-    <link type = "text/css" href="../static/bootstrap.min.css" rel="stylesheet">
-    <link type = "text/css" href="../static/style.css" rel="stylesheet">
-    <link type = "text/css" href="../static/jquery-ui.min.css" rel="stylesheet">
-    <script src="../static/jquery-3.6.3.min.js"></script>
-    <script src="../static/jquery-ui.min.js"></script> 
-    <script src="../static/script.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <title>Network</title>
+  <meta name="viewport" content="width=device-width, height=device-height,initial-scale=1.0" />
+  <link type="image/png" href="../static/logo.png" rel="icon">
+  <link type="text/css" href="../static/bootstrap.min.css" rel="stylesheet">
+  <link type="text/css" href="../static/style.css" rel="stylesheet">
+  <link type="text/css" href="../static/jquery-ui.min.css" rel="stylesheet">
+  <script src="../static/jquery-3.6.3.min.js"></script>
+  <script src="../static/jquery-ui.min.js"></script>
+  <script src="../static/script.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
+
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
-            <div class="container-fluid justify-content-center">
-                <a class="navbar-brand" style="padding: 0px 0px; " href="{{ url_for('index') }}">
-                    <img src="../static/logo2.png" alt="Avatar Logo" style="width:110px; background-color: white;" class="rounded-pill"> 
-                </a>
-              <ul class="navbar-nav">
-                <li class="nav-item" style="padding: 3px 0 0 0; ">
-                    <a class="navbar-brand" href="{{ url_for('index') }}">Gateway</a>
-                </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="{{ url_for('index') }}">Status</a>
-                  </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('devices') }}">Devices</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Network</a>
-                </li>
-              </ul>
-            </div>
-          </nav>
-    </header>
-    <main>
-      
+  <header>
+    <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+      <div class="container-fluid justify-content-center">
+        <a class="navbar-brand" style="padding: 0px 0px; " href="{{ url_for('index') }}">
+          <img src="../static/logo2.png" alt="Avatar Logo" style="width:110px; background-color: white;"
+            class="rounded-pill">
+        </a>
+        <ul class="navbar-nav">
+          <li class="nav-item" style="padding: 3px 0 0 0; ">
+            <a class="navbar-brand" href="{{ url_for('index') }}">Gateway</a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="{{ url_for('status') }}">Status</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('devices') }}">Devices</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Network</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="container mt-3">
+      <div class="d-flex justify-content-end mt-5">
+        <div class="flex-grow-1 d-flex align-items-center">
+          <h3> LoRa Gateway Settings </h3>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end">
+        <div class="flex-grow-1 d-flex align-items-center">
+          <p>Configuration to cammunicate to LoRa devices and LoRaWAN server</p>
+        </div>
+      </div>
 
+      <form class="mt-5"> 
 
+        <h4>LoRaWAN Server Settings</h4>
 
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label" for="serveraddr"> Server Address </label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="serveraddr" placeholder="Server Address" value="192.168.1.154">
+          </div>
+        </div>
 
-    </main>
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label" for="serverport"> Server Port </label>
+          <div class="col-sm-10">
+            <input type="number" class="form-control" id="serverport" placeholder="Server Port" value="1700">
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label" for="gatewayid"> Gateway ID </label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="gatewayid" placeholder="Gateway ID" value="ghg65454fcfc4987">
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label" for="latitude"> Latitude </label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="latitude" placeholder="Location info">
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label" for="longtitude"> Longtitude </label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="longtitude" placeholder="Location info">
+          </div>
+        </div>
+
+        <div class="mt-5">
+
+        <h4>Radio Settings</h4>
+
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label" for="txfrequency"> TX Frequency </label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="txfrequency" placeholder="Gateway's LoRa TX Frequency">
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label" for="rxfrequency"> RX Frequency </label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="rxfrequency" placeholder="Gateway's LoRa RX Frequency">
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label" for="spreadingfactor"> Spreading Factor </label>
+          <div class="col-sm-10">
+            <select class="form-select" id="spreadingfactor">
+              <option selected>SF7</option>
+              <option>SF8</option>
+              <option>SF9</option>
+              <option>SF10</option>
+              <option>SF11</option>
+              <option>SF12</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label" for="transmitSF"> Transmit Spreading Factor </label>
+          <div class="col-sm-10">
+            <select class="form-select" id="transmitSF">
+              <option>SF7</option>
+              <option>SF8</option>
+              <option selected>SF9</option>
+              <option>SF10</option>
+              <option>SF11</option>
+              <option>SF12</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label" for="codingrate"> Coding Rate </label>
+          <div class="col-sm-10">
+            <select class="form-select" id="codingrate">
+              <option selected>4/5</option>
+              <option>4/6</option>
+              <option>4/7</option>
+              <option>4/8</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label" for="SBW"> Signal Bandwidth </label>
+          <div class="col-sm-10">
+            <select class="form-select" id="SBW">
+              <option selected>125 kHz</option>
+              <option>250 kHz</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label" for="preamblelength"> Preamble Length </label>
+          <div class="col-sm-10">
+            <input type="number" class="form-control" id="preamblelength" placeholder="Preamble Length" min="6"
+              max="65536" value="8">
+            <small>Length range: 6 ~ 65536 </small>
+          </div>
+        </div>
+        </div>
+        <div class="d-flex justify-content-end mt-5">
+          <div>
+            <button type="submit" class="btn btn-primary me-3">Save & apply</button>
+            <button type="submit" class="btn btn-primary me-3">Save</button>
+            <button type="submit" class="btn btn-primary me-3">Reset</button>
+          </div>
+        </div>
+
+    </div>
+    </form>
+    </div>
+  </main>
 </body>
+
 </html>

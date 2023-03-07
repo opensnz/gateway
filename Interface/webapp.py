@@ -18,8 +18,13 @@ mqtt_client.connect(MQTT_BROKER, MQTT_PORT)
 
 app = Flask(__name__)
 
+
 @app.route("/")
 def index():
+    return render_template('index.html')
+
+@app.route("/status")
+def status():
     db = Database()
     db.open()
     db.close()
@@ -28,7 +33,7 @@ def index():
     disk = DISK()
     ram=RAM()
     platform=PLATFORM()
-    return render_template('index.html', interfaces=network.interfaces, cpu=cpu, disk=disk, ram=ram, platform=platform )
+    return render_template('status.html', interfaces=network.interfaces, cpu=cpu, disk=disk, ram=ram, platform=platform )
 
 @app.route("/addDevice")
 def addDevice():
