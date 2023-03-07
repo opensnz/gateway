@@ -30,7 +30,7 @@ def index():
     platform=PLATFORM()
     return render_template('index.html', interfaces=network.interfaces, cpu=cpu, disk=disk, ram=ram, platform=platform )
 
-@app.route("/addDevice" , methods=['GET' , 'POST'])
+@app.route("/addDevice")
 def addDevice():
     return render_template('addDevice.html')
 
