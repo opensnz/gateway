@@ -12,6 +12,7 @@ function addDevice(){
             // Request finished. Do processing here.
             
             console.log("Success")
+            location.href = "peripherique.html";
         }
     }
     xhr.send(JSON.stringify({
