@@ -93,6 +93,8 @@ def add_device():
     db.open()
     state = db.insert_device(body["DevEUI"], body["AppEUI"], body["AppKey"])
     db.close()
+    # Publish mqtt topic
+    
     if state:
         return redirect("/peripherique.html")
     else:
