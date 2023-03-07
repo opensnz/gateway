@@ -30,24 +30,18 @@ def index():
     platform=PLATFORM()
     return render_template('index.html', interfaces=network.interfaces, cpu=cpu, disk=disk, ram=ram, platform=platform )
 
-@app.route("/addDevice")
+@app.route("/addDevice" , methods=['GET' , 'POST'])
 def addDevice():
     return render_template('addDevice.html')
 
-
-
-
-
-
-
-@app.route('/peripherique' , methods=['GET', 'POST'])
-def peripherique():
-    db = Database()
-    db.open()
-    devices = db.get_devices()
-    print(devices)
-    db.close()
-    return render_template('peripherique.html',  devices=devices)
+#@app.route('/peripherique' , methods=['GET', 'POST'])
+#def peripherique():
+#    db = Database()
+#    db.open()
+#    devices = db.get_devices()
+#    print(devices)
+#    db.close()
+#    return render_template('peripherique.html',  devices=devices)
 
 
 @app.route("/system",  methods=['GET', 'POST'])
@@ -94,11 +88,11 @@ def add_device():
     db.open()
     state = db.insert_device(body["DevEUI"], body["AppEUI"], body["AppKey"])
     db.close()
-    return render_template("peripherique.html")
-    #if state:
-        #return Response(status=200)
-    #else:
-        #return Response(status=500)  
+    #return render_template("peripherique.html")
+    if state:
+        return Response(status=200)
+    else:
+        return Response(status=500)  
     
    
 
