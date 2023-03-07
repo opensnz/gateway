@@ -19,63 +19,61 @@
     <title>Add Devices</title>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm bg-primary navbar-dark ">
-            <div class="container-fluid justify-content-center">
-                <a class="navbar-brand" style="padding: 0px 0px; " href="{{ url_for('index') }}">
-                    <img src="../static/logo2.png" alt="Avatar Logo" style="width:110px; background-color: white;" class="rounded-pill"> 
-                </a>
-              <ul class="navbar-nav">
-                <li class="nav-item" style="padding: 3px 0 0 0; ">
-                    <a class="navbar-brand" href="{{ url_for('index') }}">Gateway</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Status</a>
-                    <ul class="dropdown-menu bg-light">
-                      <li><a class="dropdown-item" href="#">Overview</a></li>
-                      <li><a class="dropdown-item" href="#">Graphs</a></li>
-                    </ul>
-                  </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('devices') }}">Devices</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('system') }}">Network</a>
-                </li>
-              </ul>
-            </div>
-          </nav>
-    </header>
+  <header>
+    <nav class="navbar navbar-expand-sm bg-primary navbar-dark ">
+        <div class="container-fluid justify-content-center">
+            <a class="navbar-brand" style="padding: 0px 0px; " href="{{ url_for('index') }}">
+                <img src="../static/logo2.png" alt="Avatar Logo" style="width:110px; background-color: white;" class="rounded-pill"> 
+            </a>
+          <ul class="navbar-nav">
+            <li class="nav-item" style="padding: 3px 0 0 0; ">
+                <a class="navbar-brand" href="{{ url_for('index') }}">Gateway</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('index') }}">Status</a>
+              </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('devices') }}">Devices</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('system') }}">Network</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+</header>
     <div class="container mt-3">
         <h2>Add Device </h2>
         <form>
             <label for="DevEUI">DevEUI:</label>
-          <div class="input-group mb-3">
+          <div class="input-group-append mb-3" style="display: flex; align-items: center; justify-content: center;">
             
             <input type="text" class="form-control" id="DevEUI" placeholder="Enter DevEUI" name="DevEUI">
         
-                <button type="submit" class="btn btn-light" name="generate">
-                    <span class="material-icons">
+                <button type="button" class="btn btn-light" onclick="random()">
+                    <span class="material-icons" style="display: flex; align-items: center; justify-content: center;">
                         autorenew
                         </span>
                 </button> 
           </div>
           <label for="AppEUI">AppEUI:</label>
-          <div class="input-group mb-3">
+          <div class="input-group-append mb-3" style="display: flex; align-items: center; justify-content: center;">
             
             <input type="text" class="form-control" id="AppEUI" placeholder="Enter AppEUI" name="AppEUI">
-            <button type="submit" class="btn btn-light" onclick="generate()" name="generate" value="{{ random_string }}">
-                <span class="material-icons">
-                    autorenew
-                    </span>
-          </div>
+            <button type="button" class="btn btn-light" onclick="random()">
+              <span class="material-icons" style="display: flex; align-items: center; justify-content: center;">
+                  autorenew
+                  </span>
+          </button> 
+              </div>
+
           
           <label for="AppKey">AppKey:</label>
-          <div class="input-group mb-3">
+          <div class="input-group-append mb-3" style="display: flex; align-items: center; justify-content: center;">
            
             <input type="text" class="form-control" id="AppKey" placeholder="Enter AppKey" name="AppKey">
-            <button type="submit" class="btn btn-light" name="generate">
-                <span class="material-icons">
+            <button type="button" class="btn btn-light" onclick="random()">
+                <span class="material-icons" style="display: flex; align-items: center; justify-content: center;">
                     autorenew
                     </span>
                 </div>
