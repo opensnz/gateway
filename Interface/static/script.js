@@ -58,24 +58,12 @@ function getSystem()
     xhr.send(); 
 }
 
-function random() {
-    var length;
+function generateRandomString(inputId, length) {
     var chars = '0123456789abcdefghijklmnopqrstuv';
-    var result = '';
-    
-    var input = document.getElementById("AppEUI");
-    if (input) {
-      length = 16; // set length to 16 for AppEUI and DevEUI
-    } else if (input = document.getElementById("DevEUI")) {
-      
-      length = 16; // set length to 32 for AppKey
-    } else {
-        length = 32;
-    }
-    
+    var result = '';    
+    var input = document.getElementById(inputId);  
     for (var i = 0; i < length; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-  
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }  
     input.value = result;
-  }
+}
