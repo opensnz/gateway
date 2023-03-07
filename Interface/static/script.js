@@ -15,9 +15,9 @@ function addDevice(){
         }
     }
     xhr.send(JSON.stringify({
-        "AppEUI": "0000000000000000",
-        "AppKey": "45abd993fa42864305fd20b63b21b80d",
-        "DevEUI": "b53fcaaa8725fe11"
+        "AppEUI": document.getElementById("AppEUI").value,
+        "AppKey": document.getElementById("AppKey").value,
+        "DevEUI": document.getElementById("DevEUI").value
     }));
  
 }
@@ -67,3 +67,35 @@ function generateRandomString(inputId, length) {
     }  
     input.value = result;
 }
+function deleteDevices() {
+    var checkboxes = document.querySelectorAll("input[type=checkbox]:checked");
+    var DevEUIs = [];
+
+    checkboxes.forEach(function (checkbox)
+ {
+        DevEUIs.push(checkbox.getAttribute("data-dev-eui"));
+    });
+
+    if (DevEUIs.length > 0) {
+        if (confirm("Are you sure you want to delete the selected devices?")) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/device/delete", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        location.reload();
+                    } else {
+                        alert("Failed to delete devices.");
+                    }
+                }
+            };
+            xhr.send(JSON.stringify({ "DevEUIs": DevEUIs }));
+        }
+    } else {
+        alert("Please select at least one device to delete.");
+    }
+}
+
+
+  

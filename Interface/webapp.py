@@ -88,25 +88,27 @@ def add_device():
     db.open()
     state = db.insert_device(body["DevEUI"], body["AppEUI"], body["AppKey"])
     db.close()
-    #return render_template("peripherique.html")
     if state:
-        return Response(status=200)
+        return redirect("/peripherique.html")
     else:
-        return Response(status=500)  
+        return jsonify({"message": "Device addition failed."}), 500
     
    
 
-@app.route("/device/delete" , methods=['GET' , 'POST'])
-def delete_device():
+@app.route("/device/delete", methods=["POST"])
+def delete_devices():
     body = request.json
     db = Database()
     db.open()
-    state = db.delete_device(body["DevEUI"])
+    for DevEUI in body["DevEUIs"]:
+        state = db.delete_device(DevEUI)
+        if not state:
+            db.close()
+            return Response(status=500)
     db.close()
-    if state:
-        return Response(status=200)
-    else:
-        return Response(status=500)   
+    return Response(status=200)  
+
+ 
 
 @app.route("/network",  methods=['GET', 'POST'])
 def notwork():
