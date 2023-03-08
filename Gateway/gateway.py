@@ -1,26 +1,19 @@
 import paho.mqtt.client as mqtt
 import json
-import time, threading
+import time, threading, queue
 from datetime import datetime
 from database import Database
 from encoder import Encoder
 from constants import *
 
 
-# class TYPE(enumerate):
-#     TX = 0
-#     TX_RX = 1
 
 
-class STATUS(enumerate):
-    JOIN_REQUEST = 0
-    CONFIRMED_DATA_UP = 1
 
 class Gateway():
 
 
     def __init__(self):
-        self.__mapping__ = dict()
         self.__mqtt_client = mqtt.Client(transport="tcp",client_id="gateway")
 
 
@@ -38,6 +31,7 @@ class Gateway():
         self.__mqtt_client.on_disconnect = self.__mqtt_on_disconnect__
         self.__mqtt_client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
         self.__mqtt_client.connect(MQTT_BROKER, MQTT_PORT)
+        self.__queue = queue.Queue()
 
 
     def __loop__(self):
@@ -69,7 +63,7 @@ class Gateway():
             "tmst": round(datetime.utcnow().timestamp()),
         }
         topic = message.topic
-        topic_payload = eval(message.payload)
+        topic_payload = json.loads((b''+message.payload).decode())
         if topic == MQTT_TOPIC_TRANSCEIVER_OUT:
             # Get DevEUI 
             DevEUI = topic_payload["packet"][:2*DEVICE_IDENTIFIER_SIZE]
@@ -77,25 +71,22 @@ class Gateway():
             packet  = self.__topic_transceiver_handler__(topic_payload, date_time)
             if packet != None :
                 # Publish packet
-                self.__publish__(DevEUI, packet)
+                self.__publish__(packet)
         elif topic == MQTT_TOPIC_FORWARDER_OUT:
-            # Get DevEUI
-            DevEUI = topic_payload["DevEUI"]
-            if DevEUI in self.__mapping__.keys():
-                # Handle MQTT topic
-                packet = self.__topic_forwarder_handler__(topic_payload, date_time)
-                if packet != None :
-                    # Publish packet
-                    self.__publish__(DevEUI, packet)
-            else:
-                pass
+            # Handle MQTT topic
+            packet = self.__topic_forwarder_handler__(topic_payload, date_time)
+            if packet != None :
+                # Publish packet
+                self.__publish__(packet)
             
 
 
 
     def __join_request_packet__(self, device:dict) -> dict:
-        packet = self.__generic_packet__()
+        # Put DevEUI to queue before JoinRequest
+        self.__queue.put(device["DevEUI"])
         encoded = Encoder.join_request(device)
+        packet = self.__generic_packet__()
         # Filling packet
         packet["rxpk"][0]["size"] = encoded["size"]
         packet["rxpk"][0]["data"] = encoded["PHYPayload"]
@@ -177,7 +168,6 @@ class Gateway():
             # Check if device have already joined the server otherwise Join
             if device["NwkSKey"] is None or device["FCnt"] > 65530:
                 # Save device's DevEUI for Join Accept
-                self.__mapping__[DevEUI] = STATUS.JOIN_REQUEST
                 # Save device's packet(with its raw payload) for later Unconfirmed or Conformed Data Up (Unconfirmed by default)
                 packet = self.__generic_packet__()
                 packet["rxpk"][0]["data"] = payload
@@ -203,47 +193,31 @@ class Gateway():
             
         return None
     
-    def __topic_forwarder_handler__(self, topic_payload:dict, date_time:dict):
-        DevEUI = topic_payload["DevEUI"]
-        _db = Database()
-        if self.__mapping__[DevEUI] == STATUS.JOIN_REQUEST:
-            # Remove DevEUI from mapping dict
-            self.__mapping__.pop(DevEUI)
-            PHYPayload = json.loads(topic_payload["packet"])["txpk"]["data"]
+    def __topic_forwarder_handler__(self, topic_payload:dict, date_time:dict=None):
+        DevEUI = "" 
+        print(topic_payload, type(topic_payload))
+        PHYPayload = topic_payload["txpk"]["data"]
+        packet_type = Encoder.packet_type(PHYPayload)
+        if packet_type == "JoinAccept" : 
+            DevEUI = self.__queue.get()
             # Get device informations from database
-            _db.open()
+            _db = Database()
+            _db.open() 
             device = _db.get_device(DevEUI=DevEUI)
-            # Get saved packet
-            packet = _db.get_data(DevEUI=DevEUI)["Packet"]
             _db.close()
-            # Convert to python object
-            packet = json.loads(packet)
-            # LoRaWAN Join Accept is needed
-            # Decode packet by using RESP API service
-            # device is modified in the function(device is mutable object, so no need to get return dict)
-            Encoder.join_accept(device, PHYPayload) 
-            # Use saved packet's raw payload to encode uplink data
-            # LoRaWAN Unconfirmed or Conformed Data Up is needed (Unconfirmed by default)
-            # Encode packet by using RESP API service
-            encoded_pk = self.__unconfirmed_data_up_packet__(device, packet["rxpk"][0]["data"])
-            # Update saved packet
-            packet["rxpk"][0]["size"] = encoded_pk["rxpk"][0]["size"]
-            packet["rxpk"][0]["data"] = encoded_pk["rxpk"][0]["data"]
-            return packet
-        elif self.__mapping__[DevEUI] == STATUS.CONFIRMED_DATA_UP:
+            Encoder.join_accept(device, PHYPayload)
             return None
+        elif packet_type == "UnconfirmedDataDown" or packet_type == "ConfirmedDataDown": 
+            return None
+
 
 
     ################### MQTT Publish  ######################
 
-    def __publish__(self, DevEUI:str, packet:dict):
+    def __publish__(self, packet:dict):
         """Publish packet with DevEUI to Packet Forwarder"""
-        payload = {
-            "DevEUI":DevEUI,
-            "packet":json.dumps(packet)
-        }
-        print("Publishing Packet", payload["packet"])
-        self.__mqtt_client.publish(MQTT_TOPIC_FORWARDER_IN, payload=json.dumps(payload))
+        print("Publishing Packet", packet)
+        self.__mqtt_client.publish(MQTT_TOPIC_FORWARDER_IN, payload=json.dumps(packet))
 
 
     def __publish_config__(self, topic:str, config:dict):
@@ -252,8 +226,5 @@ class Gateway():
     
 
 if __name__ == "__main__":
-    import os 
-    if os.path.exists(SQLITE_DATABASE_PATH):
-        os.remove(SQLITE_DATABASE_PATH)
     gateway = Gateway()
     gateway.main()
