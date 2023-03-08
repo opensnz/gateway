@@ -64,13 +64,16 @@ def devices():
 def add_device():
     body = request.json
     print(body)
+    db = Database()
+    db.open()
+    status = db.insert_device(body["DevEUI"], body["AppEUI"], body["AppKey"])
+    db.close()
     client = mqtt.Client(transport="tcp",client_id="interface")
     mqtt_client.username_pw_set(MQTT_USERNAME,MQTT_PASSWORD)
     client.connect(MQTT_BROKER, MQTT_PORT)
-    (state, t) = client.publish(MQTT_TOPIC_GATEWAY_DEV, body)
+    client.publish(MQTT_TOPIC_GATEWAY_DEV, payload=json.dumps(body))
     client.disconnect()
-
-    if state == mqtt.MQTT_ERR_SUCCESS:
+    if status:
         return redirect("/peripherique.html")
     else:
         return jsonify({"message": "Device addition failed."}), 500
@@ -100,7 +103,7 @@ def save_json():
     client = mqtt.Client(transport="tcp",client_id="interface")
     mqtt_client.username_pw_set(MQTT_USERNAME,MQTT_PASSWORD)
     client.connect(MQTT_BROKER, MQTT_PORT)
-    client.publish(MQTT_TOPIC_GATEWAY_DEV, data)
+    client.publish(MQTT_TOPIC_GATEWAY_DEV, json.dumps(data)) 
     client.disconnect()
     return jsonify({'message': 'Data saved successfully'})
 
