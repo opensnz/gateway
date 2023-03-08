@@ -157,7 +157,11 @@ function saveData() {
     };
   
     var xhr = new XMLHttpRequest();
+<<<<<<< HEAD
     xhr.open("POST", "/network");
+=======
+    xhr.open("POST", "");
+>>>>>>> 3f59fffac371a4cac2bb08851158893de3485e70
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(data));
   }
