@@ -1,5 +1,28 @@
 function addDevice(){
-    console.log("add device")
+    console.log("add device");
+
+    const appEUI = document.getElementById("AppEUI").value;
+    const appKey = document.getElementById("AppKey").value;
+    const devEUI = document.getElementById("DevEUI").value;
+
+    // Check if the DevEUI and AppEUI are in the correct format
+    const regex = /^[0-9a-f]{16}$/;
+    if (!regex.test(appEUI)) {
+        alert("The AppEUI must be 16 characters long and contain only numbers and letters a-f.");
+        return;
+    }
+    const reegex = /^[0-9a-f]{16}$/;
+    if (!reegex.test(devEUI)) {
+        alert("The DevEUI must be 16 characters long and contain only numbers and letters a-f.");
+        return;
+    }
+
+    // Check if the AppKey is in the correct format
+    const regeex = /^[0-9a-f]{32}$/;
+    if (!regeex.test(appKey)) {
+        alert("The AppKey must be 32 characters long and contain only numbers and letters a-f.");
+        return;
+    }
 
     const xhr = new XMLHttpRequest();
     xhr.open("POST", '/device/add', true);
@@ -16,12 +39,13 @@ function addDevice(){
         }
     }
     xhr.send(JSON.stringify({
-        "AppEUI": document.getElementById("AppEUI").value,
-        "AppKey": document.getElementById("AppKey").value,
-        "DevEUI": document.getElementById("DevEUI").value
+        "AppEUI": appEUI,
+        "AppKey": appKey,
+        "DevEUI": devEUI
     }));
  
-}
+} 
+
 
 function getDevices()
 {
