@@ -47,7 +47,10 @@ def addDevice():
 
 @app.route("/system",  methods=['GET', 'POST'])
 def system():
-    system = Telemetry()
+    system = None
+    with open(CONFIG_FILE_PATH, "r") as file:
+        system = json.load(file)
+        print(system)
     return render_template('network.html', system=system)
 
 
@@ -94,7 +97,6 @@ def delete_devices():
     return Response(status=200)  
 
  
-
 
 
 @app.route('/network', methods=['POST'])

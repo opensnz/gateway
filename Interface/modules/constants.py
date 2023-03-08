@@ -12,3 +12,5 @@ MQTT_PASSWORD  = "interface#2022"
 
 MQTT_TOPIC_GATEWAY_NWK     = "/config/gateway/nwk"
 MQTT_TOPIC_GATEWAY_DEV     = "/config/gateway/dev"
+
+CONFIG_FILE_PATH = "../Gateway/gateway.json"

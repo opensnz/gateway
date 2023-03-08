@@ -59,16 +59,16 @@
           <thead>
             <tr>
               <th></th>
+              <th>Created_at</th>
               <th>DevEUI</th>
               <th>AppEUI</th>
               <th>AppKey</th>
               <th>DevNonce</th>
+              <th>FCnt</th>
+              <th>FPort</th>
               <th>DevAddr</th>
               <th>NwkSKey</th>
               <th>AppSKey</th>
-              <th>FCnt</th>
-              <th>FPort</th>
-              <th>Created_at</th>
             </tr>
           </thead>
           <tbody>
@@ -80,16 +80,16 @@
                     data-dev-eui="{{ device['DevEUI'] }}">
                 </div>
               </td>
+              <td>{{ device["Created_at"] }}</td>
               <td>{{ device["DevEUI"] }}</td>
               <td>{{ device["AppEUI"] }}</td>
               <td>{{ device["AppKey"] }}</td>
               <td>{{ device["DevNonce"] }}</td>
+              <td>{{ device["FCnt"] }}</td>
+              <td>{{ device["FPort"] }}</td>
               <td>{{ device["DevAddr"] }}</td>
               <td>{{ device["NwkSKey"] }}</td>
               <td>{{ device["AppSKey"] }}</td>
-              <td>{{ device["FCnt"] }}</td>
-              <td>{{ device["FPort"] }}</td>
-              <td>{{ device["Created_at"] }}</td>
             </tr>
             {% endfor %}
           </tbody>
