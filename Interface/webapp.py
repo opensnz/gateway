@@ -64,16 +64,13 @@ def devices():
 def add_device():
     body = request.json
     print(body)
-    db = Database()
-    db.open()
-    state = db.insert_device(body["DevEUI"], body["AppEUI"], body["AppKey"])
-    db.close()
-    client = mqtt_client("transceiver", MQTT_BROKER)
-    client.connect()
-    client.publish(MQTT_TOPIC_GATEWAY_DEV, body["DevEUI"])
+    client = mqtt.Client(transport="tcp",client_id="interface")
+    mqtt_client.username_pw_set(MQTT_USERNAME,MQTT_PASSWORD)
+    client.connect(MQTT_BROKER, MQTT_PORT)
+    (state, t) = client.publish(MQTT_TOPIC_GATEWAY_DEV, body)
     client.disconnect()
 
-    if state:
+    if state == mqtt.MQTT_ERR_SUCCESS:
         return redirect("/peripherique.html")
     else:
         return jsonify({"message": "Device addition failed."}), 500
@@ -95,16 +92,16 @@ def delete_devices():
 
  
 
-@app.route("/network",  methods=['GET', 'POST'])
-def notwork():
-    system = Telemetry().to_json()
-    return jsonify(json.loads(system))
 
-@app.route('/', methods=['POST'])
+
+@app.route('/network', methods=['POST'])
 def save_json():
     data = request.get_json()
-    with open('Gateway/gateway.json', 'w') as f:
-        json.dump(data, f)
+    client = mqtt.Client(transport="tcp",client_id="interface")
+    mqtt_client.username_pw_set(MQTT_USERNAME,MQTT_PASSWORD)
+    client.connect(MQTT_BROKER, MQTT_PORT)
+    client.publish(MQTT_TOPIC_GATEWAY_DEV, data)
+    client.disconnect()
     return jsonify({'message': 'Data saved successfully'})
 
 
