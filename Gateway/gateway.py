@@ -248,8 +248,5 @@ class Gateway():
     
 
 if __name__ == "__main__":
-    import os 
-    if os.path.exists(SQLITE_DATABASE_PATH):
-        os.remove(SQLITE_DATABASE_PATH)
     gateway = Gateway()
     gateway.main()
