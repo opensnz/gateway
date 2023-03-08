@@ -8,21 +8,23 @@ function addDevice(){
     // Check if the DevEUI and AppEUI are in the correct format
     const regex = /^[0-9a-f]{16}$/;
     if (!regex.test(appEUI)) {
-        alert("The AppEUI must be 16 characters long and contain only numbers and letters a-f.");
+        alert("Respect the length and the content indicated under the input field.");
         return;
     }
     const reegex = /^[0-9a-f]{16}$/;
     if (!reegex.test(devEUI)) {
-        alert("The DevEUI must be 16 characters long and contain only numbers and letters a-f.");
+        alert("Respect the length and the content indicated under the input field.");
         return;
     }
 
     // Check if the AppKey is in the correct format
     const regeex = /^[0-9a-f]{32}$/;
     if (!regeex.test(appKey)) {
-        alert("The AppKey must be 32 characters long and contain only numbers and letters a-f.");
+        alert("Respect the length and the content indicated under the input field.");
         return;
     }
+
+    
 
     const xhr = new XMLHttpRequest();
     xhr.open("POST", '/device/add', true);
@@ -122,6 +124,8 @@ function deleteDevices() {
     }
 }
 
+
+
 function saveData() {
     var serverAddress = document.getElementById("serveraddr").value;
     var serverPort = document.getElementById("serverport").value;
@@ -129,30 +133,36 @@ function saveData() {
     var latitude = document.getElementById("latitude").value;
     var longitude = document.getElementById("longtitude").value;
     var altitude = document.getElementById("altitude").value;
-
+  
     var frequency = document.getElementById("frequency").value;
+    var bandwidth = document.getElementById("SBW").value;
     var spreadingFactor = document.getElementById("spreadingfactor").value;
-    var codingrate = document.getElementById("codingrate").value;
-    var SBW = document.getElementById("SBW").value;
-
+    var codingRate = document.getElementById("codingrate").value;
+  
     var data = {
-      server_address: serverAddress,
-      server_port: serverPort,
-      gateway_id: gatewayId,
-      gateway_lat: latitude,
-      gateway_lon: longitude,
-      gateway_alt: altitude,
-
-      frequency: frequency,
-      bandwidth: SBW,
-      spreading_factor: spreadingFactor,
-      coding_rate: codingrate
+      radio_conf: {
+        frequency: frequency,
+        bandwidth: bandwidth,
+        spreading_factor: spreadingFactor,
+        coding_rate: codingRate,
+      },
+      gateway_conf: {
+        server_address: serverAddress,
+        server_port: serverPort,
+        gateway_id: gatewayId,
+        gateway_lat: latitude,
+        gateway_lon: longitude,
+        gateway_alt: altitude,
+      },
     };
+  
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", url);
+<<<<<<< HEAD
+    xhr.open("POST", "/network");
+=======
+    xhr.open("POST", "");
+>>>>>>> 3f59fffac371a4cac2bb08851158893de3485e70
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(data));
   }
-
-
   

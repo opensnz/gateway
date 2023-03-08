@@ -21,10 +21,6 @@ class Gateway():
         _db = Database()
         _db.open()
         _db.create_tables()
-        ############## Just for test
-        _db.insert_device(DevEUI="b53fcaaa8725fe1b", AppKey="45abd993fa42864305fd20b63b21b80d")
-        _db.insert_device(DevEUI="A840415411822622", AppKey="283CE694DCDA688F1A9E7BC9995A46E1", AppEUI="A84041DF61822622")
-        ##############
         _db.close()
         self.__mqtt_client.on_connect    = self.__mqtt_on_connect__
         self.__mqtt_client.on_message    = self.__mqtt_on_message__

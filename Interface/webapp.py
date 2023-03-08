@@ -2,9 +2,13 @@ import secrets
 from flask import Flask, redirect, render_template, request, Response, jsonify, abort, url_for
 from modules.constants import *
 import paho.mqtt.client as mqtt
+import paho.mqtt.publish as publish
 import json
 from modules.database import Database
 from modules.telemetry import *
+from modules.constants import *
+
+
 
 
 
@@ -39,38 +43,12 @@ def status():
 def addDevice():
     return render_template('addDevice.html')
 
-#@app.route('/peripherique' , methods=['GET', 'POST'])
-#def peripherique():
-#    db = Database()
-#    db.open()
-#    devices = db.get_devices()
-#    print(devices)
-#    db.close()
-#    return render_template('peripherique.html',  devices=devices)
 
 
 @app.route("/system",  methods=['GET', 'POST'])
 def system():
     system = Telemetry()
     return render_template('network.html', system=system)
-
-#@app.route('/peripherique' , methods=['GET', 'POST'])
-#def peripherique():
-#    db = Database()
-#    db.open()
-#    devices = db.get_devices()
-#    print(devices)
-#    db.close()
-#    return render_template('peripherique.html',  devices=devices)
-
-
-#@app.route("/system",  methods=['GET', 'POST'])
-#def system():
-#    db = Database()
-#    db.open()
-#    db.close()
-#    network = NETWORK()
-#    return render_template('network.html')
 
 
 @app.route("/device/all",  methods=['GET', 'POST'])
@@ -80,26 +58,23 @@ def devices():
     devices = db.get_devices()
     print(devices)
     db.close()
-    #return jsonify(devices)
     return render_template("peripherique.html", devices=devices)
-
-
-
+    
 @app.route("/device/add" , methods=['GET' , 'POST'])
 def add_device():
     body = request.json
     print(body)
-    db = Database()
-    db.open()
-    state = db.insert_device(body["DevEUI"], body["AppEUI"], body["AppKey"])
-    db.close()
-    # Publish mqtt topic
-    
-    if state:
+    client = mqtt.Client(transport="tcp",client_id="interface")
+    mqtt_client.username_pw_set(MQTT_USERNAME,MQTT_PASSWORD)
+    client.connect(MQTT_BROKER, MQTT_PORT)
+    (state, t) = client.publish(MQTT_TOPIC_GATEWAY_DEV, body)
+    client.disconnect()
+
+    if state == mqtt.MQTT_ERR_SUCCESS:
         return redirect("/peripherique.html")
     else:
         return jsonify({"message": "Device addition failed."}), 500
-    
+
    
 
 @app.route("/device/delete", methods=["POST"])
@@ -117,16 +92,16 @@ def delete_devices():
 
  
 
-@app.route("/network",  methods=['GET', 'POST'])
-def notwork():
-    system = Telemetry().to_json()
-    return jsonify(json.loads(system))
 
-@app.route('/', methods=['POST'])
+
+@app.route('/network', methods=['POST'])
 def save_json():
     data = request.get_json()
-    with open('Gateway/gateway.json', 'w') as f:
-        json.dump(data, f)
+    client = mqtt.Client(transport="tcp",client_id="interface")
+    mqtt_client.username_pw_set(MQTT_USERNAME,MQTT_PASSWORD)
+    client.connect(MQTT_BROKER, MQTT_PORT)
+    client.publish(MQTT_TOPIC_GATEWAY_DEV, data)
+    client.disconnect()
     return jsonify({'message': 'Data saved successfully'})
 
 
