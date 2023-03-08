@@ -103,7 +103,7 @@ def save_json():
     client = mqtt.Client(transport="tcp",client_id="interface")
     mqtt_client.username_pw_set(MQTT_USERNAME,MQTT_PASSWORD)
     client.connect(MQTT_BROKER, MQTT_PORT)
-    client.publish(MQTT_TOPIC_GATEWAY_DEV, json.dumps(data))
+    client.publish(MQTT_TOPIC_GATEWAY_DEV, json.dumps(data)) 
     client.disconnect()
     return jsonify({'message': 'Data saved successfully'})
 
