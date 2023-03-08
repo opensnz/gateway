@@ -52,40 +52,52 @@
   <main>
     <div class="container mt-3">
       <h2>Add Device </h2>
+      
       <form>
-        <label for="DevEUI">DevEUI:</label>
-        <div class="input-group-append mb-3" style="display: flex; align-items: center; justify-content: center;">
-
-          <input type="text" class="form-control" id="DevEUI" placeholder="Enter DevEUI" name="DevEUI">
-
-          <button type="button" class="btn btn-light" onclick="generateRandomString('DevEUI',16)">
-            <span class="material-icons" style="display: flex; align-items: center; justify-content: center;">
-              autorenew
-            </span>
-          </button>
-        </div>
-        <label for="AppEUI">AppEUI:</label>
-        <div class="input-group-append mb-3" style="display: flex; align-items: center; justify-content: center;">
-
-          <input type="text" class="form-control" id="AppEUI" placeholder="Enter AppEUI" name="AppEUI">
-          <button type="button" class="btn btn-light" onclick="generateRandomString('AppEUI',16)">
-            <span class="material-icons" style="display: flex; align-items: center; justify-content: center;">
-              autorenew
-            </span>
-          </button>
+        
+        <div class="mb-3">
+          <label for="DevEUI" class="form-label">DevEUI:</label>
+          <div class="input-group">
+            <input type="text" class="form-control" id="DevEUI" placeholder="Enter DevEUI" name="DevEUI" aria-describedby="DevEUIError">
+            <button type="button" class="btn btn-light" onclick="generateRandomString('DevEUI',16)">
+              <span class="material-icons" style="display: flex; align-items: center; justify-content: center;">
+                autorenew
+              </span>
+            </button>
+          </div>
+          <div class="form-text" id="DevEUIError">Length must be 16 characters long and contain only numbers and letters a-f.</div>
         </div>
 
-        <label for="AppKey">AppKey:</label>
-        <div class="input-group-append mb-3" style="display: flex; align-items: center; justify-content: center;">
-
-          <input type="text" class="form-control" id="AppKey" placeholder="Enter AppKey" name="AppKey">
-          <button type="button" class="btn btn-light" onclick="generateRandomString('AppKey',32)">
-            <span class="material-icons" style="display: flex; align-items: center; justify-content: center;">
-              autorenew
-            </span></button>
+        <div class="mb-3">
+          <label for="AppEUI" class="form-label">AppEUI:</label>
+          <div class="input-group">
+            <input type="text" class="form-control" id="AppEUI" placeholder="Enter AppEUI" name="AppEUI" aria-describedby="AppEUIError">
+            <button type="button" class="btn btn-light" onclick="generateRandomString('AppEUI',16)">
+              <span class="material-icons" style="display: flex; align-items: center; justify-content: center;">
+                autorenew
+              </span>
+            </button>
+          </div>
+          <div class="form-text" id="AppEUIError">Length must be 16 characters long and contain only numbers and letters a-f.</div>
         </div>
+        
+        <div class="mb-3">
+          <label for="AppKey" class="form-label">AppKey:</label>
+          <div class="input-group">
+            <input type="text" class="form-control" id="AppKey" placeholder="Enter AppKey" name="AppKey" aria-describedby="AppKeyError">
+            <button type="button" class="btn btn-light" onclick="generateRandomString('AppKey',32)">
+              <span class="material-icons" style="display: flex; align-items: center; justify-content: center;">
+                autorenew
+              </span>
+            </button>
+          </div>
+          <div class="form-text" id="AppKeyError">Length must be 32 characters long and contain only numbers and letters a-f.</div>
+        </div>
+        
+        
         <button id="add" onclick="addDevice()" class="btn btn-primary me-3">Add device</button>
       </form>
+      
     </div>
   </main>
   

@@ -8,21 +8,23 @@ function addDevice(){
     // Check if the DevEUI and AppEUI are in the correct format
     const regex = /^[0-9a-f]{16}$/;
     if (!regex.test(appEUI)) {
-        alert("The AppEUI must be 16 characters long and contain only numbers and letters a-f.");
+        alert("Respect the length and the content indicated under the input field.");
         return;
     }
     const reegex = /^[0-9a-f]{16}$/;
     if (!reegex.test(devEUI)) {
-        alert("The DevEUI must be 16 characters long and contain only numbers and letters a-f.");
+        alert("Respect the length and the content indicated under the input field.");
         return;
     }
 
     // Check if the AppKey is in the correct format
     const regeex = /^[0-9a-f]{32}$/;
     if (!regeex.test(appKey)) {
-        alert("The AppKey must be 32 characters long and contain only numbers and letters a-f.");
+        alert("Respect the length and the content indicated under the input field.");
         return;
     }
+
+    
 
     const xhr = new XMLHttpRequest();
     xhr.open("POST", '/device/add', true);

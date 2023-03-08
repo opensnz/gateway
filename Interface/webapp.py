@@ -2,9 +2,13 @@ import secrets
 from flask import Flask, redirect, render_template, request, Response, jsonify, abort, url_for
 from modules.constants import *
 import paho.mqtt.client as mqtt
+import paho.mqtt.publish as publish
 import json
 from modules.database import Database
 from modules.telemetry import *
+from modules.constants import *
+
+
 
 
 
@@ -39,38 +43,12 @@ def status():
 def addDevice():
     return render_template('addDevice.html')
 
-#@app.route('/peripherique' , methods=['GET', 'POST'])
-#def peripherique():
-#    db = Database()
-#    db.open()
-#    devices = db.get_devices()
-#    print(devices)
-#    db.close()
-#    return render_template('peripherique.html',  devices=devices)
 
 
 @app.route("/system",  methods=['GET', 'POST'])
 def system():
     system = Telemetry()
     return render_template('network.html', system=system)
-
-#@app.route('/peripherique' , methods=['GET', 'POST'])
-#def peripherique():
-#    db = Database()
-#    db.open()
-#    devices = db.get_devices()
-#    print(devices)
-#    db.close()
-#    return render_template('peripherique.html',  devices=devices)
-
-
-#@app.route("/system",  methods=['GET', 'POST'])
-#def system():
-#    db = Database()
-#    db.open()
-#    db.close()
-#    network = NETWORK()
-#    return render_template('network.html')
 
 
 @app.route("/device/all",  methods=['GET', 'POST'])
@@ -80,11 +58,8 @@ def devices():
     devices = db.get_devices()
     print(devices)
     db.close()
-    #return jsonify(devices)
     return render_template("peripherique.html", devices=devices)
-
-
-
+    
 @app.route("/device/add" , methods=['GET' , 'POST'])
 def add_device():
     body = request.json
@@ -93,13 +68,16 @@ def add_device():
     db.open()
     state = db.insert_device(body["DevEUI"], body["AppEUI"], body["AppKey"])
     db.close()
-    # Publish mqtt topic
-    
+    client = mqtt_client("transceiver", MQTT_BROKER)
+    client.connect()
+    client.publish(MQTT_TOPIC_GATEWAY_DEV, body["DevEUI"])
+    client.disconnect()
+
     if state:
         return redirect("/peripherique.html")
     else:
         return jsonify({"message": "Device addition failed."}), 500
-    
+
    
 
 @app.route("/device/delete", methods=["POST"])
