@@ -1,15 +1,12 @@
 {
-	"radio_conf": {
-        "frequency": 867500000,
-        "bandwidth": 250000,
-        "spreading_factor": 7,
-        "coding_rate" : 1
-	},
-	"gateway_conf": {
+                "frequency": 867500000,
+                "bandwidth": 250000,
+                "spreading_factor": 7,
+                "coding_rate" : 1,
 		"server_address": "192.168.1.113",
 		"server_port": 1700,
-        "gateway_lat" : 0.0,
-        "gateway_lon" : 0.0,
-        "gateway_alt" : 0.0
-	}
+                "gateway_id" : "0011223344556677",
+                "gateway_lat" : 0.0,
+                "gateway_lon" : 0.0,
+                "gateway_alt" : 0.0
 }

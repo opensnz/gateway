@@ -98,5 +98,37 @@ function deleteDevices() {
     }
 }
 
+function saveData() {
+    var serverAddress = document.getElementById("serveraddr").value;
+    var serverPort = document.getElementById("serverport").value;
+    var gatewayId = document.getElementById("gatewayid").value;
+    var latitude = document.getElementById("latitude").value;
+    var longitude = document.getElementById("longtitude").value;
+    var altitude = document.getElementById("altitude").value;
+
+    var frequency = document.getElementById("frequency").value;
+    var spreadingFactor = document.getElementById("spreadingfactor").value;
+    var codingrate = document.getElementById("codingrate").value;
+    var SBW = document.getElementById("SBW").value;
+
+    var data = {
+      server_address: serverAddress,
+      server_port: serverPort,
+      gateway_id: gatewayId,
+      gateway_lat: latitude,
+      gateway_lon: longitude,
+      gateway_alt: altitude,
+
+      frequency: frequency,
+      bandwidth: SBW,
+      spreading_factor: spreadingFactor,
+      coding_rate: codingrate
+    };
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", url);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify(data));
+  }
+
 
   

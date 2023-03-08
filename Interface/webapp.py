@@ -122,6 +122,14 @@ def notwork():
     system = Telemetry().to_json()
     return jsonify(json.loads(system))
 
+@app.route('/', methods=['POST'])
+def save_json():
+    data = request.get_json()
+    with open('Gateway/gateway.json', 'w') as f:
+        json.dump(data, f)
+    return jsonify({'message': 'Data saved successfully'})
+
+
 
 #########################################################
 
