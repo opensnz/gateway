@@ -10,6 +10,6 @@ MQTT_PORT      = 1883
 MQTT_USERNAME  = "interface"
 MQTT_PASSWORD  = "interface#2022"
 
-MQTT_TOPIC_GATEWAY_EUI     = "/config/gateway/eui"
+
 MQTT_TOPIC_GATEWAY_NWK     = "/config/gateway/nwk"
 MQTT_TOPIC_GATEWAY_DEV     = "/config/gateway/dev"
