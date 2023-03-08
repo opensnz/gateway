@@ -18,7 +18,7 @@ class Forwarder():
         self.port   = port
         self.__lock = threading.Lock()
         self.__socket  = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-        self.__handler = Handler(DEFAULT_GATEWAY_EUI)
+        self.__handler = Handler(DEFAULT_GATEWAY_ID)
         self.__mqtt_client = mqtt.Client(transport="tcp",client_id="forwarder")
 
 
@@ -66,9 +66,8 @@ class Forwarder():
             with self.__lock:
                 self.__socket.sendto(tx_data, (self.host, self.port))
                 print("TX_ACK Sent")
-            DevEUI = self.__handler.get_DevEUI()
             packet = data[4:].decode("utf-8")
-            self.__publish__(DevEUI, packet)
+            self.__publish__(packet)
         elif pkt_type == PKT_PULL_ACK:
             self.__handler.pull_ack(data)
         elif pkt_type == PKT_PUSH_ACK:
@@ -93,22 +92,13 @@ class Forwarder():
             payload = eval(message.payload)
             print(payload)
             if topic == MQTT_TOPIC_FORWARDER_IN:
-                DevEUI = payload["DevEUI"]
-                data : str = payload["packet"]
-                data = self.__handler.push_data(data, DevEUI)
+                data = json.dumps(payload)
+                data = self.__handler.push_data(data)
                 with self.__lock:
                     self.__socket.sendto(data, (self.host, self.port))
                     print("PUSH_DATA Sent")
-            elif topic == MQTT_TOPIC_FORWARDER_EUI:
-                gateway_id = payload["gatewayID"]
-                self.__handler.set_gateway_eui(gateway_id)
-                print("GATEWAY ID Set")
             elif topic == MQTT_TOPIC_FORWARDER_NWK:
-                host = payload["host"]
-                port = payload["port"]
-                with self.__lock:
-                    self.host = host
-                    self.port = port
+                self.__network_config__(payload)
                 print("LoRa Server Set")
         except Exception as e:
             print(e)
@@ -124,8 +114,6 @@ class Forwarder():
 
     def __mqtt_on_connect__(self, client : mqtt.Client, userdata, flags, rc):
         print("MQTT_Client connected")
-        client.subscribe(MQTT_TOPIC_FORWARDER_IN)
-        client.subscribe(MQTT_TOPIC_FORWARDER_EUI)
         client.subscribe(MQTT_TOPIC_FORWARDER_NWK)
 
 
@@ -133,16 +121,19 @@ class Forwarder():
         print("MQTT_Client disconnected")
 
 
-    def __publish__(self, DevEUI:str, packet:str):
-        """Publish packet with DevEUI to Gateway System"""
-        payload = {
-            "DevEUI":DevEUI,
-            "packet":packet
-        }
-        print("Publishing Packet", payload["packet"])
-        self.__mqtt_client.publish(MQTT_TOPIC_FORWARDER_OUT, payload=json.dumps(payload))
+    def __publish__(self,  packet:str):
+        """Publish packet to Gateway System"""
+        print("Publishing Packet", packet)
+        self.__mqtt_client.publish(MQTT_TOPIC_FORWARDER_OUT, packet)
 
-
+    def __network_config__(self,  payload:dict):
+        host  = payload["gateway_conf"]["server_address"]
+        port  = payload["gateway_conf"]["server_post"]
+        gw_id = payload["gateway_conf"]["gateway_id"]
+        with self.__lock:
+            self.host = host
+            self.port = port
+            self.__handler.set_gateway_id(gw_id)
 
 if __name__ == "__main__":
     forwarder = Forwarder("192.168.1.113", 1700)

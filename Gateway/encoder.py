@@ -7,6 +7,17 @@ class Encoder():
 
 
     @staticmethod
+    def packet_type(PHYPayload:str) -> str:
+        post_json = {}
+        post_json["PHYPayload"] = PHYPayload
+        response = requests.post(PACKET_ENCODER_URL+"MessageType", json=post_json)
+        # To be sure that everything is ok
+        while response.status_code != 200:
+            response = requests.post(PACKET_ENCODER_URL+"MessageType", json=post_json)
+        return response.json()["MessageType"]
+
+
+    @staticmethod
     def join_request(device:dict) -> dict:
         post_json = {}
         post_json["DevEUI"] = device["DevEUI"]
@@ -44,6 +55,7 @@ class Encoder():
         _db = Database()
         _db.open()
         _db.update_session_keys(device["DevEUI"], device["DevAddr"], device["NwkSKey"], device["AppSKey"])
+        _db.update_f_cnt(device["DevEUI"])
         _db.close()
         return device
 
