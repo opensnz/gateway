@@ -65,42 +65,42 @@
         <div class="row mb-3">
           <label class="col-sm-2 col-form-label" for="serveraddr"> Server Address </label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="serveraddr" placeholder="Server Address" value="192.168.1.154">
+            <input type="text" class="form-control" id="serveraddr" placeholder="Server Address" value="{{ system.gateway_conf.server_address }}">
           </div>
         </div>
 
         <div class="row mb-3">
           <label class="col-sm-2 col-form-label" for="serverport"> Server Port </label>
           <div class="col-sm-10">
-            <input type="number" class="form-control" id="serverport" placeholder="Server Port" value="1700">
+            <input type="number" class="form-control" id="serverport" placeholder="Server Port" value="{{ system.gateway_conf.server_port }}">
           </div>
         </div>
 
         <div class="row mb-3">
           <label class="col-sm-2 col-form-label" for="gatewayid"> Gateway ID </label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="gatewayid" placeholder="Gateway ID" value="ghg65454fcfc4987">
+            <input type="text" class="form-control" id="gatewayid" placeholder="Gateway ID" value="{{ system.gateway_conf.gateway_id }}">
           </div>
         </div>
 
         <div class="row mb-3">
           <label class="col-sm-2 col-form-label" for="latitude"> Latitude </label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="latitude" placeholder="Location info">
+            <input type="text" class="form-control" id="latitude" placeholder="Location info" value="{{ system.gateway_conf.gateway_lat }}">
           </div>
         </div>
 
         <div class="row mb-3">
           <label class="col-sm-2 col-form-label" for="longtitude"> Longtitude </label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="longtitude" placeholder="Location info">
+            <input type="text" class="form-control" id="longtitude" placeholder="Location info" value="{{ system.gateway_conf.gateway_lon }}">
           </div>
         </div>
         
         <div class="row mb-3">
           <label class="col-sm-2 col-form-label" for="altitude"> Altitude </label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="altitude" placeholder="Location info">
+            <input type="text" class="form-control" id="altitude" placeholder="Location info" value="{{ system.gateway_conf.gateway_alt }}">
           </div>
         </div>
 
@@ -111,15 +111,15 @@
           <div class="row mb-3">
             <label class="col-sm-2 col-form-label" for="frequency"> Frequency </label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="frequency" placeholder="Gateway's LoRa Frequency">
+              <input type="text" class="form-control" id="frequency" placeholder="Gateway's LoRa Frequency" value="{{ system.radio_conf.frequency }}">
             </div>
           </div>
 
           <div class="row mb-3">
             <label class="col-sm-2 col-form-label" for="spreadingfactor"> Spreading Factor </label>
             <div class="col-sm-10">
-              <select class="form-select" id="spreadingfactor">
-                <option selected>7</option>
+              <select class="form-select" id="spreadingfactor" value="{{ system.radio_conf.spreading_factor }}">
+                <option>7</option>
                 <option>8</option>
                 <option>9</option>
                 <option>10</option>
@@ -132,8 +132,8 @@
           <div class="row mb-3">
             <label class="col-sm-2 col-form-label" for="codingrate"> Coding Rate </label>
             <div class="col-sm-10">
-              <select class="form-select" id="codingrate">
-                <option selected>1</option>
+              <select class="form-select" id="codingrate" value="{{ system.radio_conf.coding_rate }}">
+                <option>1</option>
                 <option>2</option>
                 <option>3</option>
                 <option>4</option>
@@ -144,9 +144,9 @@
           <div class="row mb-3">
             <label class="col-sm-2 col-form-label" for="SBW"> Signal Bandwidth </label>
             <div class="col-sm-10">
-              <select class="form-select" id="SBW">
+              <select class="form-select" id="SBW" value="{{ system.radio_conf.bandwidth }}">
                 <option>125000</option>
-                <option selected>250000</option>
+                <option>250000</option>
               </select>
             </div>
           </div>
