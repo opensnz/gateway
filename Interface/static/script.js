@@ -122,6 +122,8 @@ function deleteDevices() {
     }
 }
 
+
+
 function saveData() {
     var serverAddress = document.getElementById("serveraddr").value;
     var serverPort = document.getElementById("serverport").value;
@@ -129,30 +131,32 @@ function saveData() {
     var latitude = document.getElementById("latitude").value;
     var longitude = document.getElementById("longtitude").value;
     var altitude = document.getElementById("altitude").value;
-
+  
     var frequency = document.getElementById("frequency").value;
+    var bandwidth = document.getElementById("SBW").value;
     var spreadingFactor = document.getElementById("spreadingfactor").value;
-    var codingrate = document.getElementById("codingrate").value;
-    var SBW = document.getElementById("SBW").value;
-
+    var codingRate = document.getElementById("codingrate").value;
+  
     var data = {
-      server_address: serverAddress,
-      server_port: serverPort,
-      gateway_id: gatewayId,
-      gateway_lat: latitude,
-      gateway_lon: longitude,
-      gateway_alt: altitude,
-
-      frequency: frequency,
-      bandwidth: SBW,
-      spreading_factor: spreadingFactor,
-      coding_rate: codingrate
+      radio_conf: {
+        frequency: frequency,
+        bandwidth: bandwidth,
+        spreading_factor: spreadingFactor,
+        coding_rate: codingRate,
+      },
+      gateway_conf: {
+        server_address: serverAddress,
+        server_port: serverPort,
+        gateway_id: gatewayId,
+        gateway_lat: latitude,
+        gateway_lon: longitude,
+        gateway_alt: altitude,
+      },
     };
+  
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", url);
+    xhr.open("POST", "gateway\Gateway\gateway.json");
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(data));
   }
-
-
   
