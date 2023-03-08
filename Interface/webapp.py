@@ -94,11 +94,7 @@ def delete_devices():
 
 
 
-<<<<<<< HEAD
-@app.route('/', methods=['POST'])
-=======
 @app.route('/network', methods=['POST'])
->>>>>>> 46a6c7d10ff8fbe97f0056315545a831378792eb
 def save_json():
     data = request.get_json()
     client = mqtt.Client(transport="tcp",client_id="interface")
