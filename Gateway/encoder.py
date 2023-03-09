@@ -29,7 +29,6 @@ class Encoder():
         while response.status_code != 200:
             response = requests.post(PACKET_ENCODER_URL+"JoinRequest", json=post_json)
         _db = Database()
-        print(device)
         _db.open()
         _db.update_dev_nonce(device["DevEUI"], device["DevNonce"]+1)
         _db.close()
