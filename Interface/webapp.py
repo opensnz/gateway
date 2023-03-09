@@ -115,7 +115,7 @@ def save_json():
 
 
 if __name__ == "__main__":
-   app.run(host='0.0.0.0', port=88, debug=False)
+   app.run(host=WEB_APP_BIND, port=WEB_APP_PORT, debug=False)
 
 
 
