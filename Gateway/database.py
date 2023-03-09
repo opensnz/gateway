@@ -1,15 +1,6 @@
 import sqlite3
 from constants import SQLITE_DATABASE_PATH
 
-TABLE_CONFIG_QUERY = """
-CREATE TABLE IF NOT EXISTS CONFIG (
-    ID INTEGER PRIMARY KEY AUTOINCREMENT,
-    GatewayEUI VARCHAR(16) NOT NULL,
-    Forwarder_Host VARCHAR(255) NOT NULL,
-    Forwarder_Port INTEGER DEFAULT 1700,
-    Created_at TIMESTAMP DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now', 'utc'))
-);
-"""
 TABLE_DEVICE_QUERY = """
 CREATE TABLE IF NOT EXISTS DEVICE (
     ID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -34,9 +25,6 @@ CREATE TABLE IF NOT EXISTS DATA (
 );
 """
 
-SELECT_CONFIG_QUERY  = "SELECT * FROM CONFIG"
-INSERT_CONFIG_QUERY  = "INSERT INTO CONFIG(GatewayEUI, Forwarder_Host, Forwarder_Port) VALUES(?, ?, ?) "
-UPDATE_CONFIG_QUERY  = "UPDATE CONFIG SET "
 
 SELECT_DEVICES_QUERY = "SELECT * FROM DEVICE "
 SELECT_DEVICE_QUERY  = "SELECT * FROM DEVICE WHERE DevEUI = ? "
@@ -84,59 +72,12 @@ class Database():
     def create_tables(self) -> bool:
         if self.__connected__() is not True:
             return False
-        self.__cursor.execute(TABLE_CONFIG_QUERY)
         self.__cursor.execute(TABLE_DEVICE_QUERY)
         self.__cursor.execute(TABLE_DATA_QUERY)
         self.__connection.commit()
-        self.__insert_config__()
         return True
 
-    ######################## Table CONFIG CRUD methods #############################
 
-    def __get_config__(self, item:tuple=None) -> dict:
-        if item is None or len(item) != 5:
-            return None
-        config = {}
-        config["GatewayEUI"]   = item[1]
-        config["Forwarder_Host"]   = item[2]
-        config["Forwarder_Port"]   = item[3]
-        return config
-
-    def get_config(self) -> dict:
-        if self.__connected__() is not True:
-            return None
-        self.__cursor.execute(SELECT_CONFIG_QUERY)
-        item = self.__cursor.fetchone()
-        return self.__get_config__(item)
-
-    def __insert_config__(self, gateway_eui=DEFAULT_GATEWAYEUI, host='localhost', port=1700) -> bool:
-        if self.__connected__() is not True:
-            return False
-        self.__cursor.execute(INSERT_CONFIG_QUERY, (gateway_eui, host, port,))
-        self.__cursor.connection.commit()
-        return True
-    
-    def update_gateway_eui(self, gateway_eui) -> bool:
-        if self.__connected__() is not True:
-            return False
-        if gateway_eui == None:
-            print(COLOR.FAIL+"GatewayEUI can't be none"+COLOR.END)
-            return False
-        query = UPDATE_CONFIG_QUERY + "GatewayEUI = ? " \
-                                    + "WHERE ID = ?"
-        self.__cursor.execute(query, (gateway_eui, 1,))
-        self.__connection.commit()
-        return True
-    
-    def update_forwarder_config(self, host, port) -> bool:
-        if self.__connected__() is not True:
-            return False
-        query = UPDATE_CONFIG_QUERY + "Forwarder_Host = ? " \
-                                    + "Forwarder_Port = ? " \
-                                    + "WHERE ID = ?"
-        self.__cursor.execute(query, (host, port, 1,))
-        self.__connection.commit()
-        return True
 
     ######################## Table DEVICE CRUD methods #############################
 
@@ -179,69 +120,83 @@ class Database():
         return devices
 
     def insert_device(self, DevEUI:str=None, AppEUI:str=DEFAULT_APPEUI, AppKey:str=None) -> bool:
-        if self.__connected__() is not True:
+        try:
+            if self.__connected__() is not True:
+                return False
+            if DevEUI == None or AppKey == None:
+                print(COLOR.FAIL+"DevEUI or AppEUI can't be none"+COLOR.END)
+                return False
+            self.__cursor.execute(INSERT_DEVICE_QUERY, (DevEUI, AppEUI, AppKey,))
+            self.__cursor.connection.commit()
+            return self.__insert_data__(DevEUI=DevEUI)
+        except:
             return False
-        if DevEUI == None or AppKey == None:
-            print(COLOR.FAIL+"DevEUI or AppEUI can't be none"+COLOR.END)
-            return False
-        self.__cursor.execute(INSERT_DEVICE_QUERY, (DevEUI, AppEUI, AppKey,))
-        self.__cursor.connection.commit()
-        return self.__insert_data__(DevEUI=DevEUI)
     
-    def update_dev_nonce(self, DevEUI:str=None, DevNonce:int=0) -> bool:
-        if self.__connected__() is not True:
+    def update_dev_nonce(self, DevEUI:str=None, DevNonce:int=1) -> bool:
+        try:
+            if self.__connected__() is not True:
+                return False
+            if DevEUI == None:
+                print(COLOR.FAIL+"DevEUI can't be none"+COLOR.END)
+                return False
+            if DevNonce <= 0 or DevNonce >= 65536:
+                print(COLOR.FAIL+"DevNonce must be between 1 and 65535"+COLOR.END)
+                return False
+            query = UPDATE_DEVICE_QUERY + "DevNonce = ? " \
+                                        + "WHERE DevEUI = ?"
+            self.__cursor.execute(query, (DevNonce, DevEUI,))
+            self.__connection.commit()
+            return True
+        except:
             return False
-        if DevEUI == None:
-            print(COLOR.FAIL+"DevEUI can't be none"+COLOR.END)
-            return False
-        if DevNonce <= 0 or DevNonce >= 65536:
-            print(COLOR.FAIL+"DevNonce must be between 1 and 65535"+COLOR.END)
-            return False
-        query = UPDATE_DEVICE_QUERY + "DevNonce = ? " \
-                                    + "WHERE DevEUI = ?"
-        self.__cursor.execute(query, (DevNonce, DevEUI,))
-        self.__connection.commit()
-        return True
 
-    def update_f_cnt(self, DevEUI:str=None, FCnt:int=0) -> bool:
-        if self.__connected__() is not True:
+    def update_f_cnt(self, DevEUI:str=None, FCnt:int=1) -> bool:
+        try:
+            if self.__connected__() is not True:
+                return False
+            if DevEUI == None:
+                print(COLOR.FAIL+"DevEUI can't be none"+COLOR.END)
+                return False
+            if FCnt <= 0 or FCnt >= 65536:
+                print(COLOR.FAIL+"FCnt must be between 1 and 65535"+COLOR.END)
+                return False
+            query = UPDATE_DEVICE_QUERY + "FCnt = ? " \
+                                        + "WHERE DevEUI = ?"
+            self.__cursor.execute(query, (FCnt, DevEUI,))
+            self.__connection.commit()
+            return True
+        except:
             return False
-        if DevEUI == None:
-            print(COLOR.FAIL+"DevEUI can't be none"+COLOR.END)
-            return False
-        if FCnt <= 0 or FCnt >= 65536:
-            print(COLOR.FAIL+"FCnt must be between 1 and 65535"+COLOR.END)
-            return False
-        query = UPDATE_DEVICE_QUERY + "FCnt = ? " \
-                                    + "WHERE DevEUI = ?"
-        self.__cursor.execute(query, (FCnt, DevEUI,))
-        self.__connection.commit()
-        return True
 
     def update_session_keys(self, DevEUI:str=None, DevAddr:str=None, NwkSKey:str=None, AppSKey:str=None) -> bool:
-        if self.__connected__() is not True:
+        try:
+            if self.__connected__() is not True:
+                return False
+            if DevEUI == None or DevAddr == None or NwkSKey == None or AppSKey == None:
+                print(COLOR.FAIL+"DevEUI or DevAddr or NwkSKey or AppSKey can't be none"+COLOR.END)
+                return False
+            query = UPDATE_DEVICE_QUERY + "DevAddr = ?, " \
+                                        + "NwkSKey = ?, " \
+                                        + "AppSKey = ? " \
+                                        + "WHERE DevEUI = ?"
+            self.__cursor.execute(query, (DevAddr, NwkSKey, AppSKey, DevEUI,))
+            self.__connection.commit()
+            return True
+        except:
             return False
-        if DevEUI == None or DevAddr == None or NwkSKey == None or AppSKey == None:
-            print(COLOR.FAIL+"DevEUI or DevAddr or NwkSKey or AppSKey can't be none"+COLOR.END)
-            return False
-        query = UPDATE_DEVICE_QUERY + "DevAddr = ?, " \
-                                    + "NwkSKey = ?, " \
-                                    + "AppSKey = ? " \
-                                    + "WHERE DevEUI = ?"
-        self.__cursor.execute(query, (DevAddr, NwkSKey, AppSKey, DevEUI,))
-        self.__connection.commit()
-        return True
     
     def delete_device(self, DevEUI:str=None) -> bool:
-        if self.__connected__() is not True:
+        try:
+            if self.__connected__() is not True:
+                return False
+            if DevEUI == None:
+                print(COLOR.FAIL+"DevEUI can't be none"+COLOR.END)
+                return False
+            self.__cursor.execute(DELETE_DEVICE_QUERY, (DevEUI,))
+            self.__connection.commit()
+            return self.__delete_data__(DevEUI=DevEUI)
+        except:
             return False
-        if DevEUI == None:
-            print(COLOR.FAIL+"DevEUI can't be none"+COLOR.END)
-            return False
-        self.__cursor.execute(DELETE_DEVICE_QUERY, (DevEUI,))
-        self.__connection.commit()
-        return self.__delete_data__(DevEUI=DevEUI)
-    
 
     ######################## Table DATA CRUD methods #############################
 

@@ -125,7 +125,7 @@ class Database():
         self.__cursor.connection.commit()
         return self.__insert_data__(DevEUI=DevEUI)
     
-    def update_dev_nonce(self, DevEUI:str=None, DevNonce:int=0) -> bool:
+    def update_dev_nonce(self, DevEUI:str=None, DevNonce:int=1) -> bool:
         if self.__connected__() is not True:
             return False
         if DevEUI == None:
@@ -140,7 +140,7 @@ class Database():
         self.__connection.commit()
         return True
 
-    def update_f_cnt(self, DevEUI:str=None, FCnt:int=0) -> bool:
+    def update_f_cnt(self, DevEUI:str=None, FCnt:int=1) -> bool:
         if self.__connected__() is not True:
             return False
         if DevEUI == None:
