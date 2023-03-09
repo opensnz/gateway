@@ -27,3 +27,19 @@ sudo chmod a+x ./gateway.sh
 source ./gateway.sh
 cd ..
 echo "Finished"
+
+
+echo "Installation of Transceiver Service..."
+cd ./Transceiver
+sudo chmod a+x ./transceiver.sh
+source ./transceiver.sh
+cd ..
+echo "Finished"
+
+
+echo "Installation of Interface Service..."
+cd ./Interface
+sudo chmod a+x ./interface.sh
+source ./interface.sh
+cd ..
+echo "Finished"
