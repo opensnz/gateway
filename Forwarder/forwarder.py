@@ -133,6 +133,7 @@ class Forwarder():
 
     def __mqtt_on_connect__(self, client : mqtt.Client, userdata, flags, rc):
         print("MQTT_Client connected")
+        client.subscribe(MQTT_TOPIC_FORWARDER_IN)
         client.subscribe(MQTT_TOPIC_FORWARDER_NWK)
 
 

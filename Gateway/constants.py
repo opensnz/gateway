@@ -12,7 +12,7 @@ SQLITE_DATABASE_PATH = "gateway.db"
 # Constants for GPS
 GPS_START_TIMESTAMP  = 315964800 # January 6, 1980, 00:00:00 (seconds)
 
-JOIN_REQUEST_FREQUENCY = 30#86400  # 1 day = 86400s 
+JOIN_REQUEST_FREQUENCY = 86400  # 1 day = 86400s 
 
 # Constants for Packet Encoder Service
 PACKET_ENCODER_URL = "http://localhost:8080/"
