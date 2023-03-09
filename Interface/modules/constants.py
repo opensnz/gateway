@@ -2,7 +2,10 @@
 # Constants for SQLITE
 SQLITE_DATABASE_PATH = "../Gateway/gateway.db"
 SELECT_DEVICES_QUERY = "SELECT * FROM DEVICE "
-SELECT_CONFIG_QUERY  = "SELECT * FROM CONFIG"
+
+# Constants for web app
+WEB_APP_BIND  = "0.0.0.0"
+WEB_APP_PORT  = 88  # must be 80 in final version
 
 # Constants for MQTT
 MQTT_BROKER    = "localhost"#"192.168.1.241"
