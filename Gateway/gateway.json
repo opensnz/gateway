@@ -1,1 +1,1 @@
-{"radio_conf": {"frequency": "867100000", "bandwidth": "125000", "spreading_factor": "9", "coding_rate": "1"}, "gateway_conf": {"server_address": "192.168.1.116", "server_port": "1800", "gateway_id": "0011223344556677", "gateway_lat": "1.0", "gateway_lon": "2.0", "gateway_alt": "3.0"}}
+{"radio_conf": {"frequency": "867100000", "bandwidth": "125000", "spreading_factor": "7", "coding_rate": "1"}, "gateway_conf": {"server_address": "192.168.1.119", "server_port": "1800", "gateway_id": "0011223344556677", "gateway_lat": "1.0", "gateway_lon": "2.0", "gateway_alt": "3.0"}}
