@@ -1,17 +1,18 @@
 #################### Project dependencies installation #####################
 # 0. Update the source list
 sudo apt update
-# 1. Install paho-mqtt and pyLoRa module and its dependencies
-sudo pip install RPi.GPIO
-sudo pip install spidev
-sudo pip install pyLoRa
+# Install dependencies for gateway.py
+sudo pip3 install paho-mqtt
+sudo pip3 install pyserial
+# UART configuration on Pi 3 or 4
+############# Edit /boot/config.txt file 
+#sudo nano /boot/config.txt
+############# Paste these lines at the end of config file
+# enable_uart=1
+# dtoverlay=pi3-disable-bt
+############# Reboot now
+# sudo reboot
 
-# 2. Enable SPI peripheral
-echo "Enable SPI peripheral"
-sleep 2
-#sudo raspi-config
-
-# 3. Create 
 
 ############# Transceiver Service Daemon Installation ############
 
@@ -28,19 +29,19 @@ sudo chmod 644 /lib/systemd/system/transceiver.service
 sudo systemctl daemon-reload
 
 # 5. Enable transceiver service
-sudo systemctl enable transceiver.service
+# sudo systemctl enable transceiver.service
 
-# 6. Start transceiver service
-sudo systemctl start transceiver.service
+# # 6. Start transceiver service
+# sudo systemctl start transceiver.service
 
 
-####### Other commands ##########
+# ####### Other commands ##########
 
-# Restart transceiver service
-sudo systemctl restart transceiver.service
+# # Restart transceiver service
+# sudo systemctl restart transceiver.service
 
-# Show transceiver service status
-sudo systemctl status transceiver.service
+# # Show transceiver service status
+# sudo systemctl status transceiver.service
 
-#  Show transceiver service journal 
-sudo journalctl -r -u transceiver.service
+# #  Show transceiver service journal 
+# sudo journalctl -r -u transceiver.service

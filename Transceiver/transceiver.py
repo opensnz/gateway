@@ -1,8 +1,7 @@
 
 import paho.mqtt.client as mqtt
+import serial
 from constants import *
-from SX127x.LoRa import LoRa
-from SX127x.board_config import BOARD2 as BOARD
 
 
 class Transceiver():
@@ -18,15 +17,27 @@ class Transceiver():
         self.__mqtt_client.on_disconnect = self.__mqtt_on_disconnect__
         self.__mqtt_client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
         self.__mqtt_client.connect(MQTT_BROKER, MQTT_PORT)
+        # Open serial port with baud rate
+        self.__ser = serial.Serial (port='/dev/ttyAMA0',
+                            baudrate=9600,
+                            parity=serial.PARITY_NONE,
+                            stopbits=serial.STOPBITS_ONE,
+                            bytesize=serial.EIGHTBITS,
+                            timeout=None) 
 
 
     def __loop__(self):
         while True:
             print("Transceiver Waiting for data...")
             # Read incoming data
-            payload = ""
+            self.__ser.flushInput()
+            data = self.__ser.readline()
+            payload = data[1:].decode('utf-8').rstrip("\n")
+            print(payload)
+
+
             # Publish data
-            self.__mqtt_client.publish(topic=MQTT_TOPIC_TRANSCEIVER_OUT, payload=payload)
+            #self.__mqtt_client.publish(topic=MQTT_TOPIC_TRANSCEIVER_OUT, payload=payload)
         
 
     def main(self) -> None:

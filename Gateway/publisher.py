@@ -5,11 +5,11 @@ from constants import *
 
 mqtt_client = mqtt.Client(transport="tcp",client_id="transceiver")
 
-DevEUI = "b53fcaaa8725fe1b"
+DevEUI = "c2e1bce5f95abcae"
 #DevEUI = "A840415411822622"
 DevEUI = "f8e420ac9753b6a2"
 #payload = "68100001020304050681319012002C601300002C150515002C330303033556353700043600303016111119200012005716"
-payload = "6810AAAAAAAAAAAAAA81319012002C601300002C150515002C33030303355635370004360030301611111920001200E816"
+payload = "4545"
 
 
 mqtt_client.username_pw_set("transceiver","transceiver#2022")
