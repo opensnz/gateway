@@ -107,7 +107,9 @@ def save_json():
     client.connect(MQTT_BROKER, MQTT_PORT)
     client.publish(MQTT_TOPIC_GATEWAY_DEV, json.dumps(data)) 
     client.disconnect()
-    return jsonify({'message': 'Data saved successfully'})
+    with open(CONFIG_FILE_PATH, "w") as file:
+        json.dump(data, file)
+    return jsonify({"success": True})
 
 
 
