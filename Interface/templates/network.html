@@ -10,11 +10,11 @@
   <link href="../static/bootstrap.min.css" rel="stylesheet">
   <script src="../static/bootstrap.bundle.min.js"></script>
   <style>
-		body {
-			margin: 0;
-			padding: 0;
-		}
-	</style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
 </head>
 
 <body>
@@ -62,42 +62,48 @@
         <div class="row mb-3">
           <label class="col-sm-2 col-form-label" for="serveraddr"> Server Address </label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="serveraddr" placeholder="Server Address" value="{{ system.gateway_conf.server_address }}">
+            <input type="text" class="form-control" id="serveraddr" placeholder="Server Address"
+              value="{{ system.gateway_conf.server_address }}">
           </div>
         </div>
 
         <div class="row mb-3">
           <label class="col-sm-2 col-form-label" for="serverport"> Server Port </label>
           <div class="col-sm-10">
-            <input type="number" class="form-control" id="serverport" placeholder="Server Port" value="{{ system.gateway_conf.server_port }}">
+            <input type="number" class="form-control" id="serverport" placeholder="Server Port"
+              value="{{ system.gateway_conf.server_port }}">
           </div>
         </div>
 
         <div class="row mb-3">
           <label class="col-sm-2 col-form-label" for="gatewayid"> Gateway ID </label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="gatewayid" placeholder="Gateway ID" value="{{ system.gateway_conf.gateway_id }}">
+            <input type="text" class="form-control" id="gatewayid" placeholder="Gateway ID"
+              value="{{ system.gateway_conf.gateway_id }}">
           </div>
         </div>
 
         <div class="row mb-3">
           <label class="col-sm-2 col-form-label" for="latitude"> Latitude </label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="latitude" placeholder="Location info" value="{{ system.gateway_conf.gateway_lat }}">
+            <input type="text" class="form-control" id="latitude" placeholder="Location info"
+              value="{{ system.gateway_conf.gateway_lat }}">
           </div>
         </div>
 
         <div class="row mb-3">
           <label class="col-sm-2 col-form-label" for="longtitude"> Longtitude </label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="longtitude" placeholder="Location info" value="{{ system.gateway_conf.gateway_lon }}">
+            <input type="text" class="form-control" id="longtitude" placeholder="Location info"
+              value="{{ system.gateway_conf.gateway_lon }}">
           </div>
         </div>
-        
+
         <div class="row mb-3">
           <label class="col-sm-2 col-form-label" for="altitude"> Altitude </label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="altitude" placeholder="Location info" value="{{ system.gateway_conf.gateway_alt }}">
+            <input type="text" class="form-control" id="altitude" placeholder="Location info"
+              value="{{ system.gateway_conf.gateway_alt }}">
           </div>
         </div>
 
@@ -108,7 +114,8 @@
           <div class="row mb-3">
             <label class="col-sm-2 col-form-label" for="frequency"> Frequency </label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="frequency" placeholder="Gateway's LoRa Frequency" value="{{ system.radio_conf.frequency }}">
+              <input type="text" class="form-control" id="frequency" placeholder="Gateway's LoRa Frequency"
+                value="{{ system.radio_conf.frequency }}">
             </div>
           </div>
 
@@ -163,7 +170,8 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-auto">
-          <p class="mb-0">&copy;2022 <a href="https://www.opensnz-technology.com" class="text-white" target="_blank">Opensnz Technology</a>. Tous droits réservés.</p>
+          <p class="mb-0">&copy;2022 <a href="https://www.opensnz-technology.com" class="text-white"
+              target="_blank">Opensnz Technology</a>. Tous droits réservés.</p>
         </div>
       </div>
     </div>

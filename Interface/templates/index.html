@@ -11,15 +11,26 @@
   <link href="../static/bootstrap.min.css" rel="stylesheet">
   <script src="../static/bootstrap.bundle.min.js"></script>
   <style>
-		body {
-			margin: 0;
-			padding: 0;
-		}
-	</style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    main {
+      flex-grow: 1;
+    }
+
+    footer {
+      margin-top: auto;
+    }
+  </style>
 </head>
 
 <body>
-  
+
   <!-- Header -->
   <header>
     <nav class="navbar navbar-expand-sm bg-primary navbar-dark ">
@@ -45,7 +56,7 @@
       </div>
     </nav>
   </header>
-<main>
+  <main>
 
     <div class="container mt-3" style="min-height: 100vh;">
       <div class="card">
@@ -56,30 +67,34 @@
           <div class="col-md-8">
             <div class="card-body">
               <h5 class="card-title">Welcome to OpenSNZ Technology Company's LoRaWAN Gateway Configuration page!</h5>
-              <p class="card-text">Welcome to the Opensnz LoRaWAN gateway monitoring web application. With this tool, you can easily monitor the status of your LoRaWAN gateway and manage the devices that are connected to it.</p>
-              <p>You can add new devices, delete devices that are no longer needed, and view information about each device </p>
-              <p>This web application also provides real-time information about the gateway's network and system, such as server information, location and radio setings. </p>
-              <p>You can use this information to troubleshoot issues and ensure that your LoRaWAN network is running smoothly.</p>                
-              <p>Overall, this tool provides an easy and convenient way to manage your LoRaWAN gateway and connected devices, helping you to streamline your operations and keep your network running smoothly. </p>
+              <p class="card-text">Welcome to the Opensnz LoRaWAN gateway monitoring web application. With this tool,
+                you can easily monitor the status of your LoRaWAN gateway and manage the devices that are connected to
+                it.</p>
+              <p>You can add new devices, delete devices that are no longer needed, and view information about each
+                device </p>
+              <p>This web application also provides real-time information about the gateway's network and system, such
+                as server information, location and radio setings. </p>
+              <p>You can use this information to troubleshoot issues and ensure that your LoRaWAN network is running
+                smoothly.</p>
+              <p>Overall, this tool provides an easy and convenient way to manage your LoRaWAN gateway and connected
+                devices, helping you to streamline your operations and keep your network running smoothly. </p>
             </div>
           </div>
         </div>
       </div>
     </div>
-</main>
+  </main>
 
-<footer class="bg-primary text-white py-3">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-auto">
-        <p class="mb-0">&copy;2022 <a href="https://www.opensnz-technology.com" class="text-white" target="_blank">Opensnz Technology</a>. Tous droits réservés.</p>
+  <footer class="bg-primary text-white py-3">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-auto">
+          <p class="mb-0">&copy;2022 <a href="https://www.opensnz-technology.com" class="text-white"
+              target="_blank">Opensnz Technology</a>. Tous droits réservés.</p>
+        </div>
       </div>
     </div>
-  </div>
-</footer>
-
-
-  </body>
-  
+  </footer>
+</body>
 
 </html>
