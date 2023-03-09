@@ -1,28 +1,42 @@
 
 import paho.mqtt.client as mqtt
-import json, socket, threading
+import json, sys, socket, threading
+from datetime import datetime
 from handler import Handler
 from constants import *
 
-
-# class TYPE(enumerate):
-#     TX = 0
-#     TX_RX = 1
 
 
 class Forwarder():
 
 
-    def __init__(self, host : str, port : int):
-        self.host   = host
-        self.port   = port
+    def __init__(self):
+        self.host   = "localhost"
+        self.port   = 1700
         self.__lock = threading.Lock()
         self.__socket  = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         self.__handler = Handler(DEFAULT_GATEWAY_ID)
         self.__mqtt_client = mqtt.Client(transport="tcp",client_id="forwarder")
 
+    def __config__(self):
+        while True:
+            try :
+                with open(CONFIG_FILE_PATH, "r") as file:
+                    config = json.load(file)
+                    self.host = config["gateway_conf"]["server_address"]
+                    self.port = config["gateway_conf"]["server_port"]
+                    self.__handler.set_gateway_id(config["gateway_conf"]["gateway_id"])
+                    self.__handler.gateway_lon = config["gateway_conf"]["gateway_lon"]
+                    self.__handler.gateway_lat = config["gateway_conf"]["gateway_lat"]
+                    self.__handler.gateway_alt = config["gateway_conf"]["gateway_alt"]
+                    self.__handler.stat_interval  = config["gateway_conf"]["stat_interval"]
+                    self.__handler.alive_interval = config["gateway_conf"]["alive_interval"]
+                break
+            except:
+                pass
 
     def __setup__(self):
+        self.__config__()
         self.__socket.bind(("0.0.0.0" , self.port))
         self.__mqtt_client.on_connect    = self.__mqtt_on_connect__
         self.__mqtt_client.on_message    = self.__mqtt_on_message__
@@ -33,12 +47,9 @@ class Forwarder():
 
     def __loop__(self):
         while True:
-            print("UDP Waiting for data...")
             data, address = self.__socket.recvfrom(4096)
-            print('received {} bytes from {}'.format(len(data), address))
-            print("received message:", data)
             self.__handle__(data)
-        
+    
 
     def main(self) -> None:
         """run packet forwarder forever"""
@@ -65,7 +76,6 @@ class Forwarder():
             tx_data = self.__handler.tx_ack(token_z)
             with self.__lock:
                 self.__socket.sendto(tx_data, (self.host, self.port))
-                print("TX_ACK Sent")
             packet = data[4:].decode("utf-8")
             self.__publish__(packet)
         elif pkt_type == PKT_PULL_ACK:
@@ -76,27 +86,36 @@ class Forwarder():
 
     def __periodic_task__(self):
         try:
+            timestamp = round(datetime.utcnow().timestamp())
+            if (timestamp - self.__handler.stat_timestamp) >= self.__handler.stat_interval:
+                self.__handler.stat_timestamp = timestamp
+                data = self.__handler.push_stat()
+                with self.__lock:
+                    self.__socket.sendto(data, (self.host, self.port))
+            if self.__handler.pkt__txnb == sys.maxsize - 1:
+                self.__handler.lora_rxnb = 0
+                self.__handler.lora_txnb = 0
+                self.__handler.pkt__rxnb = 0
+                self.__handler.pkt__txnb = 0
+                self.__handler.pkt_acknb = 0
             data = self.__handler.pull_data()
             with self.__lock:
                 self.__socket.sendto(data, (self.host, self.port))
-                print("PULL_DATA Sent")
         except:
             pass
         finally:
-            threading.Timer(PULL_DATA_FREQUENCY, self.__periodic_task__).start()
+            threading.Timer(self.__handler.alive_interval, self.__periodic_task__).start()
 
                         
     def __one_shot_task__(self, message:mqtt.MQTTMessage):
         try:
             topic = message.topic
             payload = eval(message.payload)
-            print(payload)
             if topic == MQTT_TOPIC_FORWARDER_IN:
                 data = json.dumps(payload)
                 data = self.__handler.push_data(data)
                 with self.__lock:
                     self.__socket.sendto(data, (self.host, self.port))
-                    print("PUSH_DATA Sent")
             elif topic == MQTT_TOPIC_FORWARDER_NWK:
                 self.__network_config__(payload)
                 print("LoRa Server Set")
@@ -136,5 +155,5 @@ class Forwarder():
             self.__handler.set_gateway_id(gw_id)
 
 if __name__ == "__main__":
-    forwarder = Forwarder("192.168.1.113", 1700)
+    forwarder = Forwarder()
     forwarder.main()

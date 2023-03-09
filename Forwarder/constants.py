@@ -8,7 +8,6 @@ PKT_PULL_RESP = 0x03
 PKT_PULL_ACK  = 0x04
 PKT_TX_ACK    = 0x05
 
-PULL_DATA_FREQUENCY = 30 # every 30 seconds
 
 TX_ACK_NO_ERROR = "NONE"
 """Packet has been programmed for downlink"""
@@ -26,4 +25,4 @@ MQTT_TOPIC_FORWARDER_NWK   = "/forwarder/gateway/nwk"
 
 
 # Constants for Packet Forwarder
-QUEUE_MAX_SIZE = 100
+CONFIG_FILE_PATH = "../Gateway/gateway.json"
