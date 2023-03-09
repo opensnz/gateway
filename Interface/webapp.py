@@ -1,8 +1,6 @@
-import secrets
-from flask import Flask, redirect, render_template, request, Response, jsonify, abort, url_for
+from flask import Flask, redirect, render_template, request, Response, jsonify
 from modules.constants import *
 import paho.mqtt.client as mqtt
-import paho.mqtt.publish as publish
 import json
 from modules.database import Database
 from modules.telemetry import *
