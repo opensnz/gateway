@@ -1,5 +1,6 @@
 
 import paho.mqtt.client as mqtt
+import base64, json
 import serial
 from constants import *
 
@@ -33,11 +34,10 @@ class Transceiver():
             self.__ser.flushInput()
             data = self.__ser.readline()
             payload = data[1:].decode('utf-8').rstrip("\n")
+            payload = base64.b64decode(payload).hex()
             print(payload)
 
-
-            # Publish data
-            #self.__mqtt_client.publish(topic=MQTT_TOPIC_TRANSCEIVER_OUT, payload=payload)
+            self.__mqtt_client.publish(MQTT_TOPIC_TRANSCEIVER_OUT, payload=json.dumps({"packet":payload}))
         
 
     def main(self) -> None:

@@ -29,6 +29,17 @@ cd ..
 echo "Finished"
 
 
+<<<<<<< HEAD
+echo "Installation of Transceiver Service..."
+cd ./Transceiver
+sudo chmod a+x ./transceiver.sh
+source ./transceiver.sh
+cd ..
+echo "Finished"
+
+
+=======
+>>>>>>> e56b0b64581c7934506678f3284ff90b378e6b67
 echo "Installation of Interface Service..."
 cd ./Interface
 sudo chmod a+x ./interface.sh
