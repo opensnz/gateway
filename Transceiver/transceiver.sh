@@ -32,17 +32,17 @@ sudo systemctl daemon-reload
 # 5. Enable transceiver service
 sudo systemctl enable transceiver.service
 
-# # 6. Start transceiver service
-sudo systemctl start transceiver.service
+#  6. Start transceiver service
+# sudo systemctl start transceiver.service
 
 
-# ####### Other commands ##########
+######## Other commands ##########
 
-# # Restart transceiver service
-sudo systemctl restart transceiver.service
+# Restart transceiver service
+# sudo systemctl restart transceiver.service
 
-# # Show transceiver service status
-sudo systemctl status transceiver.service
+# Show transceiver service status
+# sudo systemctl status transceiver.service
 
-# #  Show transceiver service journal 
-sudo journalctl -r -u transceiver.service
+# Show transceiver service journal 
+# sudo journalctl -r -u transceiver.service
