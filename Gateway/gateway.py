@@ -26,7 +26,7 @@ class Gateway():
         self.__mqtt_client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
         self.__mqtt_client.connect(MQTT_BROKER, MQTT_PORT)
         self.__queue = queue.Queue()
-        self.__lock = threading.Lock()
+        self.__semaphore = threading.Semaphore()
 
 
     def __loop__(self):
@@ -34,7 +34,7 @@ class Gateway():
         while True:
             self._db.open()
             devices = self._db.get_devices()
-            with self.__lock :
+            with self.__semaphore :
                 for device in devices :
                     date_time = {
                         "time": datetime.utcnow().isoformat()+'Z',
@@ -113,8 +113,8 @@ class Gateway():
 
     def __unconfirmed_data_up_packet__(self, device:dict, payload:str) -> dict:
         # Acquire will block when gateway perfoms JoinRequest
-        self.__lock.acquire()
-        self.__lock.release()
+        self.__semaphore.acquire()
+        self.__semaphore.release()
         packet = self.__generic_packet__()
         encoded = Encoder.unconfirmed_data_up(device, payload)
         # Filling packet
