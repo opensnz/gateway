@@ -46,7 +46,6 @@ class Transceiver():
     def __one_shot_task__(self, payload:bytes):
         try:
             payload = payload.decode('utf-8').rstrip("\n")
-            print(payload)
             payload = base64.b64decode(payload, validate=True).hex()
             self.__mqtt_client.publish(MQTT_TOPIC_TRANSCEIVER_OUT, payload=json.dumps({"packet":payload}))
         except:
