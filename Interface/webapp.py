@@ -12,11 +12,6 @@ from modules.constants import *
 
 #########################################################################
 
-mqtt_client = mqtt.Client(transport="tcp",client_id="interface")
-mqtt_client.username_pw_set("interface","interface#2022")
-mqtt_client.connect(MQTT_BROKER, MQTT_PORT)
-
-#########################################################################
 
 app = Flask(__name__)
 
@@ -70,7 +65,7 @@ def add_device():
     status = db.insert_device(body["DevEUI"], body["AppEUI"], body["AppKey"])
     db.close()
     client = mqtt.Client(transport="tcp",client_id="interface")
-    mqtt_client.username_pw_set(MQTT_USERNAME,MQTT_PASSWORD)
+    client.username_pw_set(MQTT_USERNAME,MQTT_PASSWORD)
     client.connect(MQTT_BROKER, MQTT_PORT)
     client.publish(MQTT_TOPIC_GATEWAY_DEV, payload=json.dumps(body))
     client.disconnect()
@@ -101,7 +96,7 @@ def delete_devices():
 def save_json():
     data = request.get_json()
     client = mqtt.Client(transport="tcp",client_id="interface")
-    mqtt_client.username_pw_set(MQTT_USERNAME,MQTT_PASSWORD)
+    client.username_pw_set(MQTT_USERNAME,MQTT_PASSWORD)
     client.connect(MQTT_BROKER, MQTT_PORT)
     client.publish(MQTT_TOPIC_GATEWAY_NWK, json.dumps(data)) 
     client.disconnect()
