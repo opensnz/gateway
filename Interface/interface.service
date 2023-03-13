@@ -8,7 +8,7 @@ User=pi
 Group=sudo
 Type=simple
 WorkingDirectory=/home/pi/gateway/Interface
-ExecStart=/usr/bin/python3 -u /home/pi/gateway/Interface/webapp.py
+ExecStart=sudo /usr/bin/python3 -u /home/pi/gateway/Interface/webapp.py
 Restart=on-failure
 RestartSec=1s
 
