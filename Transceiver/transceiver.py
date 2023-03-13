@@ -39,12 +39,13 @@ class Transceiver():
             if data[0] == 0x0A:
                 data = self.__ser.readline()
                 payload_index = 0
-            payload = data[payload_index:].decode('utf-8').rstrip("\n")
+            payload = data[payload_index:]
             threading.Timer(0, self.__one_shot_task__, args=(payload,)).start()
 
 
-    def __one_shot_task__(self, payload:str):
+    def __one_shot_task__(self, payload:bytes):
         try:
+            payload = payload.decode('utf-8').rstrip("\n")
             print(payload)
             payload = base64.b64decode(payload, validate=True).hex()
             self.__mqtt_client.publish(MQTT_TOPIC_TRANSCEIVER_OUT, payload=json.dumps({"packet":payload}))
