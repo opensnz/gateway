@@ -46,6 +46,7 @@ class Gateway():
                     if packet != None :
                         # Publish packet
                         self.__publish__(packet)
+                        time.sleep(1)
 
             time.sleep(JOIN_REQUEST_FREQUENCY)
   
