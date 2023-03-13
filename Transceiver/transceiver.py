@@ -34,19 +34,19 @@ class Transceiver():
             # Read incoming data
             self.__ser.flushInput()
             payload = ""
+            payload_index = 1
             data = self.__ser.readline()
             if data[0] == 0x0A:
                 data = self.__ser.readline()
-                payload = data.decode('utf-8').rstrip("\n")
-            else:
-                payload = data[1:].decode('utf-8').rstrip("\n")
+                payload_index = 0
+            payload = data[payload_index:].decode('utf-8').rstrip("\n")
             threading.Timer(0, self.__one_shot_task__, args=(payload,)).start()
 
 
     def __one_shot_task__(self, payload:str):
         try:
-            payload = base64.b64decode(payload, validate=True).hex()
             print(payload)
+            payload = base64.b64decode(payload, validate=True).hex()
             self.__mqtt_client.publish(MQTT_TOPIC_TRANSCEIVER_OUT, payload=json.dumps({"packet":payload}))
         except:
             pass
