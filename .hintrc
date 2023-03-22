@@ -1,0 +1,11 @@
+{
+  "extends": [
+    "development"
+  ],
+  "hints": {
+    "axe/forms": "off",
+    "disown-opener": "off",
+    "no-inline-styles": "off",
+    "detect-css-reflows/layout": "off"
+  }
+}
