@@ -1,5 +1,7 @@
 
 import paho.mqtt.client as mqtt
+import base64, json
+import threading
 import serial
 from constants import *
 
@@ -31,14 +33,24 @@ class Transceiver():
             print("Transceiver Waiting for data...")
             # Read incoming data
             self.__ser.flushInput()
+            payload = ""
+            payload_index = 1
             data = self.__ser.readline()
-            payload = data[1:].decode('utf-8').rstrip("\n")
-            print(payload)
+            if data[0] == 0x0A:
+                data = self.__ser.readline()
+                payload_index = 0
+            payload = data[payload_index:]
+            threading.Timer(0, self.__one_shot_task__, args=(payload,)).start()
 
 
-            # Publish data
-            #self.__mqtt_client.publish(topic=MQTT_TOPIC_TRANSCEIVER_OUT, payload=payload)
-        
+    def __one_shot_task__(self, payload:bytes):
+        try:
+            payload = payload.decode('utf-8').rstrip("\n")
+            payload = base64.b64decode(payload, validate=True).hex()
+            self.__mqtt_client.publish(MQTT_TOPIC_TRANSCEIVER_OUT, payload=json.dumps({"packet":payload}))
+        except:
+            pass
+
 
     def main(self) -> None:
         """run transceiver forever"""

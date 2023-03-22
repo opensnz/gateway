@@ -85,7 +85,7 @@ class Handler():
         data = {"stat":
                     {
                         "time":str(datetime.utcnow()).split(".")[0]+' GMT',
-                        "lati":round(self.gateway_lon, 5),
+                        "lati":round(self.gateway_lat, 5),
                         "long":round(self.gateway_lon, 5),
                         "alti":int(self.gateway_alt),
                         "rxnb":self.lora_rxnb,
