@@ -125,16 +125,16 @@ function deleteDevices() {
 
 function saveData() {
     var serverAddress = document.getElementById("serveraddr").value;
-    var serverPort = document.getElementById("serverport").value;
+    var serverPort = parseInt(document.getElementById("serverport").value);
     var gatewayId = document.getElementById("gatewayid").value;
-    var latitude = document.getElementById("latitude").value;
-    var longitude = document.getElementById("longtitude").value;
-    var altitude = document.getElementById("altitude").value;
+    var latitude = parseFloat(document.getElementById("latitude").value);
+    var longitude = parseFloat(document.getElementById("longtitude").value);
+    var altitude = parseInt(document.getElementById("altitude").value);
 
-    var frequency = document.getElementById("frequency").value;
-    var bandwidth = document.getElementById("SBW").value;
-    var spreadingFactor = document.getElementById("spreadingfactor").value;
-    var codingRate = document.getElementById("codingrate").value;
+    var frequency = parseInt(document.getElementById("frequency").value);
+    var bandwidth = parseInt(document.getElementById("SBW").value);
+    var spreadingFactor = parseInt(document.getElementById("spreadingfactor").value);
+    var codingRate = parseInt(document.getElementById("codingrate").value);
 
     var data = {
         radio_conf: {
