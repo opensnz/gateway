@@ -2,7 +2,7 @@ import serial, time
 from constants import *
 
 
-ser = serial.Serial (port='COM3',
+ser = serial.Serial (port='/dev/ttyAMA0',
                             baudrate=9600,
                             parity=serial.PARITY_NONE,
                             stopbits=serial.STOPBITS_ONE,
@@ -48,11 +48,9 @@ def dorji_cmd_data(frequency : int, bandwith : int, spreading_factor : int) -> b
     return data
 
 
-print(dorji_crc(bytes([0x01, 0x02])))
 
 
-
-command = dorji_command(868700000, 250000, 8)
+command = dorji_command(868000000, 125000, 7)
 print(command)
 ser.write(command)
 
