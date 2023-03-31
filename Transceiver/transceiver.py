@@ -4,6 +4,7 @@ import base64, json, time
 import threading
 import serial
 from constants import *
+from dorji import *
 
 
 class Transceiver():
