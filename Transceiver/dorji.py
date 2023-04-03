@@ -1,18 +1,9 @@
-import serial, time
 from constants import *
 
 
-ser = serial.Serial (port='/dev/ttyAMA0',
-                            baudrate=9600,
-                            parity=serial.PARITY_NONE,
-                            stopbits=serial.STOPBITS_ONE,
-                            bytesize=serial.EIGHTBITS,
-                            timeout=None) 
 
 
-
-
-def dorji_command(frequency : int, bandwith : int, spreading_factor : int) -> bytes:
+def dorji_cmd_config(frequency : int, bandwith : int, spreading_factor : int) -> bytes:
     config = bytes([DORJI_SYNC_WORD, DORJI_SYNC_WORD, DORJI_ID_CODE, DORJI_ID_CODE, DORJI_HEADER, 
                     DORJI_CMD_SEND, DORJI_CMD_WRITE, DORJI_LENGTH])
     
@@ -22,13 +13,13 @@ def dorji_command(frequency : int, bandwith : int, spreading_factor : int) -> by
         return None
 
     config = config + data
-    config = config + bytes([dorji_crc(config)])
+    config = config + bytes([dorji_cmd_crc(config)])
     config = config + bytes([DORJI_END_CODE_CR, DORJI_END_CODE_LF])
     return config
 
 
 
-def dorji_crc(command : bytes) -> int:
+def dorji_cmd_crc(command : bytes) -> int:
     return sum(command) % 256
 
 
@@ -47,17 +38,3 @@ def dorji_cmd_data(frequency : int, bandwith : int, spreading_factor : int) -> b
                          DORJI_CMD_DATA_BREATH, DORJI_CMD_DATA_WAKE_TIME])
     return data
 
-
-
-
-command = dorji_command(868000000, 125000, 7)
-print(command)
-ser.write(command)
-
-response = ser.read()
-time.sleep(0.1)
-while ser.in_waiting:
-    response = response + ser.read(ser.in_waiting)
-    time.sleep(0.1)
-
-print(response)
