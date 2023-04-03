@@ -1,6 +1,6 @@
 from flask import Flask, redirect, render_template, request, Response, jsonify
 import paho.mqtt.client as mqtt
-import json, time
+import json
 from modules.database import Database
 from modules.telemetry import *
 from modules.constants import *
@@ -91,14 +91,12 @@ def delete_devices():
 @app.route('/network', methods=['POST'])
 def save_json():
     data = request.get_json()
-    print(data)
     client = mqtt.Client(transport="tcp",client_id="interface")
     client.username_pw_set(MQTT_USERNAME,MQTT_PASSWORD)
     client.connect(MQTT_BROKER, MQTT_PORT)
     client.publish(MQTT_TOPIC_GATEWAY_NWK, json.dumps(data).lower()) 
     client.disconnect()
-    time.sleep(2)
-    return jsonify({"success": True})
+    return render_template('network.html', system=system)
 
 
 
