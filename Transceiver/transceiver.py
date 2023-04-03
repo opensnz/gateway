@@ -96,7 +96,7 @@ class Transceiver():
             self.__mqtt_client.loop_stop()
             raise Exception("Raised exception to relaunch Transceiver Service")
 
-    def __one_shot_task__(self, message:mqtt.MQTTMessage):
+    def __mqtt_task__(self, message:mqtt.MQTTMessage):
         try:
             topic = message.topic
             if topic == MQTT_TOPIC_TRANSCEIVER_IN:
@@ -115,7 +115,7 @@ class Transceiver():
 
     def __mqtt_on_message__(self,  client : mqtt.Client, userdata, message:mqtt.MQTTMessage):
         print("MQTT_Message received")
-        threading.Timer(0, self.__one_shot_task__, args=(message,)).start()
+        threading.Timer(0, self.__mqtt_task__, args=(message,)).start()
 
 
     def __mqtt_on_connect__(self, client : mqtt.Client, userdata, flags, rc):
