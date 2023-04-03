@@ -64,7 +64,25 @@ class Gateway():
             print("Exception in the main Thread:", e)
             self.__mqtt_client.loop_stop()
             raise Exception("Raised exception to relaunch Gateway Service")
+        
 
+    def __load_config__() -> dict:
+        while True:
+            try :
+                with open(CONFIG_FILE_PATH, "r") as file:
+                    config = json.load(file)
+                    return config
+            except:
+                pass
+
+    def __save_config__(config : dict) -> bool:
+        while True:
+            try :
+                with open(CONFIG_FILE_PATH, "w") as file:
+                    file.write(json.dumps(config, indent=4))
+                    return True
+            except:
+                pass
 
     def __one_shot_task__(self, message:mqtt.MQTTMessage):
         # Save current date and time
@@ -226,12 +244,32 @@ class Gateway():
         return packet
     
     def __topic_network_handler__(self, topic_payload:dict):
-        with open(CONFIG_FILE_PATH, "rw") as file:
-            config = json.load(file)
-            # TODO
-            # check if it's new config
-            # save config if new config
-            # reboot gateway if new config
+        conf = self.__load_config__()
+        radio_flag = False
+        gateway_flag = False
+        if "radio_conf" in topic_payload :
+            radio_dict = topic_payload["radio_conf"]
+            for key in conf["radio_conf"]:
+                if conf["radio_conf"][key] != radio_dict[key]:
+                    radio_flag = True
+                    break
+        if "gateway_conf" in topic_payload :
+            gateway_dict = topic_payload["gateway_conf"]
+            for key in conf["gateway_conf"]:
+                if conf["gateway_conf"][key] != gateway_dict[key]:
+                    gateway_flag = True
+                    break
+        if radio_flag or gateway_flag:
+            # save config file
+            self.__save_config__(topic_payload)
+            if radio_flag:
+                # notify transceiver
+                self.__mqtt_client.publish(MQTT_TOPIC_TRANSCEIVER_CONF, 
+                                           payload=json.dumps(topic_payload["radio_conf"]))
+            if gateway_flag:
+                # notify forwarder
+                self.__mqtt_client.publish(MQTT_TOPIC_FORWARDER_CONF, 
+                                           payload=json.dumps(topic_payload["gateway_conf"]))
 
 
     ################### MQTT Publish  ######################

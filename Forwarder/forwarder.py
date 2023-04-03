@@ -18,25 +18,11 @@ class Forwarder():
         self.__handler = Handler()
         self.__mqtt_client = mqtt.Client(transport="tcp",client_id="forwarder")
 
-    def __config__(self):
-        while True:
-            try :
-                with open(CONFIG_FILE_PATH, "r") as file:
-                    config = json.load(file)
-                    self.host = config["gateway_conf"]["server_address"]
-                    self.port = config["gateway_conf"]["server_port"]
-                    self.__handler.set_gateway_id(config["gateway_conf"]["gateway_id"])
-                    self.__handler.gateway_lon = config["gateway_conf"]["gateway_lon"]
-                    self.__handler.gateway_lat = config["gateway_conf"]["gateway_lat"]
-                    self.__handler.gateway_alt = config["gateway_conf"]["gateway_alt"]
-                    self.__handler.stat_interval  = config["gateway_conf"]["stat_interval"]
-                    self.__handler.alive_interval = config["gateway_conf"]["alive_interval"]
-                break
-            except:
-                pass
+
 
     def __setup__(self):
-        self.__config__()
+        conf = self.__load_config__()
+        self.__config__(conf)
         self.__socket.bind(("0.0.0.0" , self.port))
         self.__mqtt_client.on_connect    = self.__mqtt_on_connect__
         self.__mqtt_client.on_message    = self.__mqtt_on_message__
@@ -50,6 +36,24 @@ class Forwarder():
             data, address = self.__socket.recvfrom(4096)
             self.__handle__(data)
     
+    def __load_config__(self) -> dict:
+        while True:
+            try :
+                with open(CONFIG_FILE_PATH, "r") as file:
+                    conf = json.load(file)
+                    return conf["gateway_conf"]
+            except:
+                pass
+    
+    def __config__(self, conf : dict):
+        self.host = conf["server_address"]
+        self.port = conf["server_port"]
+        self.__handler.set_gateway_id(conf["gateway_id"])
+        self.__handler.gateway_lon = conf["gateway_lon"]
+        self.__handler.gateway_lat = conf["gateway_lat"]
+        self.__handler.gateway_alt = conf["gateway_alt"]
+        self.__handler.stat_interval  = conf["stat_interval"]
+        self.__handler.alive_interval = conf["alive_interval"]
 
     def main(self) -> None:
         """run packet forwarder forever"""
@@ -116,6 +120,8 @@ class Forwarder():
                 data = self.__handler.push_data(data)
                 with self.__lock:
                     self.__socket.sendto(data, (self.host, self.port))
+            elif topic == MQTT_TOPIC_FORWARDER_CONF:
+                self.__config__(payload)
         except Exception as e:
             print(e)
             pass
@@ -131,6 +137,7 @@ class Forwarder():
     def __mqtt_on_connect__(self, client : mqtt.Client, userdata, flags, rc):
         print("MQTT_Client connected")
         client.subscribe(MQTT_TOPIC_FORWARDER_IN)
+        client.subscribe(MQTT_TOPIC_FORWARDER_CONF)
 
 
     def __mqtt_on_disconnect__(self, client : mqtt.Client, userdata, rc):

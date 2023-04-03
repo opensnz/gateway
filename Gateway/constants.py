@@ -25,10 +25,11 @@ MQTT_PASSWORD  = "gateway#2022"
 
 MQTT_TOPIC_FORWARDER_IN    = "/forwarder/data/in"
 MQTT_TOPIC_FORWARDER_OUT   = "/forwarder/data/out"
-MQTT_TOPIC_FORWARDER_NWK   = "/forwarder/gateway/nwk"
+MQTT_TOPIC_FORWARDER_CONF  = "/forwarder/data/conf"
 
 MQTT_TOPIC_TRANSCEIVER_IN  = "/transceiver/data/in"
 MQTT_TOPIC_TRANSCEIVER_OUT = "/transceiver/data/out"
+MQTT_TOPIC_TRANSCEIVER_CONF= "/transceiver/data/conf"
 
 MQTT_TOPIC_GATEWAY_NWK     = "/config/gateway/nwk"
 MQTT_TOPIC_GATEWAY_DEV     = "/config/gateway/dev"

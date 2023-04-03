@@ -16,6 +16,7 @@ MQTT_USERNAME  = "forwarder"
 MQTT_PASSWORD  = "forwarder#2022"
 MQTT_TOPIC_FORWARDER_IN    = "/forwarder/data/in"
 MQTT_TOPIC_FORWARDER_OUT   = "/forwarder/data/out"
+MQTT_TOPIC_FORWARDER_CONF  = "/forwarder/data/conf"
 
 
 # Constants for Packet Forwarder
