@@ -248,15 +248,17 @@ class Gateway():
         radio_flag = False
         gateway_flag = False
         if "radio_conf" in topic_payload :
-            radio_dict = topic_payload["radio_conf"]
-            for key in conf["radio_conf"]:
-                if conf["radio_conf"][key] != radio_dict[key]:
+            radio_topic : dict = topic_payload["radio_conf"]
+            radio_conf : dict = conf["radio_conf"]
+            for key in radio_conf:
+                if radio_conf.get(key) != radio_topic.get(key):
                     radio_flag = True
                     break
         if "gateway_conf" in topic_payload :
-            gateway_dict = topic_payload["gateway_conf"]
-            for key in conf["gateway_conf"]:
-                if conf["gateway_conf"][key] != gateway_dict[key]:
+            gateway_topic : dict = topic_payload["gateway_conf"]
+            gateway_conf : dict = conf["gateway_conf"]
+            for key in gateway_conf:
+                if gateway_conf.get(key) != gateway_topic.get(key):
                     gateway_flag = True
                     break
         if radio_flag or gateway_flag:
