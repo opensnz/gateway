@@ -91,12 +91,19 @@ def delete_devices():
 @app.route('/network', methods=['POST'])
 def save_json():
     data = request.get_json()
+
+    # write the JSON data to a file
+    # with open('data.json', 'w') as f:
+    #     json.dump(data, f)
+
     client = mqtt.Client(transport="tcp",client_id="interface")
     client.username_pw_set(MQTT_USERNAME,MQTT_PASSWORD)
     client.connect(MQTT_BROKER, MQTT_PORT)
     client.publish(MQTT_TOPIC_GATEWAY_NWK, json.dumps(data)) 
     client.disconnect()
     return jsonify({"success": True})
+
+
 
 
 

@@ -156,5 +156,10 @@ function saveData() {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/network");
     xhr.setRequestHeader("Content-Type", "application/json");
+    // xhr.onreadystatechange = function() {
+    //     if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+    //         console.log(xhr.responseText);
+    //     }
+    // };
     xhr.send(JSON.stringify(data));
 }
