@@ -72,7 +72,7 @@ class Transceiver():
             res = self.__ser.readline()
         return True
     
-    def __load_config__() -> dict:
+    def __load_config__(self) -> dict:
         while True:
             try :
                 with open(CONFIG_FILE_PATH, "r") as file:
