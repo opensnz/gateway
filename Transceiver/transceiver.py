@@ -12,7 +12,7 @@ class Transceiver():
 
     def __init__(self):
         self.__mqtt_client = mqtt.Client(transport="tcp",client_id="transceiver")
-
+        self.__configuring = False
 
     def __setup__(self):
         self.__mqtt_client.on_connect    = self.__mqtt_on_connect__
@@ -38,17 +38,20 @@ class Transceiver():
         while True:
             print("Transceiver Waiting for data...")
             # Read incoming data
-            self.__ser.flushInput()
+            self.__ser.reset_input_buffer()
             data =  self.__ser.read()
             time.sleep(0.01)
             while  self.__ser.in_waiting:
                 data = data +  self.__ser.read( self.__ser.in_waiting)
                 if self.__ser.in_waiting == 0:
                     time.sleep(0.01)
-            payload = data[1:]
-            print(payload)
-            if len(payload) > TRANSCEIVER_DATA_MIN_SIZE:
-                threading.Timer(0, self.__one_shot_task__, args=(payload,)).start()
+            if not self.__configuring:
+                payload = data[1:]
+                print(payload)
+                if len(payload) > TRANSCEIVER_DATA_MIN_SIZE:
+                    threading.Timer(0, self.__one_shot_task__, args=(payload,)).start()
+            else:
+                self.__configuring = False
 
 
     def __one_shot_task__(self, payload:bytes):
@@ -62,14 +65,9 @@ class Transceiver():
         cmd = dorji_cmd_config(frequency, bandwith, spreading_factor)
         if cmd == None:
             return False
-        self.__ser.flushInput()
+        self.__ser.reset_output_buffer()
+        self.__configuring = True
         self.__ser.write(cmd)
-        time.sleep(1)
-        if self.__ser.in_waiting == 0:
-            return False
-        else :
-            time.sleep(1)
-            res = self.__ser.readline()
         return True
     
     def __load_config__(self) -> dict:

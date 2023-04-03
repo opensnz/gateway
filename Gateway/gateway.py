@@ -13,10 +13,12 @@ class Gateway():
 
     def __init__(self):
         self.__mqtt_client = mqtt.Client(transport="tcp",client_id="gateway")
+        self._db = Database()
+        self.__queue = queue.Queue()
+        self.__semaphore = threading.Semaphore()
 
 
     def __setup__(self):
-        self._db = Database()
         self._db.open()
         self._db.create_tables()
         self._db.close()
@@ -25,8 +27,6 @@ class Gateway():
         self.__mqtt_client.on_disconnect = self.__mqtt_on_disconnect__
         self.__mqtt_client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
         self.__mqtt_client.connect(MQTT_BROKER, MQTT_PORT)
-        self.__queue = queue.Queue()
-        self.__semaphore = threading.Semaphore()
 
 
     def __loop__(self):
