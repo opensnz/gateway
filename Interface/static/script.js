@@ -130,6 +130,8 @@ function saveData() {
     var latitude = parseFloat(document.getElementById("latitude").value);
     var longitude = parseFloat(document.getElementById("longtitude").value);
     var altitude = parseInt(document.getElementById("altitude").value);
+    var aliveInterval = parseInt(document.getElementById("alive").value);
+    var statInterval = parseInt(document.getElementById("stat").value);
 
     var frequency = parseInt(document.getElementById("frequency").value);
     var bandwidth = parseInt(document.getElementById("SBW").value);
@@ -150,6 +152,8 @@ function saveData() {
             gateway_lat: latitude,
             gateway_lon: longitude,
             gateway_alt: altitude,
+            alive_interval : aliveInterval,
+            stat_interval : statInterval
         },
     };
 
