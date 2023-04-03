@@ -96,7 +96,7 @@ def save_json():
     client.connect(MQTT_BROKER, MQTT_PORT)
     client.publish(MQTT_TOPIC_GATEWAY_NWK, json.dumps(data).lower()) 
     client.disconnect()
-    return render_template('network.html', system=system)
+    return render_template('network.html', system=data)
 
 
 
