@@ -1,5 +1,4 @@
 from flask import Flask, redirect, render_template, request, Response, jsonify
-from modules.constants import *
 import paho.mqtt.client as mqtt
 import json
 from modules.database import Database
@@ -22,9 +21,6 @@ def index():
 
 @app.route("/status")
 def status():
-    db = Database()
-    db.open()
-    db.close()
     network = NETWORK()
     cpu = CPU()
     disk = DISK()

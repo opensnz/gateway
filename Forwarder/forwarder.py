@@ -15,7 +15,7 @@ class Forwarder():
         self.port   = 1700
         self.__lock = threading.Lock()
         self.__socket  = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-        self.__handler = Handler(DEFAULT_GATEWAY_ID)
+        self.__handler = Handler()
         self.__mqtt_client = mqtt.Client(transport="tcp",client_id="forwarder")
 
     def __config__(self):
@@ -116,9 +116,6 @@ class Forwarder():
                 data = self.__handler.push_data(data)
                 with self.__lock:
                     self.__socket.sendto(data, (self.host, self.port))
-            elif topic == MQTT_TOPIC_FORWARDER_NWK:
-                self.__network_config__(payload)
-                print("LoRa Server Set")
         except Exception as e:
             print(e)
             pass
@@ -134,7 +131,6 @@ class Forwarder():
     def __mqtt_on_connect__(self, client : mqtt.Client, userdata, flags, rc):
         print("MQTT_Client connected")
         client.subscribe(MQTT_TOPIC_FORWARDER_IN)
-        client.subscribe(MQTT_TOPIC_FORWARDER_NWK)
 
 
     def __mqtt_on_disconnect__(self, client : mqtt.Client, userdata, rc):
@@ -146,14 +142,6 @@ class Forwarder():
         print("Publishing Packet", packet)
         self.__mqtt_client.publish(MQTT_TOPIC_FORWARDER_OUT, packet)
 
-    def __network_config__(self,  payload:dict):
-        host  = payload["gateway_conf"]["server_address"]
-        port  = payload["gateway_conf"]["server_post"]
-        gw_id = payload["gateway_conf"]["gateway_id"]
-        with self.__lock:
-            self.host = host
-            self.port = port
-            self.__handler.set_gateway_id(gw_id)
 
 if __name__ == "__main__":
     forwarder = Forwarder()

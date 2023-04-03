@@ -228,7 +228,10 @@ class Gateway():
     def __topic_network_handler__(self, topic_payload:dict):
         with open(CONFIG_FILE_PATH, "rw") as file:
             config = json.load(file)
-            # compare config and topic_payload
+            # TODO
+            # check if it's new config
+            # save config if new config
+            # reboot gateway if new config
 
 
     ################### MQTT Publish  ######################

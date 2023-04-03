@@ -9,19 +9,13 @@ PKT_PULL_ACK  = 0x04
 PKT_TX_ACK    = 0x05
 
 
-TX_ACK_NO_ERROR = "NONE"
-"""Packet has been programmed for downlink"""
-
-DEFAULT_GATEWAY_ID = "5b4931f97b1c0a8e" #"db16452335502df6"
-
 # Constants for MQTT connection
-MQTT_BROKER    = "localhost"#"192.168.1.241"
+MQTT_BROKER    = "localhost"
 MQTT_PORT      = 1883
 MQTT_USERNAME  = "forwarder"
 MQTT_PASSWORD  = "forwarder#2022"
 MQTT_TOPIC_FORWARDER_IN    = "/forwarder/data/in"
 MQTT_TOPIC_FORWARDER_OUT   = "/forwarder/data/out"
-MQTT_TOPIC_FORWARDER_NWK   = "/forwarder/gateway/nwk"
 
 
 # Constants for Packet Forwarder
