@@ -66,7 +66,7 @@ class Gateway():
             raise Exception("Raised exception to relaunch Gateway Service")
         
 
-    def __load_config__() -> dict:
+    def __load_config__(self) -> dict:
         while True:
             try :
                 with open(CONFIG_FILE_PATH, "r") as file:
@@ -75,7 +75,7 @@ class Gateway():
             except:
                 pass
 
-    def __save_config__(config : dict) -> bool:
+    def __save_config__(self, config : dict) -> bool:
         while True:
             try :
                 with open(CONFIG_FILE_PATH, "w") as file:
