@@ -107,7 +107,7 @@
         </div>
 
         <div class="row mb-3">
-          <label class="col-sm-2 col-form-label" for="alive"> Keep Alive Interval </label>
+          <label class="col-sm-2 col-form-label" for="alive"> Keep Alive Interval (s) </label>
           <div class="col-sm-10">
             <input type="text" class="form-control" id="alive" placeholder="Keep Alive Interval"
               value="{{ system.gateway_conf.alive_interval }}">
@@ -116,7 +116,7 @@
 
 
         <div class="row mb-3">
-          <label class="col-sm-2 col-form-label" for="stat"> Send Stat Interval </label>
+          <label class="col-sm-2 col-form-label" for="stat"> Send Stat Interval (s) </label>
           <div class="col-sm-10">
             <input type="text" class="form-control" id="stat" placeholder="Send Stat Interval"
               value="{{ system.gateway_conf.stat_interval }}">
@@ -128,7 +128,7 @@
           <h4>Radio Settings</h4>
 
           <div class="row mb-3">
-            <label class="col-sm-2 col-form-label" for="frequency"> Frequency </label>
+            <label class="col-sm-2 col-form-label" for="frequency"> Frequency (Hz) </label>
             <div class="col-sm-10">
               <input type="text" class="form-control" id="frequency" placeholder="Gateway's LoRa Frequency"
                 value="{{ system.radio_conf.frequency }}">
@@ -162,7 +162,7 @@
           </div>
 
           <div class="row mb-3">
-            <label class="col-sm-2 col-form-label" for="SBW"> Signal Bandwidth </label>
+            <label class="col-sm-2 col-form-label" for="SBW"> Signal Bandwidth (Hz) </label>
             <div class="col-sm-10">
               <select class="form-select" id="SBW" value="{{ system.radio_conf.bandwidth }}">
                 <option>125000</option>
