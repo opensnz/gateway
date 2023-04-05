@@ -26,7 +26,6 @@ app.post('/MessageType', (req, res) => {
     try {
 
         var data = req.body;
-        console.log(data)
         var MessageType = loraPacket.fromWire(
             Buffer.from(data.PHYPayload, "base64")
         ).getMType().replaceAll(" ", "");
@@ -59,7 +58,6 @@ app.post('/JoinRequest', (req, res) => {
     try {
 
         var data = req.body;
-        console.log(data)
         if( data.AppKey.length !== 32 ||
             data.DevEUI.length !== 16 || 
             data.AppEUI.length !== 16 || 
@@ -128,7 +126,6 @@ app.post('/JoinAccept', (req, res) => {
     try {
         
         var data = req.body;
-        console.log(data)
         if( data.AppKey.length !== 32 ||
             data.DevNonce.length !== 4 )
         {
@@ -177,7 +174,6 @@ app.post('/UnconfirmedDataUp', (req, res) => {
     try {
 
         var data = req.body;
-        console.log(data)
         if( 
             data.DevAddr.length !== 8  ||
             data.FCnt  < 1  || data.FCnt  > 65535 ||
@@ -257,7 +253,6 @@ app.post('/ConfirmedDataUp', (req, res) => {
     try {
 
         var data = req.body;
-        console.log(data)
         if( 
             data.DevAddr.length !== 8  ||
             data.FCnt  < 1  || data.FCnt  > 65535 ||

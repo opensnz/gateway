@@ -146,7 +146,6 @@ class Forwarder():
 
     def __publish__(self,  packet:str):
         """Publish packet to Gateway System"""
-        print("Publishing Packet", packet)
         self.__mqtt_client.publish(MQTT_TOPIC_FORWARDER_OUT, packet)
 
 

@@ -47,7 +47,6 @@ class Transceiver():
                     time.sleep(0.01)
             if not self.__configuring:
                 payload = data[1:]
-                print(payload)
                 if len(payload) > TRANSCEIVER_DATA_MIN_SIZE:
                     threading.Timer(0, self.__one_shot_task__, args=(payload,)).start()
             else:

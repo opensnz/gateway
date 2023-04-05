@@ -237,7 +237,6 @@ class Gateway():
         _db.close()
         if device == None:
             return None
-        print("add device", "join request", device)
         packet = self.__join_request_packet__(device)
         # Update packet with transceiver metadata, date and time 
         self.__update_packet__(packet, topic_payload, date_time)
@@ -278,7 +277,6 @@ class Gateway():
 
     def __publish__(self, packet:dict):
         """Publish packet with DevEUI to Packet Forwarder"""
-        print("Publishing Packet", packet)
         self.__mqtt_client.publish(MQTT_TOPIC_FORWARDER_IN, payload=json.dumps(packet))
 
 

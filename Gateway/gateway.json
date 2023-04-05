@@ -6,9 +6,9 @@
         "coding_rate" : 2
     },
     "gateway_conf": {
-        "server_address": "192.168.10.104",
+        "server_address": "192.168.1.1",
         "server_port": 1700,
-        "gateway_id" : "37b9cce323042ac1",
+        "gateway_id" : "0102030405060708",
         "gateway_lat" : 34.68903,
         "gateway_lon" : -1.91669,
         "gateway_alt" : 3,
