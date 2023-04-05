@@ -34,7 +34,6 @@ sudo systemctl daemon-reload
 # 5. Enable transceiver service
 sudo systemctl enable transceiver.service
 
-
 #  6. Start transceiver service
 # sudo systemctl start transceiver.service
 
