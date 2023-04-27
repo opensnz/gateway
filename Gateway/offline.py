@@ -1,62 +1,122 @@
 import urllib.request
 import time
 import paho.mqtt.client as mqtt
-import sqlite3
-import os
+import json
 from constants import *
-from Gateway.database import Database
-
-db = Database
-database_name = "offline.db"
-table_name = "offline_data"
-
-conn = sqlite3.connect(database_name)
-c = conn.cursor()
-c.execute(f"CREATE TABLE IF NOT EXISTS {table_name} (ID INTEGER PRIMARY KEY AUTOINCREMENT, DevEUI VARCHAR(16) NOT NULL, Packet TEXT, time TEXT)")
+from database import Database
+import threading
 
 
-def check_internet():
-    try :
-        urllib.request.urlopen('https://www.google.com')
-        return True
-    except :
-        return False
+
+class Offline():
+
+
+    def __init__(self):
+        self.__mqtt_client = mqtt.Client(transport="tcp",client_id="offline")
+        self._db = Database()
+        self.__status = True
+
+
+    def __setup__(self):
+        self.__mqtt_client.on_connect    = self.__mqtt_on_connect__
+        self.__mqtt_client.on_message    = self.__mqtt_on_message__
+        self.__mqtt_client.on_disconnect = self.__mqtt_on_disconnect__
+        self.__mqtt_client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
+        self.__mqtt_client.connect(MQTT_BROKER, MQTT_PORT)
+
+
+    def __loop__(self):
+        while True:
+            is_connected = self.check_internet()
+            if is_connected and self.__status != is_connected :
+                packet = self.__get_offline_packet__()
+                if packet is not None :
+                    self.__publish__(MQTT_TOPIC_FORWARDER_IN, packet)
+
+            if self.__status != is_connected:
+                self.__status = is_connected
+                self.__publish__(MQTT_TOPIC_GATEWAY_STATUS, {"status" : self.__status})
+                if self.__status :
+                    packet = self.__get_offline_packet__()
+                    if packet is not None :
+                        self.__publish__(MQTT_TOPIC_FORWARDER_IN, packet)
+                        
+            time.sleep(GATEWAY_INTERNET_CHECKING_FREQUENCY)
+
+    def check_internet(self):
+        try :
+            urllib.request.urlopen('https://www.google.com', timeout=1)
+            return True
+        except :
+            return False
+        
+    def main(self) -> None:
+        """run gateway system forever"""
+        try :
+            print("Gateway System setting...")
+            self.__setup__()
+            print("Gateway System running...")
+            """2 Threads run forever and concurrently"""
+            self.__mqtt_client.loop_start()
+            self.__loop__()
+            
+        except Exception as e:
+            print("Exception in the main Thread:", e)
+            self.__mqtt_client.loop_stop()
+            raise Exception("Raised exception to relaunch Gateway Service")
+        
+
+    def __mqtt_on_message__(self,  client:mqtt.Client, userdata, message:mqtt.MQTTMessage):
+        print("MQTT_Message received")
+        threading.Timer(0, self.__one_shot_task__, args=(message,)).start()
+
+
+    def __mqtt_on_connect__(self, client:mqtt.Client, userdata, flags, rc):
+        print("MQTT_Client connected")
+        client.subscribe(MQTT_TOPIC_GATEWAY_OFFLINE)
+
+
+    def __mqtt_on_disconnect__(self, client:mqtt.Client, userdata, rc):
+        print("MQTT_Client disconnected")
+
+    def __one_shot_task__(self, message:mqtt.MQTTMessage):
+        topic = message.topic
+        payload = json.loads((b''+message.payload).decode())
+        if topic == MQTT_TOPIC_GATEWAY_OFFLINE:
+            self._db.open()
+            self._db.insert_device_data(payload["DevEUI"], json.dumps(payload["Packet"]))
+            self._db.close()
+
+    def __get_offline_packet__(self) -> dict: 
+        packet = self.__generic_packet__()
+        offline_packet = []
+        self._db.open()
+        offline_data = self._db.get_all_data()
+        self._db.delete_all_data()
+        self._db.close()
+        for data in offline_data:
+            offline_packet.append(json.loads(data["Packet"]))
+        if len(offline_packet) == 0:
+            return None
+        packet["rxpk"] = offline_packet
+        return packet
+
+
+    def __generic_packet__(self) -> dict:
+        packet = {
+            "rxpk": [
+            ]
+        }
+        return packet
     
-def publish_message():
-    client = mqtt.Client(transport="tcp",client_id="##################")
-    client.username_pw_set(MQTT_USERNAME,MQTT_PASSWORD)
-    client.connect(MQTT_BROKER, MQTT_PORT)
-    client.publish(MQTT_TOPIC_CONNECTION, "Connected to the internet!") 
-    client.disconnect()
+    def __publish__(self, topic:str, packet:dict):
+        """Publish packet"""
+        self.__mqtt_client.publish(topic, payload=json.dumps(packet))
 
-def insert_data(dev_eui, packet):
-    current_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
-    c.execute(f"INSERT INTO {table_name} (DevEUI, Packet, time) VALUES (?, ?, ?)", (dev_eui, packet, current_time))
-    conn.commit()
 
-def send_data():
-    c.execute(f"SELECT * FROM {table_name}")
-    rows = c.fetchall()
-    for row in rows:
-        dev_eui = row[1]
-        packet = row[2]
-        current_time = row[3]
-        db.__insert_data__(DevEUI=dev_eui)
-        message = f"Packet from {dev_eui} received on {current_time}: {packet}"
-        client = mqtt.Client(transport="tcp",client_id="##################")
-        client.username_pw_set(MQTT_USERNAME,MQTT_PASSWORD)
-        client.connect(MQTT_BROKER, MQTT_PORT)
-        client.publish(MQTT_TOPIC_RECONNECTION, message)
-    c.execute(f"DELETE FROM {table_name}")
-    conn.commit()
-    os.remove(database_name)
 
-while True:
-    if check_internet():
-        publish_message()
-        send_data()
-    else:
-        insert_data(dev_eui, packet)
-    time.sleep(2)
+if __name__ == "__main__":
+    gateway = Offline()
+    gateway.main()
 
      

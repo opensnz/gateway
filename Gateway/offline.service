@@ -1,0 +1,17 @@
+[Unit]
+Description=Offline Service Daemon
+StartLimitIntervalSec=86400
+StartLimitBurst=8640
+Requires=mosquitto.service forwarder.service
+
+[Service]
+User=pi
+Group=sudo
+Type=simple
+WorkingDirectory=/home/pi/gateway/Gateway
+ExecStart=/usr/bin/python3 -u /home/pi/gateway/Gateway/offline.py
+Restart=on-failure
+RestartSec=1s
+
+[Install]
+WantedBy=multi-user.target

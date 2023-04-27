@@ -17,6 +17,8 @@ JOIN_REQUEST_FREQUENCY = 86400  # 1 day = 86400s
 # Constants for Packet Encoder Service
 PACKET_ENCODER_URL = "http://localhost:8080/"
 
+GATEWAY_INTERNET_CHECKING_FREQUENCY = 1
+
 # Constants for MQTT
 MQTT_BROKER    = "localhost"#"192.168.1.241"
 MQTT_PORT      = 1883
@@ -35,5 +37,5 @@ MQTT_TOPIC_GATEWAY_NWK     = "/config/gateway/nwk"
 MQTT_TOPIC_GATEWAY_DEV     = "/config/gateway/dev"
 
 
-MQTT_TOPIC_CONNECTION = ""
-MQTT_TOPIC_RECONNECTION = ""
+MQTT_TOPIC_GATEWAY_OFFLINE = "/config/gateway/offline"
+MQTT_TOPIC_GATEWAY_STATUS  = "/config/gateway/online"

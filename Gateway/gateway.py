@@ -5,7 +5,7 @@ from datetime import datetime
 from database import Database
 from encoder import Encoder
 from constants import *
-
+import urllib.request
 
 
 class Gateway():
@@ -16,6 +16,7 @@ class Gateway():
         self._db = Database()
         self.__queue = queue.Queue()
         self.__semaphore = threading.Semaphore()
+        self.__status = True 
 
 
     def __setup__(self):
@@ -84,6 +85,13 @@ class Gateway():
             except:
                 pass
 
+    def check_internet(self):
+        try :
+            urllib.request.urlopen('https://www.google.com')
+            return True
+        except :
+            return False
+
     def __one_shot_task__(self, message:mqtt.MQTTMessage):
         # Save current date and time
         date_time = {
@@ -97,9 +105,17 @@ class Gateway():
             DevEUI = topic_payload["packet"][:2*DEVICE_IDENTIFIER_SIZE]
             # Handle MQTT topic
             packet  = self.__topic_transceiver_handler__(topic_payload, date_time)
-            if packet != None :
+            if packet == None :
+                return 
+            
+            if self.__status :
                 # Publish packet
                 self.__publish__(packet)
+            else :
+                offline_packet = {}
+                offline_packet["DevEUI"] = DevEUI
+                offline_packet["Packet"] = packet["rxpk"][0]
+                self.__publish_offline__(offline_packet)
         elif topic == MQTT_TOPIC_FORWARDER_OUT:
             # Handle MQTT topic
             packet = self.__topic_forwarder_handler__(topic_payload, date_time)
@@ -115,6 +131,9 @@ class Gateway():
         elif topic == MQTT_TOPIC_GATEWAY_NWK:
             # Handle MQTT topic
             self.__topic_network_handler__(topic_payload)
+        elif topic == MQTT_TOPIC_GATEWAY_STATUS:
+            print(topic_payload)
+            self.__status = topic_payload["status"]
             
 
 
@@ -189,6 +208,7 @@ class Gateway():
         client.subscribe(MQTT_TOPIC_FORWARDER_OUT)
         client.subscribe(MQTT_TOPIC_GATEWAY_DEV)
         client.subscribe(MQTT_TOPIC_GATEWAY_NWK)
+        client.subscribe(MQTT_TOPIC_GATEWAY_STATUS)
 
 
     def __mqtt_on_disconnect__(self, client:mqtt.Client, userdata, rc):
@@ -276,8 +296,12 @@ class Gateway():
     ################### MQTT Publish  ######################
 
     def __publish__(self, packet:dict):
-        """Publish packet with DevEUI to Packet Forwarder"""
+        """Publish packet to Packet Forwarder"""
         self.__mqtt_client.publish(MQTT_TOPIC_FORWARDER_IN, payload=json.dumps(packet))
+
+    def __publish_offline__(self, packet:dict):
+        """Publish packet to Offline Service"""
+        self.__mqtt_client.publish(MQTT_TOPIC_GATEWAY_OFFLINE, payload=json.dumps(packet))
 
 
     def __publish_config__(self, topic:str, config:dict):

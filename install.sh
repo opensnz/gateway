@@ -25,6 +25,8 @@ sudo chmod a+x ./database.sh
 source ./database.sh
 sudo chmod a+x ./gateway.sh
 source ./gateway.sh
+sudo chmod a+x ./offline.sh
+source ./offline.sh
 cd ..
 echo "Finished"
 
