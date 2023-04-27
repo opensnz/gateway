@@ -33,3 +33,6 @@ MQTT_TOPIC_TRANSCEIVER_OUT = "/transceiver/data/out"
 MQTT_TOPIC_GATEWAY_NWK     = "/config/gateway/nwk"
 MQTT_TOPIC_GATEWAY_DEV     = "/config/gateway/dev"
 
+
+MQTT_TOPIC_CONNECTION = ""
+MQTT_TOPIC_RECONNECTION = ""
