@@ -34,9 +34,9 @@ DELETE_DEVICE_QUERY  = "DELETE FROM DEVICE WHERE DevEUI = ? "
 
 SELECT_ALL_DATA_QUERY= "SELECT * FROM DATA "
 SELECT_DATA_QUERY    = "SELECT * FROM DATA WHERE DevEUI = ? "
-INSERT_DATA_QUERY    = "INSERT INTO DATA(DevEUI) VALUES(?) "
-UPDATE_DATA_QUERY    = "UPDATE DATA SET Packet = ? WHERE DevEUI = ? "
+INSERT_DATA_QUERY    = "INSERT INTO DATA(DevEUI, Packet) VALUES(?, ?) "
 DELETE_DATA_QUERY    = "DELETE FROM DATA WHERE DevEUI = ? "
+DELETE_ALL_DATA_QUERY= "DELETE FROM DATA"
 
 DEFAULT_GATEWAYEUI   = "0000000000000000"
 DEFAULT_APPEUI       = "0000000000000000"
@@ -194,29 +194,35 @@ class Database():
                 return False
             self.__cursor.execute(DELETE_DEVICE_QUERY, (DevEUI,))
             self.__connection.commit()
-            return self.__delete_data__(DevEUI=DevEUI)
+            return self.__delete_device_data__(DevEUI=DevEUI)
         except:
             return False
 
     ######################## Table DATA CRUD methods #############################
 
-    def __get_data__(self, item:tuple=None) -> dict:
+    def __get_device_data__(self, item:tuple=None) -> dict:
         if item is None or len(item) != 4:
             return None
         data = {}
         data["DevEUI"] = item[1]
-        data["Packet"]   = item[2]
+        data["Packet"] = item[2]
+        data["Created_at"] = item[3]
         return data
     
-    def get_data(self, DevEUI:str=None) -> dict:
+    def get_device_data(self, DevEUI:str=None) -> dict:
+        device_data = []
         if self.__connected__() is not True:
             return None
         if DevEUI == None:
             print(COLOR.FAIL+"DevEUI can't be none"+COLOR.END)
             return False
         self.__cursor.execute(SELECT_DATA_QUERY, (DevEUI,))
-        item = self.__cursor.fetchone()
-        return self.__get_data__(item)
+        items = self.__cursor.fetchall()
+        for item in items:
+            data = self.__get_device_data__(item)
+            if data is not None:
+                device_data.append(data)
+        return device_data
     
     def get_all_data(self) -> list:
         all_data = []
@@ -225,33 +231,22 @@ class Database():
         self.__cursor.execute(SELECT_ALL_DATA_QUERY)
         items = self.__cursor.fetchall()
         for item in items:
-            data = self.__get_data__(item)
+            data = self.__get_device_data__(item)
             if data is not None:
                 all_data.append(data)
         return all_data
 
-    def __insert_data__(self, DevEUI:str=None) -> bool:
+    def insert_device_data(self, DevEUI:str=None, Packet:str=None) -> bool:
         if self.__connected__() is not True:
             return False
         if DevEUI == None:
             print(COLOR.FAIL+"DevEUI or Data can't be none"+COLOR.END)
             return False
-        self.__cursor.execute(INSERT_DATA_QUERY, (DevEUI,))
-        self.__connection.commit()
-        print("Success")
-        return True
-    
-    def update_data(self, DevEUI:str=None, Packet:str=None) -> bool:
-        if self.__connected__() is not True:
-            return False
-        if DevEUI == None or Packet == None:
-            print(COLOR.FAIL+"DevEUI or Packet can't be none"+COLOR.END)
-            return False
-        self.__cursor.execute(UPDATE_DATA_QUERY, (Packet, DevEUI,))
+        self.__cursor.execute(INSERT_DATA_QUERY, (DevEUI, Packet))
         self.__connection.commit()
         return True
 
-    def __delete_data__(self, DevEUI:str=None) -> bool:
+    def __delete_device_data__(self, DevEUI:str=None) -> bool:
         if self.__connected__() is not True:
             return False
         if DevEUI == None:
@@ -261,7 +256,13 @@ class Database():
         self.__connection.commit()
         return True
 
+    def delete_device_data(self, DevEUI:str=None) -> bool:
+        return self.__delete_device_data__(DevEUI)
 
 
-
-
+    def delete_all_data(self) -> bool:
+        if self.__connected__() is not True:
+            return False
+        self.__cursor.execute(DELETE_ALL_DATA_QUERY)
+        self.__connection.commit()
+        return True
