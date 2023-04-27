@@ -4,7 +4,7 @@ from constants import *
 
 class Handler():
 
-    def __init__(self, gateway_id : str):
+    def __init__(self, gateway_id : str = "0000000000000000"):
         self._token_x       = bytes([0x00, 0x00])
         self._token_y       = bytes([0x00, 0x00])
         self._token_z       = bytes([0x00, 0x00])
@@ -69,7 +69,7 @@ class Handler():
     def tx_ack(self, token_z : bytes) -> bytes:
         data =  { "txpk_ack":
                     {
-                        "error":TX_ACK_NO_ERROR
+                        "error":"NONE"
                     }
                 }
         data = bytes(json.dumps(data), encoding='utf-8')

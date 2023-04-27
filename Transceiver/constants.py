@@ -6,9 +6,14 @@ MQTT_USERNAME  = "transceiver"
 MQTT_PASSWORD  = "transceiver#2022"
 MQTT_TOPIC_TRANSCEIVER_IN  = "/transceiver/data/in"
 MQTT_TOPIC_TRANSCEIVER_OUT = "/transceiver/data/out"
+MQTT_TOPIC_TRANSCEIVER_CONF= "/transceiver/data/conf"
+
+# 
+TRANSCEIVER_DATA_MIN_SIZE = 8
+CONFIG_FILE_PATH = "../Gateway/gateway.json"
 
 
-
+# Constants for Dorji configuration
 DORJI_SYNC_WORD = 0xAF
 DORJI_ID_CODE = 0x00
 DORJI_HEADER = 0xAF
@@ -24,7 +29,6 @@ DORJI_CMD_READ = 0x02
 DORJI_CMD_STANDARD = 0x03
 DORJI_CMD_CENTRAL = 0x04
 DORJI_CMD_NODE = 0x05
-
 
 DORJI_CMD_DATA_BAUDRATE = 0x04
 DORJI_CMD_DATA_PARITY = 0x00

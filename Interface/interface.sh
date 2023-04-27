@@ -3,18 +3,10 @@ sudo pip install Flask
 sudo pip install psutil
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> e56b0b64581c7934506678f3284ff90b378e6b67
 ############# Interface Service Daemon Installation ############
 
 # 1. Create file interface.service and paste the following lines
 
-<<<<<<< HEAD
-
-=======
->>>>>>> e56b0b64581c7934506678f3284ff90b378e6b67
 # 2. Copy interface.service to /lib/systemd/system/ folder
 sudo cp ./interface.service /lib/systemd/system/interface.service
 

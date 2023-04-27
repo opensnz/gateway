@@ -1,5 +1,4 @@
 from flask import Flask, redirect, render_template, request, Response, jsonify
-from modules.constants import *
 import paho.mqtt.client as mqtt
 import json
 from modules.database import Database
@@ -20,22 +19,20 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+
 @app.route("/status")
 def status():
-    db = Database()
-    db.open()
-    db.close()
     network = NETWORK()
     cpu = CPU()
     disk = DISK()
-    ram=RAM()
-    platform=PLATFORM()
+    ram = RAM()
+    platform = PLATFORM()
     return render_template( 'status.html', interfaces=network.interfaces, cpu=cpu, disk=disk, ram=ram, platform=platform )
+
 
 @app.route("/addDevice")
 def addDevice():
     return render_template('addDevice.html')
-
 
 
 @app.route("/system",  methods=['GET', 'POST'])
@@ -43,7 +40,6 @@ def system():
     system = None
     with open(CONFIG_FILE_PATH, "r") as file:
         system = json.load(file)
-        print(system)
     return render_template('network.html', system=system)
 
 
@@ -55,14 +51,17 @@ def devices():
     print(devices)
     db.close()
     return render_template("peripherique.html", devices=devices)
-    
+
+
 @app.route("/device/add" , methods=['GET' , 'POST'])
 def add_device():
     body = request.json
     print(body)
     db = Database()
     db.open()
-    status = db.insert_device(body["DevEUI"], body["AppEUI"], body["AppKey"])
+    status = db.insert_device(str(body["DevEUI"]).lower(), 
+                              str(body["AppEUI"]).lower(),
+                              str(body["AppKey"]).lower())
     db.close()
     client = mqtt.Client(transport="tcp",client_id="interface")
     client.username_pw_set(MQTT_USERNAME,MQTT_PASSWORD)
@@ -75,7 +74,6 @@ def add_device():
         return jsonify({"message": "Device addition failed."}), 500
 
    
-
 @app.route("/device/delete", methods=["POST"])
 def delete_devices():
     body = request.json
@@ -90,20 +88,13 @@ def delete_devices():
     return Response(status=200)  
 
  
-
-
 @app.route('/network', methods=['POST'])
 def save_json():
     data = request.get_json()
-
-    # write the JSON data to a file
-    # with open('data.json', 'w') as f:
-    #     json.dump(data, f)
-
     client = mqtt.Client(transport="tcp",client_id="interface")
     client.username_pw_set(MQTT_USERNAME,MQTT_PASSWORD)
     client.connect(MQTT_BROKER, MQTT_PORT)
-    client.publish(MQTT_TOPIC_GATEWAY_NWK, json.dumps(data)) 
+    client.publish(MQTT_TOPIC_GATEWAY_NWK, json.dumps(data).lower()) 
     client.disconnect()
     return jsonify({"success": True})
 

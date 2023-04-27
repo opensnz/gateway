@@ -8,10 +8,12 @@ sudo pip3 install pyserial
 ############# Edit /boot/config.txt file 
 #sudo nano /boot/config.txt
 ############# Paste these lines at the end of config file
-# enable_uart=1
-# dtoverlay=pi3-disable-bt
-# dtoverlay=disable-bt
-############# Reboot now
+#### enable_uart=1
+############# For Pi 3
+#### dtoverlay=pi3-disable-bt
+############# For Pi 4
+#### dtoverlay=disable-bt
+############# Reboot now (after transceiver service enabled)
 # sudo reboot
 
 

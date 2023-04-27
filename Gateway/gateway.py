@@ -13,10 +13,12 @@ class Gateway():
 
     def __init__(self):
         self.__mqtt_client = mqtt.Client(transport="tcp",client_id="gateway")
+        self._db = Database()
+        self.__queue = queue.Queue()
+        self.__semaphore = threading.Semaphore()
 
 
     def __setup__(self):
-        self._db = Database()
         self._db.open()
         self._db.create_tables()
         self._db.close()
@@ -25,8 +27,6 @@ class Gateway():
         self.__mqtt_client.on_disconnect = self.__mqtt_on_disconnect__
         self.__mqtt_client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
         self.__mqtt_client.connect(MQTT_BROKER, MQTT_PORT)
-        self.__queue = queue.Queue()
-        self.__semaphore = threading.Semaphore()
 
 
     def __loop__(self):
@@ -64,7 +64,25 @@ class Gateway():
             print("Exception in the main Thread:", e)
             self.__mqtt_client.loop_stop()
             raise Exception("Raised exception to relaunch Gateway Service")
+        
 
+    def __load_config__(self) -> dict:
+        while True:
+            try :
+                with open(CONFIG_FILE_PATH, "r") as file:
+                    config = json.load(file)
+                    return config
+            except:
+                pass
+
+    def __save_config__(self, config : dict) -> bool:
+        while True:
+            try :
+                with open(CONFIG_FILE_PATH, "w") as file:
+                    file.write(json.dumps(config, indent=4))
+                    return True
+            except:
+                pass
 
     def __one_shot_task__(self, message:mqtt.MQTTMessage):
         # Save current date and time
@@ -219,23 +237,46 @@ class Gateway():
         _db.close()
         if device == None:
             return None
-        print("add device", "join request", device)
         packet = self.__join_request_packet__(device)
         # Update packet with transceiver metadata, date and time 
         self.__update_packet__(packet, topic_payload, date_time)
         return packet
     
     def __topic_network_handler__(self, topic_payload:dict):
-        with open(CONFIG_FILE_PATH, "rw") as file:
-            config = json.load(file)
-            # compare config and topic_payload
+        conf = self.__load_config__()
+        radio_flag = False
+        gateway_flag = False
+        if "radio_conf" in topic_payload :
+            radio_topic : dict = topic_payload["radio_conf"]
+            radio_conf : dict = conf["radio_conf"]
+            for key in radio_conf:
+                if radio_conf.get(key) != radio_topic.get(key):
+                    radio_flag = True
+                    break
+        if "gateway_conf" in topic_payload :
+            gateway_topic : dict = topic_payload["gateway_conf"]
+            gateway_conf : dict = conf["gateway_conf"]
+            for key in gateway_conf:
+                if gateway_conf.get(key) != gateway_topic.get(key):
+                    gateway_flag = True
+                    break
+        if radio_flag or gateway_flag:
+            # save config file
+            self.__save_config__(topic_payload)
+            if radio_flag:
+                # notify transceiver
+                self.__mqtt_client.publish(MQTT_TOPIC_TRANSCEIVER_CONF, 
+                                           payload=json.dumps(topic_payload["radio_conf"]))
+            if gateway_flag:
+                # notify forwarder
+                self.__mqtt_client.publish(MQTT_TOPIC_FORWARDER_CONF, 
+                                           payload=json.dumps(topic_payload["gateway_conf"]))
 
 
     ################### MQTT Publish  ######################
 
     def __publish__(self, packet:dict):
         """Publish packet with DevEUI to Packet Forwarder"""
-        print("Publishing Packet", packet)
         self.__mqtt_client.publish(MQTT_TOPIC_FORWARDER_IN, payload=json.dumps(packet))
 
 
