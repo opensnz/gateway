@@ -128,7 +128,7 @@ class Database():
                 return False
             self.__cursor.execute(INSERT_DEVICE_QUERY, (DevEUI, AppEUI, AppKey,))
             self.__cursor.connection.commit()
-            return self.__insert_data__(DevEUI=DevEUI)
+            return True
         except:
             return False
     
@@ -194,7 +194,7 @@ class Database():
                 return False
             self.__cursor.execute(DELETE_DEVICE_QUERY, (DevEUI,))
             self.__connection.commit()
-            return self.__delete_device_data__(DevEUI=DevEUI)
+            return self.delete_device_data(DevEUI=DevEUI)
         except:
             return False
 
@@ -246,7 +246,7 @@ class Database():
         self.__connection.commit()
         return True
 
-    def __delete_device_data__(self, DevEUI:str=None) -> bool:
+    def delete_device_data(self, DevEUI:str=None) -> bool:
         if self.__connected__() is not True:
             return False
         if DevEUI == None:
@@ -255,10 +255,6 @@ class Database():
         self.__cursor.execute(DELETE_DATA_QUERY, (DevEUI,))
         self.__connection.commit()
         return True
-
-    def delete_device_data(self, DevEUI:str=None) -> bool:
-        return self.__delete_device_data__(DevEUI)
-
 
     def delete_all_data(self) -> bool:
         if self.__connected__() is not True:
