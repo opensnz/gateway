@@ -5,7 +5,6 @@ from datetime import datetime
 from database import Database
 from encoder import Encoder
 from constants import *
-import urllib.request
 
 
 class Gateway():
@@ -16,7 +15,7 @@ class Gateway():
         self._db = Database()
         self.__queue = queue.Queue()
         self.__semaphore = threading.Semaphore()
-        self.__status = True 
+        self.__status = True
 
 
     def __setup__(self):
@@ -41,6 +40,8 @@ class Gateway():
                         "time": datetime.utcnow().isoformat()+'Z',
                         "tmst": round(datetime.utcnow().timestamp()),
                     }
+                    if not self.__status :
+                        continue
                     packet = self.__join_request_packet__(device)
                     # Update packet date and time 
                     self.__update_packet__(packet, None, date_time)
@@ -85,13 +86,6 @@ class Gateway():
             except:
                 pass
 
-    def check_internet(self):
-        try :
-            urllib.request.urlopen('https://www.google.com')
-            return True
-        except :
-            return False
-
     def __one_shot_task__(self, message:mqtt.MQTTMessage):
         # Save current date and time
         date_time = {
@@ -132,8 +126,7 @@ class Gateway():
             # Handle MQTT topic
             self.__topic_network_handler__(topic_payload)
         elif topic == MQTT_TOPIC_GATEWAY_STATUS:
-            print(topic_payload)
-            self.__status = topic_payload["status"]
+            self.__status = bool(topic_payload["status"])
             
 
 

@@ -27,7 +27,7 @@ class Offline():
 
     def __loop__(self):
         while True:
-            is_connected = self.check_internet()
+            is_connected = self.__check_internet__()
             if is_connected and self.__status != is_connected :
                 packet = self.__get_offline_packet__()
                 if packet is not None :
@@ -42,20 +42,14 @@ class Offline():
                         self.__publish__(MQTT_TOPIC_FORWARDER_IN, packet)
                         
             time.sleep(GATEWAY_INTERNET_CHECKING_FREQUENCY)
-
-    def check_internet(self):
-        try :
-            urllib.request.urlopen('https://www.google.com', timeout=1)
-            return True
-        except :
-            return False
-        
+    
+    
     def main(self) -> None:
-        """run gateway system forever"""
+        """run offline system forever"""
         try :
-            print("Gateway System setting...")
+            print("Offline System setting...")
             self.__setup__()
-            print("Gateway System running...")
+            print("Offline System running...")
             """2 Threads run forever and concurrently"""
             self.__mqtt_client.loop_start()
             self.__loop__()
@@ -63,8 +57,16 @@ class Offline():
         except Exception as e:
             print("Exception in the main Thread:", e)
             self.__mqtt_client.loop_stop()
-            raise Exception("Raised exception to relaunch Gateway Service")
+            raise Exception("Raised exception to relaunch Offline Service")
         
+
+    def __check_internet__(self):
+        try :
+            urllib.request.urlopen('https://www.google.com', timeout=1)
+            return True
+        except :
+            return False
+
 
     def __mqtt_on_message__(self,  client:mqtt.Client, userdata, message:mqtt.MQTTMessage):
         print("MQTT_Message received")
@@ -116,7 +118,7 @@ class Offline():
 
 
 if __name__ == "__main__":
-    gateway = Offline()
-    gateway.main()
+    offline = Offline()
+    offline.main()
 
      
