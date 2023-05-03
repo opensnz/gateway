@@ -1,10 +1,3 @@
-echo "Installation of Encoder Service..."
-cd ./Encoder
-sudo chmod a+x ./encoder.sh
-source ./encoder.sh
-cd ..
-echo "Finished"
-
 echo "Installation of Mosquitto Service..."
 cd ./Mosquitto
 sudo chmod a+x ./mosquitto.sh

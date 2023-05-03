@@ -14,10 +14,8 @@ GPS_START_TIMESTAMP  = 315964800 # January 6, 1980, 00:00:00 (seconds)
 
 JOIN_REQUEST_FREQUENCY = 86400  # 1 day = 86400s 
 
-# Constants for Packet Encoder Service
-PACKET_ENCODER_URL = "http://localhost:8080/"
 
-GATEWAY_INTERNET_CHECKING_FREQUENCY = 1
+GATEWAY_INTERNET_CHECKING_FREQUENCY = 5
 
 # Constants for MQTT
 MQTT_BROKER    = "localhost"#"192.168.1.241"
