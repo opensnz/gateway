@@ -2,7 +2,7 @@
 Description=Offline Service Daemon
 StartLimitIntervalSec=86400
 StartLimitBurst=8640
-Requires=mosquitto.service forwarder.service
+Requires=mosquitto.service forwarder.service gateway.service
 
 [Service]
 User=pi
