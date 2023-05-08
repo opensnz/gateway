@@ -4,11 +4,11 @@ import ctypes
 import base64
 
 
-class LoRaWAN :
+class WrapperLoRaWAN :
     """LoRaWAN Wrapper Class to C Shared Library"""
 
     LORAWAN_MAX_FOPTS_LEN = 15
-    LORAWAN_BUFFER_SIZE_MAX = 254
+    LORAWAN_BUFFER_SIZE_MAX = 224
     MESSAGE_TYPE = ["JoinRequest", "JoinAccept", "UnconfirmedDataUp", "UnconfirmedDataDown",
                     "ConfirmedDataUp", "ConfirmedDataDown", "ConfirmedDataUp", "ReJoinRequest", "Proprietary"]
 
@@ -23,7 +23,7 @@ class LoRaWAN :
 
         msg_type : MHDR_MType_t = messageType(buffer, bufferSize)
 
-        return LoRaWAN.MESSAGE_TYPE[msg_type.value]
+        return WrapperLoRaWAN.MESSAGE_TYPE[msg_type.value]
 
 
     @staticmethod
@@ -33,11 +33,11 @@ class LoRaWAN :
         appEUI = tuple(bytes.fromhex(AppEUI))
         appKey = tuple(bytes.fromhex(AppKey))
 
-        joinRequestData = JoinRequest_t(devEUI, appEUI, appKey, DevNonce)
-        buffer = (ctypes.c_uint8 * LoRaWAN.LORAWAN_BUFFER_SIZE_MAX)()
-        bufferSize = LoRaWAN.LORAWAN_BUFFER_SIZE_MAX
+        join = JoinRequest_t(devEUI, appEUI, appKey, DevNonce)
+        buffer = (ctypes.c_uint8 * WrapperLoRaWAN.LORAWAN_BUFFER_SIZE_MAX)()
+        bufferSize = WrapperLoRaWAN.LORAWAN_BUFFER_SIZE_MAX
 
-        length = joinRequest(ctypes.byref(joinRequestData), buffer, bufferSize)
+        length = joinRequest(ctypes.byref(join), buffer, bufferSize)
 
         output = {}
         PHYPayload = []
@@ -50,7 +50,7 @@ class LoRaWAN :
     
     
     @staticmethod
-    def join_accept(PHYPayload:str, AppKey:str, DevNonce:int) -> dict :
+    def join_accept(PHYPayload:str, AppKey:str, DevNonce:int) -> dict|None :
 
         phyPayload = base64.b64decode(PHYPayload)
         appKey = tuple(bytes.fromhex(AppKey))
@@ -69,21 +69,24 @@ class LoRaWAN :
         hasCFlist = False
         NwkSKey = (ctypes.c_uint8 * 16)()
         AppSKey = (ctypes.c_uint8 * 16)()
-        JoinAccept_data = JoinAccept_t(AppNonce, NetID, DevAddr, DLsettings_data, RxDelay, CFlist_data, hasCFlist, DevNonce, appKey, NwkSKey, AppSKey)
+        join = JoinAccept_t(AppNonce, NetID, DevAddr, DLsettings_data, RxDelay, CFlist_data, hasCFlist, DevNonce, appKey, NwkSKey, AppSKey)
 
         bufferSize = len(phyPayload)
         buffer = (ctypes.c_uint8 * bufferSize)()
         ctypes.memmove(ctypes.addressof(buffer), phyPayload, bufferSize)
 
-        length = joinAccept(ctypes.byref(JoinAccept_data), buffer, bufferSize)
+        status = joinAccept(ctypes.byref(join), buffer, bufferSize)
+
+        if status == False:
+            return None
 
         output = {}
-        output["DevAddr"] = hex(JoinAccept_data.DevAddr)[2:].zfill(8)
+        output["DevAddr"] = hex(join.DevAddr)[2:].zfill(8)
         NwkSKey = []
         AppSKey = []
         for i in range(16):
-            NwkSKey.append(JoinAccept_data.NwkSKey[i])
-            AppSKey.append(JoinAccept_data.AppSKey[i])
+            NwkSKey.append(join.NwkSKey[i])
+            AppSKey.append(join.AppSKey[i])
 
         output["NwkSKey"] = bytes(NwkSKey).hex()
         output["AppSKey"] = bytes(AppSKey).hex()
@@ -100,15 +103,15 @@ class LoRaWAN :
 
         FHDR_FCtrl_uplink_data = FHDR_FCtrl_uplink_t(False, False, True, False, 0)
         FHDR_FCtrl_data = FHDR_FCtrl_t((),FHDR_FCtrl_uplink_data)
-        FOpts = (ctypes.c_uint8 * LoRaWAN.LORAWAN_MAX_FOPTS_LEN)()
+        FOpts = (ctypes.c_uint8 * WrapperLoRaWAN.LORAWAN_MAX_FOPTS_LEN)()
 
         FHDR_data = FHDR_t(int(DevAddr, 16), FHDR_FCtrl_data, FCnt, FOpts)
 
-        unconfirmedDataUpData = MACPayload_t(FHDR_data, nwkSKey, appSKey, FPort, len(payload), payload)
-        buffer = (ctypes.c_uint8 * LoRaWAN.LORAWAN_BUFFER_SIZE_MAX)()
-        bufferSize = LoRaWAN.LORAWAN_BUFFER_SIZE_MAX
+        mac = MACPayload_t(FHDR_data, nwkSKey, appSKey, FPort, len(payload), payload)
+        buffer = (ctypes.c_uint8 * WrapperLoRaWAN.LORAWAN_BUFFER_SIZE_MAX)()
+        bufferSize = WrapperLoRaWAN.LORAWAN_BUFFER_SIZE_MAX
 
-        length = unconfirmedDataUp(ctypes.byref(unconfirmedDataUpData), buffer, bufferSize)
+        length = unconfirmedDataUp(ctypes.byref(mac), buffer, bufferSize)
     
         output = {}
         PHYPayload = []
@@ -121,21 +124,22 @@ class LoRaWAN :
 
     @staticmethod
     def confirmed_data_up(DevAddr:str, FCnt:int, FPort:int, Payload:str, NwkSKey:str, AppSKey:str) -> dict:
+        
         payload = tuple(bytes.fromhex(Payload))
         nwkSKey = tuple(bytes.fromhex(NwkSKey))
         appSKey = tuple(bytes.fromhex(AppSKey))
 
         FHDR_FCtrl_uplink_data = FHDR_FCtrl_uplink_t(False, False, True, False, 0)
         FHDR_FCtrl_data = FHDR_FCtrl_t((),FHDR_FCtrl_uplink_data)
-        FOpts = (ctypes.c_uint8 * LoRaWAN.LORAWAN_MAX_FOPTS_LEN)()
+        FOpts = (ctypes.c_uint8 * WrapperLoRaWAN.LORAWAN_MAX_FOPTS_LEN)()
 
         FHDR_data = FHDR_t(int(DevAddr, 16), FHDR_FCtrl_data, FCnt, FOpts)
 
-        confirmedDataUpData = MACPayload_t(FHDR_data, nwkSKey, appSKey, FPort, len(payload), payload)
-        buffer = (ctypes.c_uint8 * LoRaWAN.LORAWAN_BUFFER_SIZE_MAX)()
-        bufferSize = LoRaWAN.LORAWAN_BUFFER_SIZE_MAX
+        mac = MACPayload_t(FHDR_data, nwkSKey, appSKey, FPort, len(payload), payload)
+        buffer = (ctypes.c_uint8 * WrapperLoRaWAN.LORAWAN_BUFFER_SIZE_MAX)()
+        bufferSize = WrapperLoRaWAN.LORAWAN_BUFFER_SIZE_MAX
 
-        length = confirmedDataUp(ctypes.byref(confirmedDataUpData), buffer, bufferSize)
+        length = confirmedDataUp(ctypes.byref(mac), buffer, bufferSize)
 
         output = {}
         PHYPayload = []
@@ -147,9 +151,43 @@ class LoRaWAN :
         return output
 
     @staticmethod
-    def data_down(DevAddr:str, FCnt:int, FPort:int, FRMPayload:str, NwkSKey:str, AppSKey:str, DevNonce:int) -> dict:
+    def data_down(PHYPayload:str, DevAddr:str, NwkSKey:str, AppSKey:str) -> dict|None:
+        
+        phyPayload = base64.b64decode(PHYPayload)
+        nwkSKey = tuple(bytes.fromhex(NwkSKey))
+        appSKey = tuple(bytes.fromhex(AppSKey))
 
+        FHDR_FCtrl_downlink_data = FHDR_FCtrl_downlink_t(False, False, False, False, 0)
+        FHDR_FCtrl_data = FHDR_FCtrl_t(FHDR_FCtrl_downlink_data, ())
+        FOpts = (ctypes.c_uint8 * WrapperLoRaWAN.LORAWAN_MAX_FOPTS_LEN)()
+        
+        FHDR_data = FHDR_t(int(DevAddr, 16), FHDR_FCtrl_data, 0, FOpts)
+
+        payloadSize = WrapperLoRaWAN.LORAWAN_BUFFER_SIZE_MAX
+        payload = (ctypes.c_uint8 * payloadSize)()
+
+        mac = MACPayload_t(FHDR_data, nwkSKey, appSKey, 0, payloadSize, payload)
+        
+        bufferSize = len(phyPayload)
+        buffer = (ctypes.c_uint8 * bufferSize)()
+
+        ctypes.memmove(ctypes.addressof(buffer), phyPayload, bufferSize)
+
+        status = dataDown(ctypes.byref(mac), buffer, bufferSize)
+
+        if status == False:
+            return None
+        
         output = {}
+        payload = ""
+        for i in range(mac.payloadSize):
+            payload = payload + hex(mac.payload[i])[2:].zfill(2)
+        output["payload"]=payload
+        output["adr"]=bool(mac.FHDR.FCtrl.downlink.ADR)
+        output["rfu"]=bool(mac.FHDR.FCtrl.downlink.RFU)
+        output["ack"]=bool(mac.FHDR.FCtrl.downlink.ACK)
+        output["FCntDown"]=int(mac.FHDR.FCnt16)
+        output["FPort"]=int(mac.FPort)
 
         return output
 

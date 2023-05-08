@@ -47,7 +47,7 @@ dataDown = libLoRaWAN.LoRaWAN_DataDown
 dataDown.argtypes = [ctypes.POINTER(MACPayload_t), 
                     ctypes.POINTER(ctypes.c_uint8), 
                     ctypes.c_uint8]
-dataDown.restype = ctypes.c_uint8
+dataDown.restype = ctypes.c_bool
 
 
 
