@@ -98,6 +98,7 @@ class Transceiver():
             topic = message.topic
             if topic == MQTT_TOPIC_TRANSCEIVER_IN:
                 data = json.loads((b''+message.payload).decode())
+                self.__ser.write(bytes.fromhex(data["packet"]))
             elif topic == MQTT_TOPIC_TRANSCEIVER_CONF:
                 conf = json.loads((b''+message.payload).decode())
                 while not self.__config__(  conf["frequency"],
