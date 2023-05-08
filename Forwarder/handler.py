@@ -9,8 +9,8 @@ class Handler():
         self._token_y       = bytes([0x00, 0x00])
         self._token_z       = bytes([0x00, 0x00])
         self._gateway_id    = bytes.fromhex(gateway_id)
-        self.gateway_lon    = 0
-        self.gateway_lat    = 0
+        self.gateway_lon    = 0.0
+        self.gateway_lat    = 0.0
         self.gateway_alt    = 0
         self.stat_timestamp = 0
         self.stat_interval  = 0

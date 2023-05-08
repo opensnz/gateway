@@ -3,7 +3,7 @@ import json
 import time, threading, queue
 from datetime import datetime
 from database import Database
-from encoder import Encoder
+from lorawan import LoRaWAN
 from constants import *
 
 
@@ -32,6 +32,8 @@ class Gateway():
     def __loop__(self):
         """Main loop : performs JoinRequest every day"""
         while True:
+            while not self.__status :
+                time.sleep(1)
             self._db.open()
             devices = self._db.get_devices()
             with self.__semaphore :
@@ -40,8 +42,6 @@ class Gateway():
                         "time": datetime.utcnow().isoformat()+'Z',
                         "tmst": round(datetime.utcnow().timestamp()),
                     }
-                    if not self.__status :
-                        continue
                     packet = self.__join_request_packet__(device)
                     # Update packet date and time 
                     self.__update_packet__(packet, None, date_time)
@@ -134,7 +134,7 @@ class Gateway():
     def __join_request_packet__(self, device:dict) -> dict:
         # Put DevEUI to queue before JoinRequest
         self.__queue.put(device["DevEUI"])
-        encoded = Encoder.join_request(device)
+        encoded = LoRaWAN.join_request(device)
         packet = self.__generic_packet__()
         # Filling packet
         packet["rxpk"][0]["size"] = encoded["size"]
@@ -147,11 +147,24 @@ class Gateway():
         self.__semaphore.acquire()
         self.__semaphore.release()
         packet = self.__generic_packet__()
-        encoded = Encoder.unconfirmed_data_up(device, payload)
+        encoded = LoRaWAN.unconfirmed_data_up(device, payload)
         # Filling packet
         packet["rxpk"][0]["size"] = encoded["size"]
         packet["rxpk"][0]["data"] = encoded["PHYPayload"]
         return packet
+    
+
+    def __confirmed_data_up_packet__(self, device:dict, payload:str) -> dict:
+        # Acquire will block when gateway perfoms JoinRequest
+        self.__semaphore.acquire()
+        self.__semaphore.release()
+        packet = self.__generic_packet__()
+        encoded = LoRaWAN.confirmed_data_up(device, payload)
+        # Filling packet
+        packet["rxpk"][0]["size"] = encoded["size"]
+        packet["rxpk"][0]["data"] = encoded["PHYPayload"]
+        return packet
+    
     
 
     def __generic_packet__(self) -> dict:
@@ -220,7 +233,6 @@ class Gateway():
         _db.close()
         if device != None and device["NwkSKey"] != None:
             # LoRaWAN Unconfirmed or Conformed Data Up is needed (Unconfirmed by default)
-            # Encode packet by using RESP API service
             packet = self.__unconfirmed_data_up_packet__(device, payload)
             # Update packet with transceiver metadata, date and time 
             self.__update_packet__(packet, topic_payload, date_time)
@@ -230,7 +242,7 @@ class Gateway():
     def __topic_forwarder_handler__(self, topic_payload:dict, date_time:dict=None):
         DevEUI = "" 
         PHYPayload = topic_payload["txpk"]["data"]
-        packet_type = Encoder.packet_type(PHYPayload)
+        packet_type = LoRaWAN.packet_type(PHYPayload)
         if packet_type == "JoinAccept" : 
             DevEUI = self.__queue.get()
             # Get device informations from database
@@ -238,9 +250,15 @@ class Gateway():
             _db.open() 
             device = _db.get_device(DevEUI=DevEUI)
             _db.close()
-            Encoder.join_accept(device, PHYPayload)
+            LoRaWAN.join_accept(device, PHYPayload)
             return None
-        elif packet_type == "UnconfirmedDataDown" or packet_type == "ConfirmedDataDown": 
+        elif packet_type == "UnconfirmedDataDown" or packet_type == "ConfirmedDataDown":
+            device = LoRaWAN.data_down(PHYPayload)
+            if device == None :
+                return None
+            # Transmit data to Device (only if device["payload"] is not empty)
+            if device["payload"] != "":
+                self.__publish_transceiver__({"packet":device["payload"]})
             return None
 
     def __topic_device_handler__(self, topic_payload:dict, date_time:dict=None):
@@ -295,6 +313,10 @@ class Gateway():
     def __publish_offline__(self, packet:dict):
         """Publish packet to Offline Service"""
         self.__mqtt_client.publish(MQTT_TOPIC_GATEWAY_OFFLINE, payload=json.dumps(packet))
+    
+    def __publish_transceiver__(self, packet:dict):
+        """Publish packet to Transceiver Service"""
+        self.__mqtt_client.publish(MQTT_TOPIC_TRANSCEIVER_IN, payload=json.dumps(packet))
 
 
     def __publish_config__(self, topic:str, config:dict):

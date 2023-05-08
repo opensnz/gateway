@@ -31,6 +31,7 @@ SELECT_DEVICE_QUERY  = "SELECT * FROM DEVICE WHERE DevEUI = ? "
 INSERT_DEVICE_QUERY  = "INSERT INTO DEVICE(DevEUI, AppEUI, AppKey) VALUES(?, ?, ?) "
 UPDATE_DEVICE_QUERY  = "UPDATE DEVICE SET "
 DELETE_DEVICE_QUERY  = "DELETE FROM DEVICE WHERE DevEUI = ? "
+SELECT_DEVICE_QUERY_BY_DEVADDR  = "SELECT * FROM DEVICE WHERE DevAddr = ? "
 
 SELECT_ALL_DATA_QUERY= "SELECT * FROM DATA "
 SELECT_DATA_QUERY    = "SELECT * FROM DATA WHERE DevEUI = ? "
@@ -106,6 +107,21 @@ class Database():
         self.__cursor.execute(SELECT_DEVICE_QUERY, (DevEUI,))
         item = self.__cursor.fetchone()
         return self.__get_device__(item)
+    
+    def get_devices_by_devaddr(self, DevAddr:str=None) -> dict:
+        devices = []
+        if self.__connected__() is not True:
+            return None
+        if DevAddr == None:
+            print(COLOR.FAIL+"DevAddr can't be none"+COLOR.END)
+            return False
+        self.__cursor.execute(SELECT_DEVICE_QUERY_BY_DEVADDR, (DevAddr,))
+        items = self.__cursor.fetchall()
+        for item in items:
+            device = self.__get_device__(item)
+            if device is not None:
+                devices.append(device)
+        return devices
     
     def get_devices(self) -> list:
         devices = []
