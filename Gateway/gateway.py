@@ -3,7 +3,7 @@ import json
 import time, threading, queue
 from datetime import datetime
 from database import Database
-from lorawan import LoRaWAN
+from LoRaWAN import LoRaWAN
 from constants import *
 
 
