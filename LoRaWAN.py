@@ -2,6 +2,7 @@ import base64
 from database import Database
 from lorawan_wrapper import WrapperLoRaWAN
 
+
 class LoRaWAN():
 
 
