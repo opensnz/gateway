@@ -258,7 +258,7 @@ class Gateway():
                 return None
             # Transmit data to Device (only if device["payload"] is not empty)
             if device["payload"] != "":
-                self.__publish_transceiver__({"packet":device["payload"]})
+                self.__publish_transceiver__({"packet":device["DevEUI"]+device["payload"]})
             return None
 
     def __topic_device_handler__(self, topic_payload:dict, date_time:dict=None):
