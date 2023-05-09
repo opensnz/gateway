@@ -22,7 +22,7 @@ class LoRaWAN():
 
 
     @staticmethod
-    def join_accept(device:dict, PHYPayload:str) -> dict|None:
+    def join_accept(device:dict, PHYPayload:str) -> dict:
         """Update device after decoding Join Accept PHYPayload"""
         response = WrapperLoRaWAN.join_accept(PHYPayload, device["AppKey"], device["DevNonce"]-1)
         if response is None:
@@ -64,7 +64,7 @@ class LoRaWAN():
     
 
     @staticmethod
-    def data_down(PHYPayload:str) -> dict|None:
+    def data_down(PHYPayload:str) -> dict:
         # Get DevAddr from PHYPayload
         # devAddr = bytes from index 1 to 4 of PHYPayload (little endian)
         PHYPayloadBytes = base64.b64decode(PHYPayload)

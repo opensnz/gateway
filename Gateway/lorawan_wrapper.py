@@ -50,7 +50,7 @@ class WrapperLoRaWAN :
     
     
     @staticmethod
-    def join_accept(PHYPayload:str, AppKey:str, DevNonce:int) -> dict|None :
+    def join_accept(PHYPayload:str, AppKey:str, DevNonce:int) -> dict :
 
         phyPayload = base64.b64decode(PHYPayload)
         appKey = tuple(bytes.fromhex(AppKey))
@@ -151,7 +151,7 @@ class WrapperLoRaWAN :
         return output
 
     @staticmethod
-    def data_down(PHYPayload:str, DevAddr:str, NwkSKey:str, AppSKey:str) -> dict|None:
+    def data_down(PHYPayload:str, DevAddr:str, NwkSKey:str, AppSKey:str) -> dict:
         
         phyPayload = base64.b64decode(PHYPayload)
         nwkSKey = tuple(bytes.fromhex(NwkSKey))
