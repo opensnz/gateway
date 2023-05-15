@@ -14,7 +14,7 @@ class Offline():
     def __init__(self):
         self.__mqtt_client = mqtt.Client(transport="tcp",client_id="offline")
         self._db = Database()
-        self.__status = True
+        self.__status = False # connection status (True -> online & False -> offline)
 
 
     def __setup__(self):

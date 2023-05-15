@@ -15,7 +15,7 @@ class Gateway():
         self._db = Database()
         self.__queue = queue.Queue()
         self.__semaphore = threading.Semaphore()
-        self.__status = True
+        self.__status = False # connection status (True -> online & False -> offline)
 
 
     def __setup__(self):
@@ -32,6 +32,7 @@ class Gateway():
     def __loop__(self):
         """Main loop : performs JoinRequest every day"""
         while True:
+            # Wait for connection before perfoming join request
             while not self.__status :
                 time.sleep(1)
             self._db.open()
@@ -126,7 +127,11 @@ class Gateway():
             # Handle MQTT topic
             self.__topic_network_handler__(topic_payload)
         elif topic == MQTT_TOPIC_GATEWAY_STATUS:
-            self.__status = bool(topic_payload["status"])
+            # Flush JoinRequest queue if it is not empty and gateway is reconnecting
+            status = bool(topic_payload["status"])
+            if not self.__queue.empty() and status:
+                self.__queue = queue.Queue()
+            self.__status = status
             
 
 
@@ -244,6 +249,9 @@ class Gateway():
         PHYPayload = topic_payload["txpk"]["data"]
         packet_type = LoRaWAN.packet_type(PHYPayload)
         if packet_type == "JoinAccept" : 
+            # Don't perfom join accept if JoinRequest queue is empty
+            if self.__queue.empty():
+                return None
             DevEUI = self.__queue.get()
             # Get device informations from database
             _db = Database()
@@ -262,6 +270,9 @@ class Gateway():
             return None
 
     def __topic_device_handler__(self, topic_payload:dict, date_time:dict=None):
+        # Don't perfom join request if gateway is offline
+        if not self.__status :
+            return None
         _db = Database()
         _db.open()
         device = _db.get_device(topic_payload["DevEUI"])
