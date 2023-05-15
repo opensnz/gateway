@@ -6,10 +6,10 @@ Single Channel LoRaWAN Gateway with Raspberry
 
 # LoRaWAN Gateway Software V2.0 :
 
-- **Gateway OS Desktop with pre-installed software for Raspberry Pi 3 or Pi 4**
+- **Gateway OS Desktop with pre-installed software for Raspberry Pi 3 or Pi 4 : gateway_os_desktop_v2.0.img.gz**
 
-https://drive.google.com/file/d/1DpI-XwRGibUgKt_9ahWO8sQ5p3UuRnzM/view?usp=share_link
+https://drive.google.com/drive/folders/162dXa1LjKlJBz5VhM7ydgtugCWLjIcWV?usp=share_link
 
-- **Gateway OS Lite with pre-installed software for Raspberry Pi 3 or Pi 4**
+- **Gateway OS Lite with pre-installed software for Raspberry Pi 3 or Pi 4 : gateway_os_lite_v2.0.img.gz**
 
-https://drive.google.com/file/d/1-2oU1MpexWq8q3qgxdvi_humqxP8KsdQ/view?usp=share_link
+https://drive.google.com/drive/folders/162dXa1LjKlJBz5VhM7ydgtugCWLjIcWV?usp=share_link
